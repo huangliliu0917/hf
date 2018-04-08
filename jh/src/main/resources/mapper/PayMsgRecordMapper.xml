@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.PayMsgRecordDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.PayMsgRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="out_trade_no" property="outTradeNo" jdbcType="VARCHAR" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="service" property="service" jdbcType="VARCHAR" />
+    <result column="operate_type" property="operateType" jdbcType="INTEGER" />
+    <result column="trade_type" property="tradeType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="cipher_code" property="cipherCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hf.core.model.po.PayMsgRecord" extends="BaseResultMap" >
+    <result column="msg_body" property="msgBody" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, out_trade_no, merchant_no, service, `operate_type`,`trade_type`, `status`,cipher_code
+  </sql>
+  <sql id="Blob_Column_List" >
+    msg_body
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from pay_msg_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pay_msg_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.PayMsgRecord" >
+    insert into pay_msg_record (id, out_trade_no, merchant_no, 
+      service, `type`, `status`, 
+      msg_body)
+    values (#{id,jdbcType=BIGINT}, #{outTradeNo,jdbcType=VARCHAR}, #{merchantNo,jdbcType=VARCHAR}, 
+      #{service,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{msgBody,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.PayMsgRecord" >
+    insert into pay_msg_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="outTradeNo != null" >
+        out_trade_no,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="service != null" >
+        service,
+      </if>
+      <if test="operateType != null" >
+        `operate_type`,
+      </if>
+      <if test="tradeType != null" >
+        `trade_type`,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="msgBody != null" >
+        msg_body,
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="outTradeNo != null" >
+        #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null" >
+        #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="tradeType != null" >
+        #{tradeType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="msgBody != null" >
+        #{msgBody,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        #{cipherCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.PayMsgRecord" >
+    update pay_msg_record
+    <set >
+      <if test="outTradeNo != null" >
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="service != null" >
+        service = #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null" >
+        `operate_type` = #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="tradeType != null" >
+        `trade_type` = #{tradeType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="msgBody != null" >
+        msg_body = #{msgBody,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hf.core.model.po.PayMsgRecord" >
+    update pay_msg_record
+    set out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      service = #{service,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER},
+      msg_body = #{msgBody,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.PayMsgRecord" >
+    update pay_msg_record
+    set out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      service = #{service,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByTradeNo" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from pay_msg_record
+    where out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
+    and operate_type = #{operateType,jdbcType=INTEGER}
+    and trade_type = #{tradeType,jdbcType=INTEGER}
+  </select>
+</mapper>

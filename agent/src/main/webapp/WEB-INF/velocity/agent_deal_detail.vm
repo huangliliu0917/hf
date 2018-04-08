@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <!--条件查询-->
+                <div class="ibox-title">
+                    <h5>订单管理</h5>
+                    <div class="ibox-tools">
+                        <i class="layui-icon" onclick="location.replace(location.href);" title="刷新"
+                           style="cursor:pointer;">ဂ</i>
+                    </div>
+                </div>
+                <!--条件查询-->
+                <div class="ibox-content">
+                    <form class="layui-form" action="" method="get" autocomplete="off" id="orderform">
+                        <input type="hidden" name="m" value="">
+                        <input type="hidden" name="c" value="Order">
+                        <input type="hidden" name="a" value="index" id="action">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="memberid" autocomplete="off" placeholder="请输入商户号"
+                                           class="layui-input" value="">
+                                </div>
+
+                                <div class="layui-input-inline">
+                                    <input type="text" name="orderid" autocomplete="off" placeholder="请输入订单号"
+                                           class="layui-input" value="">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" name="createtime" id="createtime"
+                                           placeholder="创建起始时间" value="">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" name="successtime" id="successtime"
+                                           placeholder="完成起始时间" value="">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="tongdao">
+                                        <option value="">全部通道</option>
+                                        <option                     value="901">微信公众号</option><option                     value="902">微信扫码支付</option><option                     value="903">支付宝扫码支付</option><option                     value="904">支付宝手机</option><option                     value="905">QQ手机支付</option><option                     value="907">网银支付</option><option                     value="908">QQ扫码支付</option><option                     value="909">百度钱包</option><option                     value="910">京东支付</option><option                     value="911">牛支付微信扫码</option><option                     value="912">牛支付支付宝扫码</option><option                     value="913">工商银行</option><option                     value="914">招商银行</option><option                     value="915">农业银行</option><option                     value="916">建设银行</option><option                     value="917">交通银行</option><option                     value="918">兴业银行</option><option                     value="919">民生银行</option><option                     value="920">光大银行</option><option                     value="921">中国银行</option><option                     value="922">中信银行</option><option                     value="923">深圳发展银行</option><option                     value="924">广发银行</option><option                     value="925">上海浦东发展银行</option><option                     value="926">中国邮政</option><option                     value="927">平安银行</option><option                     value="928">华夏银行</option><option                     value="930">联动优势微信</option><option                     value="931">易通支付</option><option                     value="933">慧富宝D0扫码支付</option><option                     value="932">QQ钱包</option>                </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="bank">
+                                        <option value="">全部银行</option>
+                                        <option                     value="WxSm">微信扫码支付</option><option                     value="WxGzh">微信H5</option><option                     value="Aliscan">支付宝扫码</option><option                     value="Aliwap">支付宝H5</option><option                     value="QQSCAN">QQ扫码</option><option                     value="NiuZhiFu">牛支付</option><option                     value="Liandong">联动优势</option><option                     value="YiTong">易通</option><option                     value="vovpay">慧富宝</option>                </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">全部状态</option>
+                                        <option value="0">未处理</option>
+                                        <option value="1">成功，未返回</option>
+                                        <option value="2">成功，已返回</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="ddlx">
+                                        <option value="">订单类型</option>
+                                        <option  value="0">收款订单</option>
+                                        <option  value="1">充值订单</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn"><span
+                                        class="glyphicon glyphicon-search"></span> 搜索
+                                </button>
+                                <a href="javascript:;" id="export" class="layui-btn layui-btn-danger"><span class="glyphicon glyphicon-export"></span> 导出数据</a>
+                            </div>
+                        </div>
+                    </form>
+                    <blockquote class="layui-elem-quote" style="font-size:14px;padding;8px;">成功交易总金额：<span class="label label-info">0元</span> 平台收入：<span class="label label-info">0元</span> 支付金额：<span class="label label-info">0元</span></blockquote>
+                    <!--交易列表-->
+                    <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'key',width:60}"></th>
+                            <th lay-data="{field:'ddlx', width:90}">订单类型</th>
+                            <th lay-data="{field:'out_trade_id', width:240,style:'color:#060;'}">订单号</th>
+                            <th lay-data="{field:'memberid', width:90}">商户编号</th>
+                            <th lay-data="{field:'amount', width:100,style:'color:#060;'}">交易金额</th>
+                            <th lay-data="{field:'rate', width:90}">手续费</th>
+                            <th lay-data="{field:'actualamount', width:100,style:'color:#C00;'}">实际金额</th>
+                            <th lay-data="{field:'applydate', width:160}">提交时间</th>
+                            <th lay-data="{field:'successdate', width:160}">成功时间</th>
+                            <th lay-data="{field:'zh_tongdao', width:120}">支付通道</th>
+                            <th lay-data="{field:'bankname', width:120}">支付银行</th>
+                            <th lay-data="{field:'tjurl', width:100}">来源地址</th>
+                            <th lay-data="{field:'status', width:110}">状态</th>
+                            <th lay-data="{field:'op',width:80}">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <!--交易列表-->
+                    <div class="pagex"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'form'], function() {
+        var laydate = layui.laydate //日期
+                , laypage = layui.laypage //分页
+                ,layer = layui.layer //弹层
+                ,form = layui.form //表单
+                , table = layui.table; //表格
+        //日期时间范围
+        laydate.render({
+            elem: '#createtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+        //日期时间范围
+        laydate.render({
+            elem: '#successtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+    });
+    /*订单-查看*/
+    function order_view(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    $('#export').on('click',function(){
+        window.location.href
+                ="/admin_order_exportorder.html";
+    });
+</script>
+</body>
+</html>

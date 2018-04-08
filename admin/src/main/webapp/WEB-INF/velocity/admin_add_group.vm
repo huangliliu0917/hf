@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>添加商户</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--用户信息-->
+                    <form class="layui-form" action="" autocomplete="off" id="profile" method="POST">
+                        <input type="hidden" name="id" #if(${userGroup.id}) value="${userGroup.id}" #end value="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商户名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="name" name="name" lay-verify="name" autocomplete="off"
+                                       class="layui-input" value=#if(${userGroup.name}) ${userGroup.name} #else "" #end />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">法人：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="ownerName" name="ownerName" lay-verify="title" autocomplete="off"
+                                       class="layui-input" value=#if(${userGroup.ownerName}) ${userGroup.ownerName} #else "" #end />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份证号码：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="idCard" name="idCard" lay-verify="identity" autocomplete="off" class="layui-input" value= #if(${userGroup.idCard}) ${userGroup.idCard} #else "" #end >
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">手机：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="tel" name="tel" lay-verify="phone" autocomplete="off"
+                                           class="layui-input" value= #if(${userGroup.tel}) ${userGroup.tel} #else "" #end>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                        <label class="layui-form-label">联系地址：</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="address" name="address" lay-verify="title" autocomplete="off"
+                                   class="layui-input" value= #if(${userGroup.address}) ${userGroup.address} #else "" #end>
+                        </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">密钥：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="cipherCode" name="cipherCode" autocomplete="off"
+                                       class="layui-input" value= #if(${userGroup.cipherCode}) ${userGroup.cipherCode} #else "" #end>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">回调地址：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="callbackUrl" name="callbackUrl" autocomplete="off"
+                                       class="layui-input" value= #if(${userGroup.callbackUrl}) ${userGroup.callbackUrl} #else "" #end>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商户类型：</label>
+                            <div class="layui-input-block">
+                                <select name="type" lay-filter="" lay-search="">
+                                    <option value="">选择商户类型</option>
+                                    <option value="1" #if(${userGroup.type}==1) selected #end >普通商户</option>
+                                    <option value="2" #if(${userGroup.type}==2) selected #end >代理商</option>
+                                    <option value="3" #if(${userGroup.type}==3) selected #end >分公司</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">指定上级商户：</label>
+                            <div class="layui-input-block">
+                                <select name="subGroupId" lay-filter="" lay-search="">
+                                    <option value="">指定上级商户</option>
+                                    #foreach($subGroup in $subGroups)
+                                        #if(${subGroup.id} == ${subGroupId})
+                                            <option value="${subGroup.id}" selected>${subGroup.name}</option>
+                                        #else
+                                            <option value="${subGroup.id}">${subGroup.name}</option>
+                                        #end
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit="" lay-filter="save">保存</button>
+                                <button type="reset" class="reset-btn layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="__hash__" value="b51c254fb856abf85f67a3ebaaeae11f_febd51c317b82e012155d1eabc0d7815" /></form>
+                    <!--用户信息-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'form', 'element'], function() {
+        var laydate = layui.laydate //日期
+                ,layer = layui.layer //弹层
+                ,form = layui.form //弹层
+                , element = layui.element; //元素操作
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+
+        form.on('submit(save)', function(data){
+            jQuery.ajax({
+                url:"#springUrl('/user/save_user_group')",
+                type:"post",
+                data:$('#profile').serialize(),
+                success:function(res){
+                    if(res.status){
+                        layer.alert("保存成功", {icon: 6},function () {
+                            parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }else{
+                        layer.alert("操作失败", {icon: 5},function () {
+                            parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

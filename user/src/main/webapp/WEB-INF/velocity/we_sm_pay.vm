@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---API管理---微信扫码支付</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>微信扫码支付</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--用户信息-->
+                    <form class="layui-form" action="" autocomplete="off" id="profile" method="POST">
+                        <input type="hidden" name="id" value="13">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">支付通道：</label>
+                            <div class="layui-input-block">微信扫码</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">支付金额：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="total" name="total" placeholder="支付金额" autocomplete="off" class="layui-input" value= "">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" lay-submit="" lay-filter="add">提交订单</button>
+                        </div>
+                        <input type="hidden" name="__hash__" value="b51c254fb856abf85f67a3ebaaeae11f_febd51c317b82e012155d1eabc0d7815" /></form>
+                    <!--用户信息-->
+                </div>
+            </div>
+            <div id="code"></div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/jquery.qrcode.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'form', 'element'], function() {
+        var laydate = layui.laydate //日期
+                ,layer = layui.layer //弹层
+                ,form = layui.form //弹层
+                , element = layui.element; //元素操作
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+
+        form.on('submit(add)', function(data){
+            jQuery.ajax({
+                url:"#springUrl('/pay/we_sm_pay')",
+                type:"POST",
+                data:jQuery('#profile').serialize(),
+                success:function(res){
+                    if(res.errcode == 0){
+                        var options={};
+                        options.url=res.code_url; //二维码的链接
+                        options.dom="#code";//二维码生成的位置
+                        options.image=jQuery('#img-buffer');//图片id
+                        // options.render="canvas";//设置生成的二维码是canvas格式，也有image、div格式
+                        options.render="image";//设置生成的二维码是canvas格式，也有image、div格式
+
+                        var settings = {
+                            dom:'',
+                            render: 'canvas',   //生成二维码的格式还有image、div
+                            ecLevel:"H",
+                            text:"",
+                            background:"#ffffff",
+                            fill:"#333333", //二维码纹路的颜色
+                            fontcolor:"#ff9818",
+                            fontname:"Ubuntu",
+                            image:{},
+                            label:"",
+                            mPosX:0.5,   //图片在X轴的位置
+                            mPosY:0.5,    //图片在X轴的位置
+                            mSize:0.27,   //图片大小
+                            minVersion:10,
+                            mode:4,
+                            quiet:1,
+                            radius:1,
+                            size:400
+                        };
+                        if (options) {
+                            jQuery.extend(settings, options);//options对象跟settings比较，相同的就替换，没有的就添加
+
+                        }
+                        if(settings.dom.length==0){
+                            window.console.log("Error: dom empty!");
+                            return;
+                        }
+                        if(settings.url.length==0){
+                            window.console.log("Error: url empty!");
+                            return;
+                        }
+                        settings.text=settings.url; //在qrcode生成二维码的地址是text。这里就把url赋值给text
+                        jQuery(settings.dom).qrcode(settings);
+                    }else{
+                        layer.msg(res.message?res.message:"操作失败!", {icon: 5},function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                        return false;
+                    }
+                }
+            });
+            return false;
+        });
+
+        function xyqrcode(options) {
+
+
+        }
+    });
+</script>
+</body>
+</html>

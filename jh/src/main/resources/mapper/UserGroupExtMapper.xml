@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.UserGroupExtDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.UserGroupExt" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="provider_code" property="providerCode" jdbcType="VARCHAR" />
+    <result column="provider_name" property="providerName" jdbcType="VARCHAR" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="outlet_no" property="outletNo" jdbcType="VARCHAR" />
+    <result column="cipher_code" property="cipherCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, provider_code,provider_name, merchant_no, outlet_no, cipher_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_group_ext
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_group_ext
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.UserGroupExt" >
+    insert into user_group_ext (id, group_id, provider_code, 
+      merchant_no, outlet_no, cipher_code
+      )
+    values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{providerCode,jdbcType=VARCHAR}, 
+      #{merchantNo,jdbcType=VARCHAR}, #{outletNo,jdbcType=VARCHAR}, #{cipherCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.UserGroupExt" >
+    insert into user_group_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="providerCode != null" >
+        provider_code,
+      </if>
+      <if test="providerName != null" >
+        provider_name,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="outletNo != null" >
+        outlet_no,
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="providerCode != null" >
+        #{providerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="providerName != null" >
+        #{providerName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outletNo != null" >
+        #{outletNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        #{cipherCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.UserGroupExt" >
+    update user_group_ext
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="providerCode != null" >
+        provider_code = #{providerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outletNo != null" >
+        outlet_no = #{outletNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code = #{cipherCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.UserGroupExt" >
+    update user_group_ext
+    set group_id = #{groupId,jdbcType=BIGINT},
+      provider_code = #{providerCode,jdbcType=VARCHAR},
+      merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      outlet_no = #{outletNo,jdbcType=VARCHAR},
+      cipher_code = #{cipherCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group_ext
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByUnq" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_group_ext
+    where group_id = #{groupId,jdbcType=BIGINT}
+    and provider_code = #{providerCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

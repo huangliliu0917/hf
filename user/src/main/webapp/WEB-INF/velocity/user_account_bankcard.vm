@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>银行卡管理</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="layui-table" lay-data="{height:313, id:'test3'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'id', width:60}">ID</th>
+                            <th lay-data="{field:'bankname', width:120}">银行名称</th>
+                            <th lay-data="{field:'subbransh', width:200}">支行名称</th>
+                            <th lay-data="{field:'accountname', width:90}">开户名</th>
+                            <th lay-data="{field:'cardnumber', width:180}">银行卡号</th>
+                            <th lay-data="{field:'province', width:120}">所在省</th>
+                            <th lay-data="{field:'city', width:120}">所在城市</th>
+                            <th lay-data="{field:'isdefault', width:100}">默认结算</th>
+                            <th lay-data="{field:'memo', width:120}">备注</th>
+                            <th lay-data="{field:'op', width:140}">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        #foreach($card in $cards)
+                        <tr>
+                            <td>$card.id</td>
+                            <td>$card.bank</td>
+                            <td>$card.deposit</td>
+                            <td>$card.owner</td>
+                            <td>$card.bankNo</td>
+                            <td>$card.province</td>
+                            <td>$card.city</td>
+                            <td>
+                                <div class="layui-input-inline">
+                                <input type="checkbox" name="open" data-id="$card.id" #if($card.status == 10) checked #end data-name="中国工商银行" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
+                                </div>
+                            </td>
+                            <td>$card.remark</td>
+                        <td>
+                            <button class="layui-btn layui-btn-small"
+                                    onclick="bank_edit('编辑银行卡','/User_Account_addBankcard_id_47.html',600,400)"><i
+                                    class="layui-icon"></i></button>
+                            <button class="layui-btn layui-btn-small"
+                                    onclick="bank_del(this,'$card.id')"><i
+                                    class="layui-icon"></i></button>
+                        </td>
+                        </tr>
+                        #end
+                        </tbody>
+                    </table>
+                    <button class="layui-btn" onclick="bank_add('添加银行卡','#springUrl("/common/user_account_add_bankcard")',600,400)">添加银行卡</button>
+                    #if(${groupInfo.status}!=10)
+                        <button class="layui-btn" onclick="window.history.back(-1)">上一步</button>
+                        <button class="layui-btn" onclick="window.location.href='#springUrl("/user/finish_user_info_complete")'">完成</button>
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'form', 'layer', 'table', 'element'], function(){
+        var laydate = layui.laydate //日期
+                ,form = layui.form //分页
+                ,layer = layui.layer //弹层
+                ,table = layui.table //表格
+                ,element = layui.element; //元素操作
+        //监听单元格编辑
+        table.on('edit(test3)', function(obj){
+            var value = obj.value //得到修改后的值
+                    ,data = obj.data //得到所在行所有键值
+                    ,field = obj.field; //得到字段
+            data[field] = value; //更新缓存中的值
+            layer.msg(value);
+        });
+        //监听指定开关
+        form.on('switch(switchTest)', function (data) {
+            var isopen = this.checked ? 1 : 0,
+                    id = $(this).attr('data-id');
+            jQuery.ajax({
+                url: "/User_Account_editBankStatus.html",
+                type: 'post',
+                data: "id=" + id + "&isopen=" + isopen,
+                success: function (res) {
+                    if (res.status) {
+                        location.reload();
+                        layer.tips('温馨提示：开启成功', data.othis);
+                    } else {
+                        layer.tips('温馨提示：关闭成功', data.othis);
+                    }
+                }
+            });
+        });
+    });
+    /*添加-银行卡*/
+    function bank_add(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    /*编辑-银行卡*/
+    function bank_edit(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    /*删除-银行卡*/
+    function bank_del(obj,id){
+        layer.confirm('确认要删除吗？', function (index) {
+            jQuery.ajax({
+                url:"/User_Account_delBankcard.html",
+                type:'post',
+                data:'id='+id,
+                success:function(res){
+                    if(res.status){
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

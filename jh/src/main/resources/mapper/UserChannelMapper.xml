@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.UserChannelDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.UserChannel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="provider_code" property="providerCode" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="fee_rate" property="feeRate" jdbcType="DECIMAL" />
+    <result column="standard_fee_rate" property="standardFeeRate" jdbcType="DECIMAL" />
+    <result column="mch_id" property="mchId" jdbcType="VARCHAR" />
+    <result column="cipher_code" property="cipherCode" jdbcType="VARCHAR" />
+    <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="sub_group_id" property="subGroupId" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="sub_fee_rate" property="subFeeRate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channel_name,code, channel_code,provider_code, channel_id, group_id, group_name, fee_rate, standard_fee_rate,
+    mch_id, cipher_code, callback_url, `status`, version, create_time, update_time,sub_group_id,
+    company_id,sub_fee_rate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_channel
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_channel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.UserChannel" >
+    insert into user_channel (id, channel_code, channel_id, 
+      group_id, group_name, fee_rate, 
+      standard_fee_rate, mch_id, cipher_code, 
+      callback_url, `status`, version, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, #{channelId,jdbcType=BIGINT}, 
+      #{groupId,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{feeRate,jdbcType=DECIMAL}, 
+      #{standardFeeRate,jdbcType=DECIMAL}, #{mchId,jdbcType=VARCHAR}, #{cipherCode,jdbcType=VARCHAR}, 
+      #{callbackUrl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.hf.core.model.po.UserChannel" >
+    insert into user_channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="providerCode != null" >
+        provider_code,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="feeRate != null" >
+        fee_rate,
+      </if>
+      <if test="standardFeeRate != null" >
+        standard_fee_rate,
+      </if>
+      <if test="mchId != null" >
+        mch_id,
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code,
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="subGroupId != null" >
+        sub_group_id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="subFeeRate != null" >
+        sub_fee_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="providerCode != null" >
+        #{providerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="feeRate != null" >
+        #{feeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="standardFeeRate != null" >
+        #{standardFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="mchId != null" >
+        #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        #{cipherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackUrl != null" >
+        #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subGroupId != null" >
+        #{subGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="subFeeRate != null" >
+        #{subFeeRate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.UserChannel" >
+    update user_channel
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="feeRate != null" >
+        fee_rate = #{feeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="standardFeeRate != null" >
+        standard_fee_rate = #{standardFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="mchId != null" >
+        mch_id = #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code = #{cipherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url = #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subGroupId != null" >
+        sub_group_id = #{subGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="subFeeRate != null" >
+        sub_fee_rate = #{subFeeRate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.UserChannel" >
+    update user_channel
+    set channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_id = #{channelId,jdbcType=BIGINT},
+      group_id = #{groupId,jdbcType=BIGINT},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      fee_rate = #{feeRate,jdbcType=DECIMAL},
+      standard_fee_rate = #{standardFeeRate,jdbcType=DECIMAL},
+      mch_id = #{mchId,jdbcType=VARCHAR},
+      cipher_code = #{cipherCode,jdbcType=VARCHAR},
+      callback_url = #{callbackUrl,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from user_channel
+    where group_id = #{groupId,jdbcType=BIGINT} order by status ,id desc
+  </select>
+
+  <select id="selectByGroupIdProvider" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel
+    where group_id = #{groupId,jdbcType=BIGINT} and provider_code = #{providerCode,jdbcType=VARCHAR} order by status ,id desc
+  </select>
+
+  <select id="selectByGroupChannel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel
+    where group_id = #{groupId,jdbcType=BIGINT} and channel_id = #{channelId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByMchId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel
+    where mch_id = #{mchId,jdbcType=VARCHAR}
+    and channel_code = #{channelCode,jdbcType=VARCHAR}
+    and provider_code = #{providerCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByGroupChannelCode" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel
+    where group_id = #{groupId,jdbcType=BIGINT}
+    and channel_code = #{channelCode,jdbcType=VARCHAR}
+    and provider_code = #{providerCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByGroupIdList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel
+    where channel_id = #{channelId,jdbcType=BIGINT}
+    and group_id in
+    <foreach collection="groupIds" index="index" item="groupId" open="(" separator="," close=")">
+      #{groupId}
+    </foreach>
+  </select>
+</mapper>

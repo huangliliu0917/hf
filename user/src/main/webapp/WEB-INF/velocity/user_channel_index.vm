@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>查看通道费率</h5>
+                </div>
+                <!--条件查询-->
+                <div class="ibox-content">
+                    <blockquote class="layui-elem-quote">
+                        <p class="text-danger">结算方式：T+1</p>
+                        <p class="text-danger">统一收单接口：$payUrl</p>
+                        <p class="text-danger">退款接口：$refundUrl</p>
+                        <p class="text-danger">订单查询接口：$queryUrl</p>
+                        <p class="text-danger">商户编号：$groupNo</p>
+                        <p class="text-danger">回调地址：$callBackUrl</p>
+                        <p class="text-danger">密钥：$cipherCode</p>
+                    </blockquote>
+                    <table class="layui-table" lay-skin="row">
+                        <thead>
+                        <tr>
+                            <th>编码</th>
+                            <th>通道名称</th>
+                            <th>通道费率</th>
+                            <th>通道状态</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        #foreach($channel in ${channels})
+                            <tr>
+                                <td>${channel.channelCode}</td>
+                                <td>${channel.channelName}</td>
+                                <td>${channel.feeRate}%</td>
+                                <td>#if(${channel.status}==0)可用 #else 不可用#end</td>
+                            </tr>
+                        #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+</body>
+</html>

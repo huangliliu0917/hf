@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.PayPropDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.PayProp" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="prop_name" property="propName" jdbcType="VARCHAR" />
+    <result column="prop_value" property="propValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, prop_name, prop_value
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from pay_prop
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pay_prop
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.PayProp" >
+    insert into pay_prop (id, prop_name, prop_value
+      )
+    values (#{id,jdbcType=BIGINT}, #{propName,jdbcType=VARCHAR}, #{propValue,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.PayProp" >
+    insert into pay_prop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="propName != null" >
+        prop_name,
+      </if>
+      <if test="propValue != null" >
+        prop_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="propName != null" >
+        #{propName,jdbcType=VARCHAR},
+      </if>
+      <if test="propValue != null" >
+        #{propValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.PayProp" >
+    update pay_prop
+    <set >
+      <if test="propName != null" >
+        prop_name = #{propName,jdbcType=VARCHAR},
+      </if>
+      <if test="propValue != null" >
+        prop_value = #{propValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.PayProp" >
+    update pay_prop
+    set prop_name = #{propName,jdbcType=VARCHAR},
+      prop_value = #{propValue,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,47 @@
+package com.hf.agent.service;
+
+import com.hf.base.client.DefaultClient;
+import com.hf.base.dispatcher.DispatchResult;
+import com.hf.base.dispatcher.Dispatcher;
+import com.hf.base.model.Account;
+import com.hf.base.model.UserBankCard;
+import com.hf.base.utils.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+@Service
+public class AgentWithdrawDispatcher implements Dispatcher {
+    @Autowired
+    private DefaultClient client;
+
+    @Override
+    public DispatchResult dispatch(HttpServletRequest request, String page) {
+        Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
+        Account account = client.getAccountByGroupId(groupId);
+        BigDecimal amount = new BigDecimal(0);
+        BigDecimal lockAmount = new BigDecimal("0");
+        BigDecimal paidAmount = new BigDecimal("0");
+
+        if(!Objects.isNull(account)) {
+            amount = (account.getAmount().subtract(account.getLockAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            lockAmount = account.getLockAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            paidAmount = account.getPaidAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+        }
+
+        Map<String,Object> accountInfo = MapUtils.buildMap("amount",amount,"lockAmount",lockAmount,"paidAmount",paidAmount);
+        DispatchResult dispatchResult = new DispatchResult();
+        dispatchResult.setPage(page);
+        dispatchResult.addObject("accountInfo",accountInfo);
+        List<UserBankCard> cards = client.getUserBankCard(groupId);
+        dispatchResult.addObject("cards",cards);
+        BigDecimal feeRate = client.getWithDrawRate();
+        dispatchResult.addObject("feeRate",feeRate);
+        return dispatchResult;
+    }
+}

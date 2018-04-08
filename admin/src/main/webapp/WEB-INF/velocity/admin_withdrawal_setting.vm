@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link id="layuicss-laydate" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/laydate/default/laydate.css?v=5.0.2')" media="all">
+<link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all">
+<link id="layuicss-skincodecss" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/code.css')" media="all">
+</head>
+<body class="gray-bg">
+<div class="bread">
+<span class="bread-title">您的当前位置 : </span>提款管理 &gt;&gt; 提款设置
+</div>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---管理</title>
+    <link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+
+
+<div class="wrapper wrapper-content animated">
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <!--条件查询-->
+            <div class="ibox-title">
+                <h5>提款设置</h5>
+                <div class="ibox-tools">
+                    <i class="layui-icon" onclick="location.replace(location.href);" title="刷新" style="cursor:pointer;">ဂ</i>
+                </div>
+            </div>
+            <!--条件查询-->
+            <div class="ibox-content">
+                <div class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">提款设置</li>
+                        <li>提款时间设置</li>
+                        <li>提款节假日设置</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <form class="layui-form" action="" id="profile">
+	<input type="hidden" name="id" value="28">
+	<input type="hidden" name="u[issystem]" value="1">
+	<div class="layui-form-item">
+		<label class="layui-form-label">单笔最小金额：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" name="u[tkzxmoney]" autocomplete="off" value="100.00" placeholder="" class="layui-input">
+		</div>
+		<label class="layui-form-label">单笔最大金额：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" name="u[tkzdmoney]" autocomplete="off" value="50000.00" placeholder="" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">当日总金额：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" name="u[dayzdmoney]" autocomplete="off" value="500000.00" placeholder="0.00" class="layui-input">
+		</div>
+		<label class="layui-form-label">当日总次数：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" name="u[dayzdnum]" autocomplete="off" value="10" placeholder="" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">结算方式：</label>
+		<div class="layui-input-block">
+			<input type="radio" name="u[t1zt]" checked="" value="0" title="T+0"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>T+0</span></div>
+			<input type="radio" name="u[t1zt]" value="1" title="T+1"><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>T+1</span></div>
+		</div>
+	</div>
+
+	<!--<div class="layui-form-item">
+		<label class="layui-form-label">结算方式：</label>
+		<div class="layui-input-block">
+			<input type="radio" name="u[t0zt]" checked value="0" title="关闭" checked="">
+			<input type="radio" name="u[t0zt]"  value="1" title="开通">
+		</div>
+	</div>-->
+	<div class="layui-form-item">
+		<label class="layui-form-label">购买T+0金额：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" name="u[gmt0]" autocomplete="off" value="0.00" placeholder="0.00" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">手续费类型：</label>
+		<div class="layui-input-inline">
+			<select name="u[tktype]" lay-verify="required" lay-search="">
+				<option value=""></option>
+				<option value="0">按比例计算</option>
+				<option selected="" value="1">按单笔计算</option>
+			</select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="按单笔计算" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="" class="layui-select-tips">请选择</dd><dd lay-value="0" class="">按比例计算</dd><dd lay-value="1" class="layui-this">按单笔计算</dd></dl></div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">单笔提款比例：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" step="0.1" name="u[sxfrate]" autocomplete="off" value="2" placeholder="%" class="layui-input">
+		</div>
+		<label class="layui-form-label">单笔提款收取：</label>
+		<div class="layui-input-inline">
+			<input type="number" min="0" name="u[sxffixed]" autocomplete="off" value="5" placeholder="0.00" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">提款状态：</label>
+		<div class="layui-input-block">
+			<input type="radio" name="u[tkzt]" value="0" title="关闭" checked=""><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>关闭</span></div>
+			<input type="radio" name="u[tkzt]" checked="" value="1" title="开通"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i><span>开通</span></div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button class="layui-btn" lay-submit="submit" lay-filter="save">提交保存</button>
+		</div>
+	</div>
+<input type="hidden" name="__hash__" value="64fbbb789b1159c76eea6c295a72f180_df634ceda1eacbf384242a6b0cb819bb"></form>
+                        </div>
+                        <div class="layui-tab-item">
+                            <form class="layui-form" action="" id="settime">
+	<input type="hidden" name="id" value="28">	
+	<div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">提款时间：</label>
+      <div class="layui-input-inline">
+      <select name="u[allowstart]">
+      <option selected="" value="0">0:00</option>
+	  <option value="1">1:00</option>
+	  <option value="2">2:00</option>
+	  <option value="3">3:00</option>
+	  <option value="4">4:00</option>
+	  <option value="5">5:00</option>
+	  <option value="6">6:00</option>
+	  <option value="7">7:00</option>
+	  <option value="8">8:00</option>
+	  <option value="9">9:00</option>
+	  <option value="10">10:00</option>
+	  <option value="11">11:00</option>
+	  <option value="12">12:00</option>
+	  <option value="13">13:00</option>
+	  <option value="14">14:00</option>
+	  <option value="15">15:00</option>
+	  <option value="16">16:00</option>
+	  <option value="17">17:00</option>
+	  <option value="18">18:00</option>
+	  <option value="19">19:00</option>
+	  <option value="20">20:00</option>
+	  <option value="21">21:00</option>
+	  <option value="22">22:00</option>
+	  <option value="23">23:00</option>
+      </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="0:00" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="0" class="layui-this">0:00</dd><dd lay-value="1" class="">1:00</dd><dd lay-value="2" class="">2:00</dd><dd lay-value="3" class="">3:00</dd><dd lay-value="4" class="">4:00</dd><dd lay-value="5" class="">5:00</dd><dd lay-value="6" class="">6:00</dd><dd lay-value="7" class="">7:00</dd><dd lay-value="8" class="">8:00</dd><dd lay-value="9" class="">9:00</dd><dd lay-value="10" class="">10:00</dd><dd lay-value="11" class="">11:00</dd><dd lay-value="12" class="">12:00</dd><dd lay-value="13" class="">13:00</dd><dd lay-value="14" class="">14:00</dd><dd lay-value="15" class="">15:00</dd><dd lay-value="16" class="">16:00</dd><dd lay-value="17" class="">17:00</dd><dd lay-value="18" class="">18:00</dd><dd lay-value="19" class="">19:00</dd><dd lay-value="20" class="">20:00</dd><dd lay-value="21" class="">21:00</dd><dd lay-value="22" class="">22:00</dd><dd lay-value="23" class="">23:00</dd></dl></div>
+    </div>
+      <div class="layui-form-mid">-</div>
+      <div class="layui-input-inline">
+      <select name="u[allowend]">
+      <option selected="" value="0">0:00</option>
+	  <option value="1">1:00</option>
+	  <option value="2">2:00</option>
+	  <option value="3">3:00</option>
+	  <option value="4">4:00</option>
+	  <option value="5">5:00</option>
+	  <option value="6">6:00</option>
+	  <option value="7">7:00</option>
+	  <option value="8">8:00</option>
+	  <option value="9">9:00</option>
+	  <option value="10">10:00</option>
+	  <option value="11">11:00</option>
+	  <option value="12">12:00</option>
+	  <option value="13">13:00</option>
+	  <option value="14">14:00</option>
+	  <option value="15">15:00</option>
+	  <option value="16">16:00</option>
+	  <option value="17">17:00</option>
+	  <option value="18">18:00</option>
+	  <option value="19">19:00</option>
+	  <option value="20">20:00</option>
+	  <option value="21">21:00</option>
+	  <option value="22">22:00</option>
+	  <option value="23">23:00</option>
+      </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="请选择" value="0:00" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="0" class="layui-this">0:00</dd><dd lay-value="1" class="">1:00</dd><dd lay-value="2" class="">2:00</dd><dd lay-value="3" class="">3:00</dd><dd lay-value="4" class="">4:00</dd><dd lay-value="5" class="">5:00</dd><dd lay-value="6" class="">6:00</dd><dd lay-value="7" class="">7:00</dd><dd lay-value="8" class="">8:00</dd><dd lay-value="9" class="">9:00</dd><dd lay-value="10" class="">10:00</dd><dd lay-value="11" class="">11:00</dd><dd lay-value="12" class="">12:00</dd><dd lay-value="13" class="">13:00</dd><dd lay-value="14" class="">14:00</dd><dd lay-value="15" class="">15:00</dd><dd lay-value="16" class="">16:00</dd><dd lay-value="17" class="">17:00</dd><dd lay-value="18" class="">18:00</dd><dd lay-value="19" class="">19:00</dd><dd lay-value="20" class="">20:00</dd><dd lay-value="21" class="">21:00</dd><dd lay-value="22" class="">22:00</dd><dd lay-value="23" class="">23:00</dd></dl></div>
+    </div>
+    </div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button class="layui-btn" lay-submit="submit" lay-filter="time">提交保存</button>
+		</div>
+	</div>
+<input type="hidden" name="__hash__" value="64fbbb789b1159c76eea6c295a72f180_df634ceda1eacbf384242a6b0cb819bb"></form>
+                        </div>
+                        <div class="layui-tab-item">
+                            	<p class="text-danger"><strong>(默认所有周六、周日为节假日 ，这里可以排除指定的日期为节假日)</strong></p>
+	
+	<div class="layui-form">
+	<div class="layui-form-item">
+	<div class="layui-inline">
+      <label class="layui-form-label">添加排除日期：</label>
+      <div class="layui-input-inline">
+        <div id="setholiday" style="height: 38px; line-height: 38px; cursor: pointer; border-bottom: 1px solid #e2e2e2;" lay-key="1"></div>
+      </div>
+    </div>
+	</div>
+	</div>
+	<div class="layui-form" id="setdatebox">
+		<button class="layui-btn layui-btn-small layui-btn-danger" onclick="del_btn(this,10)">2017-10-01 &nbsp;&nbsp;<i class="layui-icon"></i> 删除</button><button class="layui-btn layui-btn-small layui-btn-danger" onclick="del_btn(this,6)">2017-08-27 &nbsp;&nbsp;<i class="layui-icon"></i> 删除</button><button class="layui-btn layui-btn-small layui-btn-danger" onclick="del_btn(this,8)">2017-09-02 &nbsp;&nbsp;<i class="layui-icon"></i> 删除</button><button class="layui-btn layui-btn-small layui-btn-danger" onclick="del_btn(this,9)">2017-09-03 &nbsp;&nbsp;<i class="layui-icon"></i> 删除</button>	</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.all.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+    <script>
+        layui.use(['layer', 'form', 'laydate','element'], function () {
+            var form = layui.form
+                ,$ = layui.jquery
+                , laydate = layui.laydate
+                ,element = layui.element
+                , layer = layui.layer;
+            //监听radio
+            form.on('radio(changeRule)', function (data) {
+                //console.log(data.elem); //得到radio原始DOM对象
+                //console.log(data.value); //被点击的radio的value值
+                if (data.value == 1) {
+                    $('#changeRule').css('display', '');
+                } else if (data.value == 0) {
+                    $('#changeRule').css('display', 'none');
+                }
+            });
+            //监听提交
+            form.on('submit(save)', function (data) {
+                jQuery.ajax({
+                    url: "/Admin_Withdrawal_saveWithdrawal.html",
+                    type: "post",
+                    data: $('#profile').serialize(),
+                    success: function (res) {
+                        if (res.status) {
+                            layer.alert("编辑成功", {icon: 6}, function () {
+                                location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                        }else{
+                            layer.alert("操作失败", {icon: 5}, function () {
+                                location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+
+            //选中后的回调
+            laydate.render({
+                elem: '#setholiday'
+                ,done: function(value, date){
+                    jQuery.ajax({
+                        url: "/Admin_Withdrawal_addHoliday.html",
+                        type: "post",
+                        data: "datetime="+value,
+                        success: function (res) {
+                            if (res.status) {
+                                layer.msg("编辑成功", {icon: 6}, function () {
+                                    location.reload();
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                });
+                            }else{
+                                layer.msg(res.msg, {icon: 5}, function () {
+                                    location.reload();
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+            //监听时间
+            form.on('submit(time)', function (data) {
+                jQuery.ajax({
+                    url: "/Admin_Withdrawal_settimeEdit.html",
+                    type: "post",
+                    data: $('#settime').serialize(),
+                    success: function (res) {
+                        if (res.status) {
+                            layer.msg("编辑成功", {icon: 6}, function () {
+                                location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                        }else{
+                            layer.msg("操作失败", {icon: 5}, function () {
+                                location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+        //监听button
+        function del_btn(obj,id){
+            console.log(obj);
+            jQuery.ajax({
+                url: "/Admin_Withdrawal_delHoliday.html",
+                type: "post",
+                data: "id="+id,
+                success: function (res) {
+                    if (res.status) {
+                        layer.msg("删除成功", {icon: 6}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                        $(obj).remove();
+                    }else{
+                        layer.msg(res.msg, {icon: 5}, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    
+    </div></body></html>

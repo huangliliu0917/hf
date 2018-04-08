@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/Public/Front/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link href="/Public/Front/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/Public/Front/css/animate.css" rel="stylesheet">
+    <link href="ront/css/style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style1.css">
+    <link rel="stylesheet" href="/Public/Front/js/plugins/layui/css/layui.css">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated">
+
+<div class="bread" style="width:100%;height:20px;margin-bottom:10px;line-height:20px;padding:0;">
+    <span style="color:rgb(51,51,51)">您当前的位置 : </span>管理首页 >> Dashboard
+</div>
+<div class="row">
+  <div class="col-sm-12">
+          <p class="bg-success" style="padding:15px;"> 用户名：<strong style="color:#036">adminroot</strong> |【<span style="color:#F30">
+            总管理员        </span>】
+      </p>
+  </div>
+</div>
+ 
+<div class="row">
+
+  <div class="col-md-6">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title"><h5>今日交易统计</h5></div>
+      <div class="ibox-content no-padding">
+        <div class="panel-body">
+          <div id="dday" style="height: 180px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title"><h5>7天交易统计</h5></div>
+      <div class="ibox-content no-padding">
+        <div class="panel-body">
+          <div id="dweek" style="height: 180px;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title"><h5>月度交易统计</h5></div>
+      <div class="ibox-content no-padding">
+        <div class="panel-body">
+          <div class="panel-group" id="version">
+            <div class="col-lg-12"><div id="dmonth" style="height:280px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- 全局js -->
+</div>
+<script src="/Public/Front/js/jquery.min.js"></script>
+<script src="/Public/Front/js/bootstrap.min.js"></script>
+<script src="/Public/Front/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="/Public/Front/js/content.js"></script>
+<script src="/Public/Front/js/plugins/layui/layui.all.js" charset="utf-8"></script>
+<script src="/Public/Front/js/x-layui.js" charset="utf-8"></script>
+<script src="/Public/Front/js/echarts.common.min.js"></script>
+<script>
+    layui.use(['laypage', 'layer', 'form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery;
+        });
+    function reset_pwd(title,url,w,h){
+      x_admin_show(title,url,w,h);
+    }
+</script>
+<script>
+    var myChartday = echarts.init(document.getElementById('dday'));
+    var myChartweek = echarts.init(document.getElementById('dweek'));
+    var myChartmonth = echarts.init(document.getElementById('dmonth'));
+    // 使用刚指定的配置项和数据显示图表。
+    myChartday.setOption({
+        title:{
+            text:'实时统计(共0笔)',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:['今日交易金额','今日收入金额','今日支持金额']
+        },
+        series: [
+            {
+                name:'交易统计',
+                type:'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '14',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:"0", name:'今日交易金额'},
+                    {value:"0", name:'今日收入金额'},
+                    {value:"0", name:'今日支出金额'},
+                ]
+            }
+        ]
+    });
+    myChartweek.setOption({
+        title:{
+            text:'7天统计(共0笔)',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:['7日交易金额','7日收入金额','7日支持金额']
+        },
+        series: [
+            {
+                name:'交易统计',
+                type:'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '14',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:0, name:'7日交易金额'},
+                    {value:0, name:'7日收入金额'},
+                    {value:0, name:'7日支出金额'},
+                ]
+            }
+        ]
+    });
+    myChartmonth.setOption({
+        tooltip : {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data:['交易金额','收入金额','支出金额']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['2017年-09月']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'交易金额',
+                type:'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data:[0.18]
+            },
+            {
+                name:'收入金额',
+                type:'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data:[0.00]
+            },
+            {
+                name:'支出金额',
+                type:'line',
+                stack: '总量',
+                areaStyle: {normal: {}},
+                data:[0.18]
+            },
+        ]
+    });
+</script>
+<div style="display:none;"><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261742514'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/stat.php%3Fid%3D1261742514' type='text/javascript'%3E%3C/script%3E"));</script></div></body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---密钥</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>密钥修改</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--用户信息-->
+                    <form class="layui-form" action="" autocomplete="off" id="profile" method="POST">
+                        <input type="hidden" name="id" value="13">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">密钥：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="cipherCode" name="cipherCode" lay-verify="title" autocomplete="off"
+                                       placeholder="密钥" class="layui-input" value=#if(${cipherCode}) ${cipherCode} #else "" #end>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit="" type="button" onclick="getRandom()">随机生成</button>
+                                <button class="layui-btn" lay-submit="" lay-filter="add">保存</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="__hash__" value="b51c254fb856abf85f67a3ebaaeae11f_febd51c317b82e012155d1eabc0d7815" /></form>
+                    <!--用户信息-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'form', 'element'], function() {
+        var laydate = layui.laydate //日期
+                ,layer = layui.layer //弹层
+                ,form = layui.form //弹层
+                , element = layui.element; //元素操作
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+
+        form.on('submit(add)', function(data){
+            jQuery.ajax({
+                url:"#springUrl('/user/save_cipher_code')",
+                type:"POST",
+                data:jQuery('#profile').serialize(),
+                success:function(res){
+                    if(res.status){
+                        layer.msg("保存成功");
+                    }else{
+                        layer.msg(res.msg?res.msg:"操作失败!", {icon: 5},function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                        return false;
+                    }
+                }
+            });
+            return false;
+        });
+    });
+    
+    function getRandom() {
+        len = 32;
+        var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+        var maxPos = chars.length;
+        var pwd = '';
+        for (i = 0; i < len; i++) {
+            pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+        jQuery("#cipherCode").val(pwd);
+    }
+</script>
+</body>
+</html>

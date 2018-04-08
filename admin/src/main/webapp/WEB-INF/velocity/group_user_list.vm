@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>用户管理</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="layui-table" lay-data="{height:313, id:'test3'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'id', width:60}">ID</th>
+                            <th lay-data="{field:'name', width:120}">用户名</th>
+                            <th lay-data="{field:'loginId', width:200}">登录名</th>
+                            <th lay-data="{field:'tel', width:90}">手机号</th>
+                            <th lay-data="{field:'qq', width:180}">QQ</th>
+                            <th lay-data="{field:'address', width:120}">联系地址</th>
+                            <th lay-data="{field:'idCard', width:120}">身份证号</th>
+                            <th lay-data="{field:'userType', width:120}">用户类型</th>
+                            <th lay-data="{field:'status', width:120}">状态</th>
+                            <th lay-data="{field:'createTime', width:120}">创建时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        #foreach($user in $users)
+                        <tr>
+                            <td>$user.id</td>
+                            <td>$user.name</td>
+                            <td>$user.loginId</td>
+                            <td>$user.tel</td>
+                            <td>$user.qq</td>
+                            <td>$user.address</td>
+                            <td>$user.idCard</td>
+                            <td>
+                                #if($user.type==1)
+                                    管理员
+                                #elseif($user.type==3)
+                                    普通用户
+                                #elseif($user.type==10)
+                                    超级管理员
+                                #end
+                            </td>
+                            <td>
+                                #if($user.status == 0)
+                                    用户未补充资料
+                                    #elseif($user.status == 1)
+                                    资料已补充
+                                    #elseif($user.status == 10)
+                                    可用
+                                #end
+                            </td>
+                            <td>$!date.format('yyyy-MM-dd HH:mm:ss ',$!user.createTime)</td>
+                        </tr>
+                        #end
+                        </tbody>
+                    </table>
+                    <button class="layui-btn" onclick="bank_add('添加用户','#springUrl("/common/user_add_member?group=${group}")',600,400)">添加用户</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'form', 'layer', 'table', 'element'], function(){
+        var laydate = layui.laydate //日期
+                ,form = layui.form //分页
+                ,layer = layui.layer //弹层
+                ,table = layui.table //表格
+                ,element = layui.element; //元素操作
+        //监听单元格编辑
+        table.on('edit(test3)', function(obj){
+            var value = obj.value //得到修改后的值
+                    ,data = obj.data //得到所在行所有键值
+                    ,field = obj.field; //得到字段
+            data[field] = value; //更新缓存中的值
+            layer.msg(value);
+        });
+        //监听指定开关
+        form.on('switch(switchTest)', function (data) {
+            var isopen = this.checked ? 1 : 0,
+                    id = $(this).attr('data-id');
+            jQuery.ajax({
+                url: "/User_Account_editBankStatus.html",
+                type: 'post',
+                data: "id=" + id + "&isopen=" + isopen,
+                success: function (res) {
+                    if (res.status) {
+                        location.reload();
+                        layer.tips('温馨提示：开启成功', data.othis);
+                    } else {
+                        layer.tips('温馨提示：关闭成功', data.othis);
+                    }
+                }
+            });
+        });
+    });
+    /*添加-银行卡*/
+    function bank_add(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    /*编辑-银行卡*/
+    function bank_edit(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    /*删除-银行卡*/
+    function bank_del(obj,id){
+        layer.confirm('确认要删除吗？', function (index) {
+            jQuery.ajax({
+                url:"/User_Account_delBankcard.html",
+                type:'post',
+                data:'id='+id,
+                success:function(res){
+                    if(res.status){
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

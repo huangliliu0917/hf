@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.TblSequenceDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.TblSequence" >
+    <id column="seq_name" property="seqName" jdbcType="VARCHAR" />
+    <result column="min_value" property="minValue" jdbcType="INTEGER" />
+    <result column="max_value" property="maxValue" jdbcType="INTEGER" />
+    <result column="current_val" property="currentVal" jdbcType="INTEGER" />
+    <result column="increment_val" property="incrementVal" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    seq_name, min_value, max_value, current_val, increment_val
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_sequence
+    where seq_name = #{seqName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tbl_sequence
+    where seq_name = #{seqName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.TblSequence" >
+    insert into tbl_sequence (seq_name, min_value, max_value, 
+      current_val, increment_val)
+    values (#{seqName,jdbcType=VARCHAR}, #{minValue,jdbcType=INTEGER}, #{maxValue,jdbcType=INTEGER}, 
+      #{currentVal,jdbcType=INTEGER}, #{incrementVal,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.TblSequence" >
+    insert into tbl_sequence
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="seqName != null" >
+        seq_name,
+      </if>
+      <if test="minValue != null" >
+        min_value,
+      </if>
+      <if test="maxValue != null" >
+        max_value,
+      </if>
+      <if test="currentVal != null" >
+        current_val,
+      </if>
+      <if test="incrementVal != null" >
+        increment_val,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="seqName != null" >
+        #{seqName,jdbcType=VARCHAR},
+      </if>
+      <if test="minValue != null" >
+        #{minValue,jdbcType=INTEGER},
+      </if>
+      <if test="maxValue != null" >
+        #{maxValue,jdbcType=INTEGER},
+      </if>
+      <if test="currentVal != null" >
+        #{currentVal,jdbcType=INTEGER},
+      </if>
+      <if test="incrementVal != null" >
+        #{incrementVal,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.TblSequence" >
+    update tbl_sequence
+    <set >
+      <if test="minValue != null" >
+        min_value = #{minValue,jdbcType=INTEGER},
+      </if>
+      <if test="maxValue != null" >
+        max_value = #{maxValue,jdbcType=INTEGER},
+      </if>
+      <if test="currentVal != null" >
+        current_val = #{currentVal,jdbcType=INTEGER},
+      </if>
+      <if test="incrementVal != null" >
+        increment_val = #{incrementVal,jdbcType=INTEGER},
+      </if>
+    </set>
+    where seq_name = #{seqName,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.TblSequence" >
+    update tbl_sequence
+    set min_value = #{minValue,jdbcType=INTEGER},
+      max_value = #{maxValue,jdbcType=INTEGER},
+      current_val = #{currentVal,jdbcType=INTEGER},
+      increment_val = #{incrementVal,jdbcType=INTEGER}
+    where seq_name = #{seqName,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateCurrentVal" parameterType="com.hf.core.model.po.TblSequence" >
+    update tbl_sequence
+    set
+    current_val = #{targetVal,jdbcType=INTEGER}
+    where seq_name = #{seqName,jdbcType=VARCHAR} and current_val = #{currentVal,jdbcType=INTEGER}
+  </update>
+
+</mapper>

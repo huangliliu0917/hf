@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.SettleTaskDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.SettleTask" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="account_id" property="accountId" jdbcType="BIGINT" />
+    <result column="settle_bank_card" property="settleBankCard" jdbcType="BIGINT" />
+    <result column="settle_amount" property="settleAmount" jdbcType="DECIMAL" />
+    <result column="fee_rate" property="feeRate" jdbcType="DECIMAL" />
+    <result column="pay_account_id" property="payAccountId" jdbcType="BIGINT" />
+    <result column="pay_group_id" property="payGroupId" jdbcType="BIGINT" />
+    <result column="pay_bank_card" property="payBankCard" jdbcType="BIGINT" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="pay_amount" property="payAmount" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, account_id, settle_bank_card, settle_amount, fee_rate, pay_account_id, 
+    pay_group_id, pay_bank_card, fee, pay_amount, `status`, version, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_task
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.SettleTask" >
+    insert into settle_task (id, group_id, account_id, 
+      settle_bank_card, settle_amount, fee_rate, 
+      pay_account_id, pay_group_id, pay_bank_card, 
+      fee, pay_amount, `status`, 
+      version, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, 
+      #{settleBankCard,jdbcType=BIGINT}, #{settleAmount,jdbcType=DECIMAL}, #{feeRate,jdbcType=DECIMAL}, 
+      #{payAccountId,jdbcType=BIGINT}, #{payGroupId,jdbcType=BIGINT}, #{payBankCard,jdbcType=BIGINT}, 
+      #{fee,jdbcType=DECIMAL}, #{payAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, 
+      #{version,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.hf.core.model.po.SettleTask" >
+    insert into settle_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="settleBankCard != null" >
+        settle_bank_card,
+      </if>
+      <if test="settleAmount != null" >
+        settle_amount,
+      </if>
+      <if test="feeRate != null" >
+        fee_rate,
+      </if>
+      <if test="payAccountId != null" >
+        pay_account_id,
+      </if>
+      <if test="payGroupId != null" >
+        pay_group_id,
+      </if>
+      <if test="payBankCard != null" >
+        pay_bank_card,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="payAmount != null" >
+        pay_amount,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="settleBankCard != null" >
+        #{settleBankCard,jdbcType=BIGINT},
+      </if>
+      <if test="settleAmount != null" >
+        #{settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="feeRate != null" >
+        #{feeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="payAccountId != null" >
+        #{payAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="payGroupId != null" >
+        #{payGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="payBankCard != null" >
+        #{payBankCard,jdbcType=BIGINT},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="payAmount != null" >
+        #{payAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.SettleTask" >
+    update settle_task
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="settleBankCard != null" >
+        settle_bank_card = #{settleBankCard,jdbcType=BIGINT},
+      </if>
+      <if test="settleAmount != null" >
+        settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="feeRate != null" >
+        fee_rate = #{feeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="payAccountId != null" >
+        pay_account_id = #{payAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="payGroupId != null" >
+        pay_group_id = #{payGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="payBankCard != null" >
+        pay_bank_card = #{payBankCard,jdbcType=BIGINT},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="payAmount != null" >
+        pay_amount = #{payAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.SettleTask" >
+    update settle_task
+    set group_id = #{groupId,jdbcType=BIGINT},
+      account_id = #{accountId,jdbcType=BIGINT},
+      settle_bank_card = #{settleBankCard,jdbcType=BIGINT},
+      settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      fee_rate = #{feeRate,jdbcType=DECIMAL},
+      pay_account_id = #{payAccountId,jdbcType=BIGINT},
+      pay_group_id = #{payGroupId,jdbcType=BIGINT},
+      pay_bank_card = #{payBankCard,jdbcType=BIGINT},
+      fee = #{fee,jdbcType=DECIMAL},
+      pay_amount = #{payAmount,jdbcType=DECIMAL},
+      `status` = #{status,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateStatusById" >
+    update settle_task
+    set
+    status = #{toStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT} and status = #{fromStatus,jdbcType=INTEGER}
+  </update>
+
+  <select id="select" resultMap="BaseResultMap">
+    select
+    t1.id,
+    t1.group_id,
+    t1.account_id,
+    t1.settle_bank_card,
+    t1.settle_amount,
+    t1.fee_rate,
+    t1.pay_account_id,
+    t1.pay_group_id,
+    t1.pay_bank_card,
+    t1.fee,
+    t1.pay_amount,
+    t1.`status`,
+    t1.version,
+    t1.create_time,
+    t1.update_time
+    from settle_task t1 left join user_group t2 on t1.group_id = t2.id
+    where 1=1
+    <if test="status != null and status != ''" >
+      and t1.status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="groupIds != null and groupIds.size()>0">
+      and t1.group_id in
+      <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="excludeGroupIds != null and excludeGroupIds.size()>0">
+      and t1.group_id not in
+      <foreach item="groupId" index="index" collection="excludeGroupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="mchId != null and mchId != ''" >
+      and t2.group_no like concat(concat('%',#{mchId,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="payGroupId != null" >
+      and t1.pay_group_id = #{payGroupId,jdbcType=BIGINT}
+    </if>
+    order by t1.id desc
+    limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="count" resultType="java.lang.Integer">
+    select count(t1.id) from settle_task t1 left join user_group t2 on t1.group_id = t2.id
+    where 1=1
+    <if test="status != null and status != ''" >
+      and t1.status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="groupIds != null and groupIds.size()>0">
+      and t1.group_id in
+      <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="excludeGroupIds != null and excludeGroupIds.size()>0">
+      and t1.group_id not in
+      <foreach item="groupId" index="index" collection="excludeGroupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="mchId != null and mchId != ''" >
+      and t2.group_no like concat(concat('%',#{mchId,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="payGroupId != null" >
+      and t1.pay_group_id = #{payGroupId,jdbcType=BIGINT}
+    </if>
+  </select>
+</mapper>

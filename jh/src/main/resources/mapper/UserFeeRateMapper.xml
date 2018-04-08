@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.UserFeeRateMapper" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.UserFeeRate" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_fee_rate" property="userFeeRate" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="creater" property="creater" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channel_id, channel, user_id, user_fee_rate, `status`, creater
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_fee_rate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_fee_rate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.UserFeeRate" >
+    insert into user_fee_rate (id, channel_id, channel, 
+      user_id, user_fee_rate, `status`, 
+      creater)
+    values (#{id,jdbcType=BIGINT}, #{channelId,jdbcType=BIGINT}, #{channel,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=BIGINT}, #{userFeeRate,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, 
+      #{creater,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.UserFeeRate" >
+    insert into user_fee_rate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userFeeRate != null" >
+        user_fee_rate,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="creater != null" >
+        creater,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userFeeRate != null" >
+        #{userFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creater != null" >
+        #{creater,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.UserFeeRate" >
+    update user_fee_rate
+    <set >
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userFeeRate != null" >
+        user_fee_rate = #{userFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creater != null" >
+        creater = #{creater,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.UserFeeRate" >
+    update user_fee_rate
+    set channel_id = #{channelId,jdbcType=BIGINT},
+      channel = #{channel,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      user_fee_rate = #{userFeeRate,jdbcType=DECIMAL},
+      `status` = #{status,jdbcType=INTEGER},
+      creater = #{creater,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

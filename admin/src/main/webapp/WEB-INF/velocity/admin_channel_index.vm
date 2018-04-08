@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all">
+</head>
+<body class="gray-bg">
+<div class="bread"><span class="bread-title">您的当前位置 : </span>通道管理 &gt;&gt; 供应商通道管理</div>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<title>慧富宝支付系统</title>
+<link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+<link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+<link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')" media="all">
+<style>
+.layui-form-switch {width:54px;}
+</style>
+
+    <div class="wrapper wrapper-content animated">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>接口供应商管理</h5>
+						<div class="row">
+							<div class="col-sm-2 pull-right">
+								<a href="javascript:;" id="addSupplier" class="layui-btn">添加供应商</a>
+							</div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>供应商</th>
+                                        <th>接口类型</th>
+                                        <th>接口代码</th>
+                                        <th>接口描述</th>
+                                        <th>接口状态</th>
+										<th>费率(%)</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+								#foreach($channel in $channels)
+								<tr>
+									<td>${channel.id}</td>
+									<td>${channel.providerName}</td>
+                                    <td>${channel.code}</td>
+									<td>${channel.channelCode}</td>
+									<td>${channel.channelDesc}</td>
+									<td>
+									<div class="layui-form">
+										<input type="checkbox" name="status" value="${channel.status}" data-id="${channel.id}" #if(${channel.status}==0) checked #end data-name="通道" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭">
+									</div>
+									</td>
+									<td><span id="dfRate207">${channel.feeRate}</span></td>
+									<td>
+										<div class="layui-btn-group">
+										  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑供应商接口','#springUrl("/common/admin_add_channel?channelId=${channel.id}")')">编辑</button>
+										  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'${channel.id}')">删除</button>
+										</div>
+									</td>
+								</tr>
+								#end
+                                </tbody>
+                            </table>
+                        </div>
+						<div class="page"><div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">    </div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+    <script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+    <script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+    <script src="#springUrl('/Public/Front/js/content.js')"></script>
+	<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use(['layer', 'form'], function(){
+  var form = layui.form
+  ,layer = layui.layer;
+  
+  //监听指定开关
+  form.on('switch(switchTest)', function(data){
+	var pid = jQuery(this).attr('data-id'),
+	isopen = this.checked ? 0 : 1,
+	title = jQuery(this).attr('data-name');
+      jQuery.ajax({
+		url:'#springUrl("/user/update_channel_status")',
+		type:'post',
+		data:"pid="+pid+"&isopen="+isopen,
+		success:function(res){
+			if(res.status){
+				layer.tips('温馨提示：'+title+'开启', data.othis);
+			}else{
+				layer.tips('温馨提示：'+title+'关闭', data.othis);
+			}
+		}
+	});
+  });
+  
+  //监听提交
+  jQuery('#addSupplier').on('click',function(){
+	var w=640,h;
+	if (h == null || h == '') {
+		h=(jQuery(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		fix: false, //不固定
+		maxmin: true,
+		shadeClose: true,
+		area: [w+'px', h +'px'],
+		shade:0.4,
+		title: "添加供应商",
+		content: "#springUrl('/common/admin_add_channel')"
+	});
+  });
+});
+ //编辑
+ function admin_edit(title,url){
+	var w=600,h;
+	if (h == null || h == '') {
+		h=(jQuery(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		fix: false, //不固定
+		maxmin: true,
+		shadeClose: true,
+		area: [w+'px', h +'px'],
+		shade:0.4,
+		title: title,
+		content: url
+	});
+ }
+ /*删除*/
+function admin_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+        jQuery.ajax({
+			url:'#springUrl("/user/del_channel")',
+			type:'post',
+			data:'channelId='+id,
+			success:function(res){
+				if(res.status){
+                    jQuery(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});
+				}
+			}
+		});
+	});
+}
+/*费率*/
+function admin_editRate(title,url){
+	var w=510,h=320;
+	if (h == null || h == '') {
+		h=(jQuery(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		fix: false, //不固定
+		maxmin: true,
+		shadeClose: true,
+		area: [w+'px', h +'px'],
+		shade:0.4,
+		title: title,
+		content: url
+	});
+  }
+</script>
+
+</body>
+</html>

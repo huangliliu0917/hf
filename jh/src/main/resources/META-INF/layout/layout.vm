@@ -1,0 +1,12 @@
+<body>
+<div class="content">
+    #parse("/header.vm")
+    <div class="content-info">
+        #parse("/sidebar.vm")
+        <div class="content-main">
+            $screen_content
+        </div>
+    </div>
+##    #parse("common/footer.vm")
+</div>
+</body>

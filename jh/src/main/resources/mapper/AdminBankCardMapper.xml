@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hf.core.dao.local.AdminBankCardDao">
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.AdminBankCard">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
+    <result column="bank_no" jdbcType="VARCHAR" property="bankNo" />
+    <result column="bank" jdbcType="VARCHAR" property="bank" />
+    <result column="deposit" jdbcType="VARCHAR" property="deposit" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
+    <result column="outlet_no" jdbcType="VARCHAR" property="outletNo" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+    <result column="limit_amount" jdbcType="DECIMAL" property="limitAmount" />
+    <result column="cipher_code" jdbcType="VARCHAR" property="cipherCode" />
+    <result column="channel_no" jdbcType="VARCHAR" property="channelNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, company_id, group_id, bank_no, bank, deposit, `owner`, province, city, `status`, 
+    remark,mch_id,outlet_no,name,owner_name,limit_amount,cipher_code,channel_no
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin_bank_card
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_bank_card
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.AdminBankCard">
+    insert into admin_bank_card (id, company_id, group_id, 
+      bank_no, bank, deposit, 
+      `owner`, province, city, 
+      `status`, remark)
+    values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, 
+      #{bankNo,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, #{deposit,jdbcType=VARCHAR}, 
+      #{owner,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.AdminBankCard">
+    insert into admin_bank_card
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="bankNo != null">
+        bank_no,
+      </if>
+      <if test="bank != null">
+        bank,
+      </if>
+      <if test="deposit != null">
+        deposit,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="mchId != null">
+        mch_id,
+      </if>
+      <if test="outletNo != null">
+        outlet_no,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="ownerName != null">
+        owner_name,
+      </if>
+      <if test="limitAmount != null">
+        limit_amount,
+      </if>
+      <if test="cipherCode != null">
+        cipher_code,
+      </if>
+      <if test="channelNo != null">
+        channel_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="bankNo != null">
+        #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null">
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="deposit != null">
+        #{deposit,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null">
+        #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="outletNo != null">
+        #{outletNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerName != null">
+        #{ownerName,jdbcType=VARCHAR},
+      </if>
+      <if test="limitAmount != null">
+        #{limitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cipherCode != null">
+        #{cipherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelNo != null">
+        #{channelNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.AdminBankCard">
+    update admin_bank_card
+    <set>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="bankNo != null">
+        bank_no = #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null">
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="deposit != null">
+        deposit = #{deposit,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="limitAmount != null">
+        limit_amount = #{limitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cipherCode != null">
+        cipher_code = #{cipherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelNo != null">
+        channel_no = #{channelNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.AdminBankCard">
+    update admin_bank_card
+    set company_id = #{companyId,jdbcType=BIGINT},
+      group_id = #{groupId,jdbcType=BIGINT},
+      bank_no = #{bankNo,jdbcType=VARCHAR},
+      bank = #{bank,jdbcType=VARCHAR},
+      deposit = #{deposit,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByCompanyId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin_bank_card
+    where company_id = #{companyId,jdbcType=BIGINT}
+      <if test="groupId != null">
+      and group_id = #{groupId,jdbcType=BIGINT}
+      </if>
+  </select>
+
+  <select id="selectByGroupId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin_bank_card
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+
+  <select id="select" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from admin_bank_card
+    where status = 10
+    <if test="companyId != null">
+       and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="channelNo != null and channelNo!=''">
+      and channel_no = #{channelNo,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

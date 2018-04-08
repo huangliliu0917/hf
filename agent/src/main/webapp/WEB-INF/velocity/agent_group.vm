@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商户信息</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--用户信息-->
+                    <form class="layui-form" action="" autocomplete="off" id="profile">
+                        <input type="hidden" name="id" value="25">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商户名：</label>
+                            <div class="layui-input-block" style="line-height: 29px;">
+                                <span >${userGroup.name}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">法人：</label>
+                            <div class="layui-input-block" style="line-height: 29px;">
+                                <span >${userGroup.ownerName}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份证号码：</label>
+                            <div class="layui-input-block" style="line-height: 29px;">
+                                <span>${userGroup.idCard}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">手机：</label>
+                                <div class="layui-input-inline" style="line-height: 29px;">
+                                    <span>${userGroup.tel}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">联系地址：</label>
+                            <div class="layui-input-block" style="line-height: 29px;">
+                                <span>${userGroup.address}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商户编号：</label>
+                            <div class="layui-input-block" style="line-height: 29px;">
+                                <span>${userGroup.groupNo}</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="__hash__" value="a3ceafec8e92d9ad1b51017d0415c571_2cba14779e2c6b8b2e0d4e51089948c3" /></form>
+                    <!--用户信息-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'form', 'element'], function() {
+        var laydate = layui.laydate //日期
+                ,layer = layui.layer //弹层
+                ,form = layui.form //弹层
+                , element = layui.element; //元素操作
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+        //监听提交
+        form.on('submit(profile)', function(data){
+            $.ajax({
+                url:"/agent_account_saveprofile.html",
+                type:"post",
+                data:$('#profile').serialize(),
+                success:function(res){
+                    if(res.status){
+                        layer.alert("编辑成功", {icon: 6},function () {
+                            parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }else{
+                        layer.alert("操作失败", {icon: 5},function () {
+                            parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

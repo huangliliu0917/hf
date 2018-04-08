@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="#springUrl('favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox-content">
+                <form class="layui-form" action="" autocomplete="off" id="channelForm">
+                    <input type="hidden" name="id" #if($userChannel) value="${userChannel.id}" #else value="" #end>
+                    <input type="hidden" name="group" value="${group}">
+                    <input type="hidden" name="providerCode" value="${providerCode}">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">通道：</label>
+                        <div class="layui-input-block">
+                            <select id="channelId" name="channelId" lay-filter="" lay-search="">
+                                <option value="">选择通道</option>
+                                #foreach($channel in $channels)
+                                    <option value="$channel.id" #if($userChannel.channelCode == $channel.channelCode) selected #end >$channel.channelName - $channel.channelCode</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">费率：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="feeRate" lay-verify="" autocomplete="off" class="layui-input" #if(${userChannel}) value="${userChannel.feeRate}" #else value="" #end>%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="save">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="__hash__" value="367c3332bd8f52ca024a530950c82381_ba745b9c10308f12a26f898455d2ad18" /></form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'form', 'layer', 'table', 'element'], function() {
+        var laydate = layui.laydate //日期
+                , form = layui.form //分页
+                , layer = layui.layer //弹层
+                , table = layui.table //表格
+                , element = layui.element; //元素操作
+        //监听提交
+        form.on('submit(save)', function(data){
+            jQuery.ajax({
+                url:"#springUrl('/user/save_user_channel')",
+                type:"post",
+                data:jQuery('#channelForm').serialize(),
+                success:function(res){
+                    if(res.status){
+                        layer.alert("编辑成功", {icon: 6},function () {
+                            parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }else{
+                        layer.alert(res.msg, {icon: 5},function () {
+                            parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

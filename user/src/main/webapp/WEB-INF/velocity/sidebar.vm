@@ -1,0 +1,55 @@
+<nav class="navbar-default navbar-static-side" role="navigation" >
+    <div class="nav-close"><i class="fa fa-times-circle"></i></div>
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li>
+                <div class="logo-element visible-xs">MENU</div>
+            </li>
+            <li><a href="/User_Index_index.html"> <i class="fa fa-home"></i> <span class="nav-label">管理中心</span> </a>
+            </li>
+            <li><a href="#"> <i class="fa fa-volume-up"></i> <span
+                    class="nav-label">公告</span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/User_Index_gonggao.html" class="J_menuItem"><strong>站内公告</strong></a></a> </li>
+                </ul>
+            </li>
+            <li><a href="#"> <i class="fa fa fa-user"></i> <span class="nav-label">账户管理</span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="#springUrl('/user/redirect/user_account_profile')" class="J_menuItem"><strong>基本信息</strong></a> </li>
+                    <li><a href="#springUrl('/common/user/user_account_bankcard')" class="J_menuItem"><strong>银行卡管理</strong></a> </li>
+                    <li><a href="/User_Account_authorized.html" class="J_menuItem"><strong>认证信息</strong></a> </li>
+                    <li><a href="/User_Account_editPassword.html" class="J_menuItem"><strong>登录密码</strong></a> </li>
+                    <li><a href="/User_Account_editPaypassword.html" class="J_menuItem"><strong>支付密码</strong></a> </li>
+                    <li><a href="/User_Account_loginrecord.html" class="J_menuItem"><strong>登录记录</strong></a> </li>
+
+                </ul>
+            </li>
+            <li><a href="#"> <i class="fa fa-money"></i> <span class="nav-label">财务管理</span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/User_Account_changeRecord.html" class="J_menuItem"><strong>资金变动记录</strong></a> </li>
+                </ul>
+            </li>
+            <li><a href="#"> <i class="fa fa fa-check"></i> <span class="nav-label">结算管理</span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/User_Withdrawal_clearing.html" class="J_menuItem"><strong>申请结算</strong></a>     </li>
+                    <li><a href="/User_Withdrawal_index.html" class="J_menuItem"><strong>结算记录</strong></a>     </li>
+                    <li><a href="/User_Withdrawal_payment.html" class="J_menuItem"><strong>委托结算记录</strong></a>     </li>
+                </ul>
+            </li>
+
+            <li><a href="#"> <i class="fa fa fa-sellsy"></i> <span class="nav-label">交易管理</span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/User_Order_index.html" class="J_menuItem"><strong>交易记录</strong></a>
+                    </li>
+
+                </ul>
+            </li>
+            <li><a href="#"> <i class="fa fa fa-bank"></i> <span class="nav-label">API管理</span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/User_Channel_index.html" class="J_menuItem"><strong>查看通道费率</strong></a>  </li>
+                    <li><a href="/User_Channel_apidocumnet.html" class="J_menuItem"><strong>API开发文档</strong></a>  </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

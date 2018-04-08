@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link rel="shortcut icon" href="#springUrl('/images/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/head.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/nav.css')" rel="stylesheet">
+    <meta name="__hash__" content="72892c9eab5e706138a6249ab76ceb82_52d8a72ed93f2d05cdc3f20bace6708c" /></head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div id="wrapper" style="background-color:transparent;overflow:visible">
+    <!-- 头部开始 -->
+    <div class="row head-bar" id="head-bar">
+        <div class="col-lg-8 col-md-5 col-sm-7 col-xs-4 head-left">
+            <img src="#springUrl('/images/logo1.png')"/>
+            <span class="hidden-xs">商户后台</span>
+        </div>
+        <div class="col-lg-4 col-md-7 col-sm-5 col-xs-8 head-right">
+            <div class="loginout">
+                <a href="#springUrl('/user/logout')">退出</a>
+            </div>
+            <div class="dropdown profile-element hidden-xs">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	    		<span class="clear">
+			        <span class="block m-t-xs">${name}<br></span>
+			        <span class="text-muted text-xs block"><span>认证用户</span><b class="caret"></b></span>
+	    		</span>
+                </a>
+                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                    <li><a class="J_menuItem" href="#springUrl('/common/user_account_editPassword')">修改密码</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#springUrl('/user/logout')">安全退出</a> </li>
+                </ul>
+            </div>
+            <div class="userimg hidden">
+			<span><img alt="image" class="img-circle" src="#springUrl('/Public/Front/img/avatar.jpg')"
+            ></span>
+            </div>
+            <div class="welcom hidden-xs">欢迎您</div>
+        </div>
+    </div>
+
+    <!-- 头部结束 -->
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation" >
+        <div class="nav-close"><i class="fa fa-times-circle"></i></div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li>
+                    <div class="logo-element visible-xs">MENU</div>
+                </li>
+                <li><a href="#springUrl('/common/user_account_info')"> <i class="fa fa-home"></i> <span class="nav-label">个人中心</span> </a>
+                </li>
+                <li><a href="#"> <i class="fa fa fa-user"></i> <span class="nav-label">账户管理</span> </a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/user_account_profile')" class="J_menuItem"><strong>基本信息</strong></a> </li>
+                        <li><a href="#springUrl('/common/user_account_bankcard')" class="J_menuItem"><strong>银行卡管理</strong></a> </li>
+                        <li><a href="#springUrl('/common/user_account_editPassword')" class="J_menuItem"><strong>登录密码</strong></a> </li>
+                        <li><a href="#springUrl('/common/user_cipher_code')" class="J_menuItem"><strong>密钥</strong></a> </li>
+                        <li><a href="#springUrl('/common/user_callback_url')" class="J_menuItem"><strong>回调地址</strong></a> </li>
+                    </ul>
+                </li>
+                <li><a href="#"> <i class="fa fa-money"></i> <span class="nav-label">财务管理</span> </a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/user_account_change_record')" class="J_menuItem"><strong>资金变动记录</strong></a> </li>
+                    </ul>
+                </li>
+                <li><a href="#"> <i class="fa fa fa-check"></i> <span class="nav-label">结算管理</span> </a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/user_withdraw')" class="J_menuItem"><strong>申请结算</strong></a>     </li>
+                        <li><a href="#springUrl('/common/user_withdraw_record')" class="J_menuItem"><strong>结算记录</strong></a>     </li>
+                    </ul>
+                </li>
+
+                <li><a href="#"> <i class="fa fa fa-sellsy"></i> <span class="nav-label">交易管理</span> </a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/user_order_record')" class="J_menuItem"><strong>交易记录</strong></a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li><a href="#"> <i class="fa fa fa-bank"></i> <span class="nav-label">API管理</span> </a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/user_channel_index')" class="J_menuItem"><strong>查看通道费率</strong></a>  </li>
+                    </ul>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/user_pay_demo')" class="J_menuItem"><strong>支付demo</strong></a>  </li>
+                    </ul>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/we_sm_pay')" class="J_menuItem"><strong>微信二维码</strong></a></li>
+                    </ul>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/wy_pay')" class="J_menuItem"><strong>网银支付</strong></a></li>
+                    </ul>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/h5_pay')" class="J_menuItem"><strong>H5支付</strong></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+
+    <div id="page-wrapper" class="gray-bg dashbard-1" style="padding-right:0px;">
+        <div class="row J_mainContent" id="content-main">
+            <div class="navbar-header hidden"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a></div>
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="#springUrl('/common/user_account_info')" frameborder="0"
+                    data-id="#springUrl('/common/user_account_info')" seamless></iframe>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+
+</div>
+<!-- 全局js -->
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/metisMenu/jquery.metisMenu.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/slimscroll/jquery.slimscroll.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layer/layer.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/hplus.js')"></script>
+<script type="text/javascript" src="#springUrl('/Public/Front/js/contabs.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/pace/pace.min.js')"></script>
+<script>
+//    function changeMain(url) {
+//        $('#mainframe').attr('src', url);
+//        jQuery('#mainframe').attr('src',url);
+//        alert(url);
+//        window.frames["mainframe"].src = url；
+//        var path = $('#mainframe').contentWindow.location.href;
+//        alert path;
+
+//    }
+</script>
+</body>
+</html>

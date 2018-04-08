@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.PayRefundOrderDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.PayRefundOrder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="refund" property="refund" jdbcType="INTEGER" />
+    <result column="ori_no" property="oriNo" jdbcType="VARCHAR" />
+    <result column="refund_no" property="refundNo" jdbcType="VARCHAR" />
+    <result column="out_notify_url" property="outNotifyUrl" jdbcType="VARCHAR" />
+    <result column="nonce_str" property="nonceStr" jdbcType="VARCHAR" />
+    <result column="sign_type" property="signType" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="refund_type" property="refundType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="errcode" property="errcode" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="actual_refund_fee" property="actualRefundFee" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, merchant_no, refund, ori_no, refund_no, out_notify_url, nonce_str, sign_type, 
+    sign, refund_type, `status`, version, create_time, update_time, errcode, message, 
+    `no`, actual_refund_fee
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from pay_refund_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pay_refund_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.PayRefundOrder" >
+    insert into pay_refund_order (id, merchant_no, refund, 
+      ori_no, refund_no, out_notify_url, 
+      nonce_str, sign_type, sign, 
+      refund_type, `status`, version, 
+      create_time, update_time, errcode, 
+      message, `no`, actual_refund_fee
+      )
+    values (#{id,jdbcType=BIGINT}, #{merchantNo,jdbcType=VARCHAR}, #{refund,jdbcType=INTEGER}, 
+      #{oriNo,jdbcType=VARCHAR}, #{refundNo,jdbcType=VARCHAR}, #{outNotifyUrl,jdbcType=VARCHAR}, 
+      #{nonceStr,jdbcType=VARCHAR}, #{signType,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, 
+      #{refundType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{errcode,jdbcType=INTEGER}, 
+      #{message,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, #{actualRefundFee,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.PayRefundOrder" >
+    insert into pay_refund_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="refund != null" >
+        refund,
+      </if>
+      <if test="oriNo != null" >
+        ori_no,
+      </if>
+      <if test="refundNo != null" >
+        refund_no,
+      </if>
+      <if test="outNotifyUrl != null" >
+        out_notify_url,
+      </if>
+      <if test="nonceStr != null" >
+        nonce_str,
+      </if>
+      <if test="signType != null" >
+        sign_type,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+      <if test="refundType != null" >
+        refund_type,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="errcode != null" >
+        errcode,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="no != null" >
+        `no`,
+      </if>
+      <if test="actualRefundFee != null" >
+        actual_refund_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refund != null" >
+        #{refund,jdbcType=INTEGER},
+      </if>
+      <if test="oriNo != null" >
+        #{oriNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundNo != null" >
+        #{refundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outNotifyUrl != null" >
+        #{outNotifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="nonceStr != null" >
+        #{nonceStr,jdbcType=VARCHAR},
+      </if>
+      <if test="signType != null" >
+        #{signType,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="refundType != null" >
+        #{refundType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="errcode != null" >
+        #{errcode,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="actualRefundFee != null" >
+        #{actualRefundFee,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.PayRefundOrder" >
+    update pay_refund_order
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refund != null" >
+        refund = #{refund,jdbcType=INTEGER},
+      </if>
+      <if test="oriNo != null" >
+        ori_no = #{oriNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundNo != null" >
+        refund_no = #{refundNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outNotifyUrl != null" >
+        out_notify_url = #{outNotifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="nonceStr != null" >
+        nonce_str = #{nonceStr,jdbcType=VARCHAR},
+      </if>
+      <if test="signType != null" >
+        sign_type = #{signType,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="refundType != null" >
+        refund_type = #{refundType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="errcode != null" >
+        errcode = #{errcode,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null" >
+        `no` = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="actualRefundFee != null" >
+        actual_refund_fee = #{actualRefundFee,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.PayRefundOrder" >
+    update pay_refund_order
+    set merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      refund = #{refund,jdbcType=INTEGER},
+      ori_no = #{oriNo,jdbcType=VARCHAR},
+      refund_no = #{refundNo,jdbcType=VARCHAR},
+      out_notify_url = #{outNotifyUrl,jdbcType=VARCHAR},
+      nonce_str = #{nonceStr,jdbcType=VARCHAR},
+      sign_type = #{signType,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      refund_type = #{refundType,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      errcode = #{errcode,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR},
+      `no` = #{no,jdbcType=VARCHAR},
+      actual_refund_fee = #{actualRefundFee,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByRefundNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from pay_refund_order
+    where refund_no = #{refundNo,jdbcType=VARCHAR} and refund_type = #{refundType,jdbcType=INTEGER}
+  </select>
+
+  <update id="updateStatus" >
+    update pay_refund_order
+    set status = #{toStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT} and status = #{fromStatus,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByNo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from pay_refund_order
+    where `no` = #{no,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

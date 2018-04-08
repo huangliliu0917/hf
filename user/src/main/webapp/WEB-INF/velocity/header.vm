@@ -1,0 +1,32 @@
+<div class="row head-bar" id="head-bar">
+    <div class="col-lg-8 col-md-5 col-sm-7 col-xs-4 head-left">
+        <img src="#springUrl('/images/logo.png')"/>
+        <span class="hidden-xs">商户后台</span>
+    </div>
+    <div class="col-lg-4 col-md-7 col-sm-5 col-xs-8 head-right">
+        <div class="loginout">
+            <a href="#springUrl('/user/logout')">退出</a>
+        </div>
+        <div class="dropdown profile-element hidden-xs">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	    		<span class="clear">
+			        <span class="block m-t-xs">
+			            demouu<br>(ID：10013)
+			        </span>
+			        <span class="text-muted text-xs block">
+			            			                <span>认证用户</span>			            <b class="caret"></b>
+			        </span>
+	    		</span>
+            </a>
+            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                <li><a class="J_menuItem" href="/User_Account_editPassword.html">修改密码</a> </li>
+                <li class="divider"></li>
+                <li><a href="#springUrl('/user/logout')">安全退出</a> </li>
+            </ul>
+        </div>
+        <div class="userimg hidden">
+			<span><img alt="image" class="img-circle" src="/Public/Front/img/avatar.jpg"
+            ></span>
+        </div>
+        <div class="welcom hidden-xs">欢迎您</div>
+</div>

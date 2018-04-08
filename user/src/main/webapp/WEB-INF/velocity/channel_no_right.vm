@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <link href="#springUrl('/Public/Front/css/fileinput.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/theme.css')" rel="stylesheet">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>$pageName</h5>
+                </div>
+                <div class="ibox-content">
+                    <p class="bg-success" style="padding:10px 0px 10px 30px">商户未开通:$channelName</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/fileinput.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/fileinput_locale_zh.js')"></script>
+<script src="#springUrl('/Public/Front/js/theme.js')"></script>
+<script>
+    layui.use([ 'layer','element'], function() {
+        var layer = layui.layer //弹层
+                ,element = layui.element; //元素操作
+    });
+    $("#input-ke-1").fileinput({
+        language: 'zh',
+        theme: "explorer",
+        uploadUrl: "/User_Account_upload.html",
+        allowedFileExtensions: ['jpg', 'png', 'gif'],
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        maxFileCount: 6,
+    }).on('filebatchuploadcomplete', function(event, data) {
+        layer.confirm('现在去申请认证吗？', function (index) {
+            window.location.href='/User_Account_certification.html';
+        });
+    });
+</script>
+</body>
+</html>

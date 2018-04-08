@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>支付demo</h5>
+                </div>
+                <!--条件查询-->
+                <div class="ibox-content">
+                    <blockquote class="layui-elem-quote">
+                        <p class="text-danger">统一收单接口：http://huifufu.cn/openapi/unifiedorder</p>
+                        <p class="text-danger"><a href="http://localhost:8085/user/doc/PhpPayDemo.php">php demo下载</a></p>
+                        <p class="text-danger"><a href="http://localhost:8085/user/doc/java demo.zip">java demo下载</a></p>
+                    </blockquote>
+                    <table class="layui-table" lay-skin="row">
+                        <thead>
+                        <tr>
+                            <th>参数名</th>
+                            <th>参数</th>
+                            <th>参数值示例</th>
+                            <th>类型</th>
+                            <th>是否必填</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>服务类型</td>
+                                <td>service</td>
+                                <td>10</td>
+                                <td>int</td>
+                                <td>是</td>
+                                <td>01微信公众号，02微信主 扫，03微信反扫，04微信H5  付，05微信APP 付，06支 付宝服务窗体，07支付宝主 扫，08支付宝反扫,09 网银,10 H5</td>
+                            </tr>
+                            <tr>
+                                <td>接口版本</td>
+                                <td>version</td>
+                                <td>1.0</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>商户编号</td>
+                                <td>merchant_no</td>
+                                <td>${merchantNo}</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td>慧富商户编号</td>
+                            </tr>
+                            <tr>
+                                <td>支付金额</td>
+                                <td>total</td>
+                                <td>100</td>
+                                <td>int</td>
+                                <td>是</td>
+                                <td>不能包含小数点，如100.0</td>
+                            </tr>
+                            <tr>
+                                <td>订单名称</td>
+                                <td>name</td>
+                                <td>测试支付</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>订单号</td>
+                                <td>out_trade_no</td>
+                                <td>32452356323</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td>系统唯一</td>
+                            </tr>
+                            <tr>
+                                <td>ip</td>
+                                <td>create_ip</td>
+                                <td>127.0.0.1</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>微信openid</td>
+                                <td>sub_openid</td>
+                                <td>12342145</td>
+                                <td>String</td>
+                                <td>否</td>
+                                <td>微信用户关注商家公众号的 openid，01微信公众号时必填</td>
+                            </tr>
+                            <tr>
+                                <td>支付宝买家ID</td>
+                                <td>buyer_id</td>
+                                <td>1324534125</td>
+                                <td>String</td>
+                                <td>否</td>
+                                <td>支付宝服务窗体的买家id,06支付宝服务窗体时必填</td>
+                            </tr>
+                            <tr>
+                                <td>支付授权码</td>
+                                <td>authcode</td>
+                                <td>120061098828009406</td>
+                                <td>String</td>
+                                <td>否</td>
+                                <td>支付授权码,设备读取用户微信或支付宝中的条码或者二维码信息</td>
+                            </tr>
+                            <tr>
+                                <td>银行编码</td>
+                                <td>bank_code</td>
+                                <td>ICBC</td>
+                                <td>Strign</td>
+                                <td>否</td>
+                                <td>银行编码,具体编码定义见附件,网银支付选填</td>
+                            </tr>
+                            <tr>
+                                <td>随机字符串</td>
+                                <td>nonce_str</td>
+                                <td>ASDFGSAFAG1234</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td>随机字符串,不长于32位</td>
+                            </tr>
+                            <tr>
+                                <td>签名类型</td>
+                                <td>sign_type</td>
+                                <td>MD5</td>
+                                <td>是</td>
+                                <td>String</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>签名</td>
+                                <td>sign</td>
+                                <td>1243ERFGAF423y4rf</td>
+                                <td>是</td>
+                                <td>String</td>
+                                <td>MD5签名,sign =md5(string1&key=${cipherCode}).toUpperCase</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+</body>
+</html>

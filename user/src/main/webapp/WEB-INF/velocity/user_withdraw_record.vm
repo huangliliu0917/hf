@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <!--条件查询-->
+                <div class="ibox-title">
+                    <h5>提款管理</h5>
+                    <div class="ibox-tools">
+                        <i class="layui-icon" onclick="location.replace(location.href);" title="刷新"
+                           style="cursor:pointer;">ဂ</i>
+                    </div>
+                </div>
+                <!--条件查询-->
+                <div class="ibox-content">
+                    <form class="layui-form" action="#springUrl('/user/getWithDrawList')" method="post" autocomplete="off" id="withdrawalform">
+                        <input type="hidden" name="m" value="User">
+                        <input type="hidden" name="c" value="Withdrawal">
+                        <input type="hidden" name="a" value="index">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" name="createtime" id="createtime"
+                                           placeholder="申请起始时间" value="">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" name="successtime" id="successtime"
+                                           placeholder="打款起始时间" value="">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">全部状态</option>
+                                        <option value="0" #if(${requestInfo.status}==0) selected #end>未处理</option>
+                                        <option value="1" #if(${requestInfo.status}==1) selected #end>处理中</option>
+                                        <option value="10" #if(${requestInfo.status}==10) selected #end>已打款</option>
+                                        <option value="99" #if(${requestInfo.status}==99) selected #end>处理失败</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn"><span
+                                        class="glyphicon glyphicon-search"></span> 搜索
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="__hash__" value="f015dba1e9d78e2972e09381583a07fa_7bfa132276e1f1ba70f296e92872e711" /></form>
+
+                    <!--交易列表-->
+                    <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'key',width:100}"></th>
+                            <th lay-data="{field:'userid', width:120,style:'color:#060;'}">商户编号</th>
+                            <th lay-data="{field:'tkmoney', width:110}">结算金额</th>
+                            <th lay-data="{field:'sxfmoney', width:100,style:'color:#060;'}">手续费</th>
+                            <th lay-data="{field:'money', width:110}">到账金额</th>
+                            <th lay-data="{field:'bankname', width:120,style:'color:#C00;'}">银行名称</th>
+                            <th lay-data="{field:'bankzhiname', width:160}">支行名称</th>
+                            <th lay-data="{field:'banknumber', width:198}">银行卡号/开户名</th>
+                            <th lay-data="{field:'sheng', width:100}">所属省</th>
+                            <th lay-data="{field:'shi', width:120}">所属市</th>
+                            <th lay-data="{field:'sqdatetime', width:170}">申请时间</th>
+                            <th lay-data="{field:'cldatetime', width:170}">处理时间</th>
+                            <th lay-data="{field:'status', width:100}">状态</th>
+                            <th lay-data="{field:'remark', width:100}">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($opr in ${pageInfo.data})
+                            <tr>
+                                <td>${opr.id}</td>
+                                <td>${opr.groupNo}</td>
+                                <td>${opr.settleAmount}</td>
+                                <td>${opr.fee}</td>
+                                <td>${opr.payAmount}</td>
+                                <td>${opr.withdrawBank.bank}</td>
+                                <td>${opr.withdrawBank.deposit}</td>
+                                <td>${opr.withdrawBank.bankNo}</td>
+                                <td>${opr.withdrawBank.province}</td>
+                                <td>${opr.withdrawBank.city}</td>
+                                <td>$!date.format('yyyy-MM-dd HH:mm:ss ',${opr.createTime})</td>
+                                #if(${opr.status}==0)
+                                    <td></td>
+                                #else
+                                    <td>$!date.format('yyyy-MM-dd HH:mm:ss ',${opr.updateTime})</td>
+                                #end
+                                <td>${opr.statusDesc}</td>
+                                <td>${opr.remark}</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    <div class="pagex">
+                        <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">
+                            #if(${pageInfo.showPage.showHead})
+                                <a class="num" href='#springUrl("/common/user_withdraw_record?currentPage=1&status=#if($requestInfo.status)$requestInfo.status#end")'>首页</a>
+                            #end
+                            #foreach($page in ${pageInfo.showPage.pages})
+                                #if($page.selected)
+                                    <span class="layui-laypage-curr current"><em class="layui-laypage-em"></em><em>$page.label</em></span>
+                                #else
+                                    <a class="num" href='#springUrl("/common/user_withdraw_record?currentPage=$page.pageIndex&status=#if(${requestInfo.status})${requestInfo.status}#end")'>$page.label</a>
+                                #end
+                            #end
+                            #if($pageInfo.hasNext)
+                                <a class="next layui-laypage-next" href='#springUrl("/common/user_withdraw_record?currentPage=${pageInfo.nextPage}&status=#if(${requestInfo.status})${requestInfo.status}#end")'>下一页</a>
+                            #end
+                            #if($pageInfo.showPage.showTail)
+                                <a class="next layui-laypage-next" href='#springUrl("/common/user_withdraw_record?currentPage=${pageInfo.tailPage.pageIndex}&status=#if(${requestInfo.status})${requestInfo.status}#end")'>${pageInfo.tailPage.label}</a>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'form'], function() {
+        var laydate = layui.laydate //日期
+                , laypage = layui.laypage //分页
+                ,layer = layui.layer //弹层
+                ,form = layui.form //表单
+                , table = layui.table; //表格
+        //日期时间范围
+        laydate.render({
+            elem: '#createtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+        //日期时间范围
+        laydate.render({
+            elem: '#successtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+    });
+</script>
+</body>
+</html>

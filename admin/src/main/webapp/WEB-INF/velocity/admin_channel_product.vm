@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all">
+</head>
+<body class="gray-bg">
+<div class="bread"><span class="bread-title">您的当前位置 : </span>通道管理 &gt;&gt; 支付产品管理</div>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<title>慧富宝支付系统</title>
+<link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+<link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+<link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')" media="all">
+<style>
+.layui-form-switch {width:54px;}
+</style>
+
+    <div class="wrapper wrapper-content animated">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>支付产品管理</h5>
+						<div class="row">
+							<div class="col-sm-2 pull-right">
+								<a href="javascript:;" id="addProduct" class="layui-btn layui-btn-warm">添加支付产品</a>
+							</div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+
+                                        <th>编号</th>
+                                        <th>通道名称</th>
+										<th>通道代码</th>
+                                        <th>支付类型</th>
+										<th>接口模式</th>
+										<th>状态</th>
+										<th>用户端</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+								<tr>
+                                        <td>901</td>
+                                        <td>微信公众号</td>
+                                        <td>WXJSAPI</td>
+										<td>支付宝H5</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="status" value="1" data-id="901" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="901" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_901.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'901')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>902</td>
+                                        <td>微信扫码支付</td>
+                                        <td>WXSCAN</td>
+										<td>微信扫码</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="status" value="1" data-id="902" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="902" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_902.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'902')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>903</td>
+                                        <td>支付宝扫码支付</td>
+                                        <td>ALISCAN</td>
+										<td>支付宝扫码</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="903" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="903" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_903.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'903')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>904</td>
+                                        <td>支付宝手机</td>
+                                        <td>ALIWAP</td>
+										<td>支付宝H5</td>
+                                        <td>轮询</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="904" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="904" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_904.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'904')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>905</td>
+                                        <td>QQ手机支付</td>
+                                        <td>QQWAP</td>
+										<td>微信H5</td>
+                                        <td>轮询</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="905" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="905" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_905.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'905')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>907</td>
+                                        <td>网银支付</td>
+                                        <td>DBANK</td>
+										<td>网银跳转</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="status" value="1" data-id="907" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="907" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_907.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'907')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>908</td>
+                                        <td>QQ扫码支付</td>
+                                        <td>QSCAN</td>
+										<td>QQ钱包扫码</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="908" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="908" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_908.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'908')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>909</td>
+                                        <td>百度钱包</td>
+                                        <td>BAIDU</td>
+										<td>百度钱包</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="909" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="909" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_909.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'909')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>910</td>
+                                        <td>京东支付</td>
+                                        <td>JDPAY</td>
+										<td>京东钱包</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="910" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="isopen" value="1" data-id="910" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_910.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'910')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>911</td>
+                                        <td>牛支付微信扫码</td>
+                                        <td>wxcode</td>
+										<td>牛支付</td>
+                                        <td>轮询</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="status" value="1" data-id="911" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="911" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_911.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'911')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>912</td>
+                                        <td>牛支付支付宝扫码</td>
+                                        <td>alipay</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="status" value="1" data-id="912" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="912" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_912.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'912')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>913</td>
+                                        <td>工商银行</td>
+                                        <td>ICBC</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="913" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="913" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_913.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'913')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>914</td>
+                                        <td>招商银行</td>
+                                        <td>CMBCHINA</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="914" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="914" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_914.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'914')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>915</td>
+                                        <td>农业银行</td>
+                                        <td>ABC</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="915" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="915" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_915.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'915')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>916</td>
+                                        <td>建设银行</td>
+                                        <td>CCB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="916" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="916" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_916.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'916')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>917</td>
+                                        <td>交通银行</td>
+                                        <td>BOCO</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="917" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="917" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_917.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'917')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>918</td>
+                                        <td>兴业银行</td>
+                                        <td>CIB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="918" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="918" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_918.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'918')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>919</td>
+                                        <td>民生银行</td>
+                                        <td>CMBC</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="919" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="919" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_919.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'919')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>920</td>
+                                        <td>光大银行</td>
+                                        <td>CEB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="920" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="920" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_920.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'920')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>921</td>
+                                        <td>中国银行</td>
+                                        <td>BOC</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="921" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="921" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_921.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'921')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>922</td>
+                                        <td>中信银行</td>
+                                        <td>ECITIC</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="922" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="922" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_922.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'922')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>923</td>
+                                        <td>深圳发展银行</td>
+                                        <td>SDB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="923" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="923" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_923.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'923')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>924</td>
+                                        <td>广发银行</td>
+                                        <td>GDB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="924" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="924" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_924.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'924')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>925</td>
+                                        <td>上海浦东发展银行</td>
+                                        <td>SPDB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="925" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="925" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_925.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'925')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>926</td>
+                                        <td>中国邮政</td>
+                                        <td>POST</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="926" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="926" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_926.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'926')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>927</td>
+                                        <td>平安银行</td>
+                                        <td>PINGANBANK</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="927" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="927" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_927.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'927')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>928</td>
+                                        <td>华夏银行</td>
+                                        <td>HXB</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="928" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="928" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_928.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'928')">删除</button>
+											</div>
+                                        </td>
+                                    </tr><tr>
+                                        <td>930</td>
+                                        <td>QQ钱包</td>
+                                        <td>tenpay</td>
+										<td>牛支付</td>
+                                        <td>单独</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" name="status" value="1" data-id="930" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>关闭</em><i></i></div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-form">
+											<input type="checkbox" checked="" name="isopen" value="1" data-id="930" lay-skin="switch" lay-filter="switchDisplay" lay-text="开启|关闭"><div class="layui-unselect layui-form-switch layui-form-onswitch" lay-skin="_switch"><em>开启</em><i></i></div>
+											</div>
+										</td>
+                                        <td>
+											<div class="layui-btn-group">
+											  <button class="layui-btn layui-btn-small" onclick="admin_edit('编辑通道接口','/Admin_Channel_editProduct_pid_930.html')">编辑</button>
+											  <button class="layui-btn layui-btn-small" onclick="admin_del(this,'930')">删除</button>
+											</div>
+                                        </td>
+                                    </tr>    
+                                </tbody>
+                            </table>
+                        </div>
+						<div class="page"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="/Public/Front/js/jquery.min.js"></script>
+    <script src="/Public/Front/js/bootstrap.min.js"></script>
+    <script src="/Public/Front/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="/Public/Front/js/content.js"></script>
+	<script src="/Public/Front/js/plugins/layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use(['layer', 'form'], function(){
+  var form = layui.form
+  ,layer = layui.layer;
+  
+  //监听接口状态
+  form.on('switch(switchStatus)', function(data){
+	var pid = $(this).attr('data-id'),
+	isopen = this.checked ? 1 : 0;
+	jQuery.ajax({
+		url:"/Admin_Channel_prodStatus.html",
+		type:'post',
+		data:"id="+pid+"&v="+isopen+"&k=status",
+		success:function(res){
+			if(res.status){
+				layer.tips('温馨提示：通道开启', data.othis);
+			}else{
+				layer.tips('温馨提示：通道关闭', data.othis);
+			}
+		}
+	});
+  });
+  
+  //监听用户显示
+  form.on('switch(switchDisplay)', function(data){
+	var pid = $(this).attr('data-id'),
+	isopen = this.checked ? 1 : 0;
+	jQuery.ajax({
+		url:"/Admin_Channel_prodDisplay.html",
+		type:'post',
+		data:"id="+pid+"&v="+isopen+"&k=isdisplay",
+		success:function(res){
+			if(res.status){
+				layer.tips('温馨提示：用户端显示', data.othis);
+			}else{
+				layer.tips('温馨提示：用户端关闭', data.othis);
+			}
+		}
+	});
+  });
+  
+  //监听提交
+  $('#addProduct').on('click',function(){
+	var w=800,h;
+	if (h == null || h == '') {
+		h=($(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		fix: false, //不固定
+		maxmin: true,
+		shadeClose: true,
+		area: [w+'px', h +'px'],
+		shade:0.4,
+		title: "添加支付通道",
+		content: "/Admin_Channel_addProduct.html"
+	});
+  });
+});
+ //编辑
+ function admin_edit(title,url){
+	var w=600,h;
+	if (h == null || h == '') {
+		h=($(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		fix: false, //不固定
+		maxmin: true,
+		shadeClose: true,
+		area: [w+'px', h +'px'],
+		shade:0.4,
+		title: title,
+		content: url
+	});
+ }
+ /*删除*/
+function admin_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		jQuery.ajax({
+			url:"/Admin_Channel_delProduct.html",
+			type:'post',
+			data:'pid='+id,
+			success:function(res){
+				if(res.status){
+				$(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});
+				}
+			}
+		});
+	});
+}
+/*费率*/
+function admin_editRate(title,url){
+	var w=510,h;
+	if (h == null || h == '') {
+		h=($(window).height() - 50);
+	};
+	layer.open({
+		type: 2,
+		fix: false, //不固定
+		maxmin: true,
+		shadeClose: true,
+		area: [w+'px', h +'px'],
+		shade:0.4,
+		title: title,
+		content: url
+	});
+  }
+</script>
+
+</body></html>

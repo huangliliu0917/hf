@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>编辑个人资料</h5>
+                    <div class="ibox-content">
+                        <p class="text-danger">谨慎修改用户信息，胡乱填写一律禁封账号处理</p>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <!--用户信息-->
+                    <form class="layui-form" action="#springUrl('/user/edit_user_info')" autocomplete="off" id="profile" method="POST">
+                        <input type="hidden" name="id" value="13">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">姓名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="name" name="name" lay-verify="title" autocomplete="off"
+                                       placeholder="姓名" class="layui-input" value=#if(${userInfo.name}) ${userInfo.name} #else "" #end>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份证号码：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="idCard" name="idCard" lay-verify="identity" placeholder="身份证号码" autocomplete="off" class="layui-input" value= #if(${userInfo.idCard}) ${userInfo.idCard} #else "" #end >
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">手机：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="tel" name="tel" lay-verify="phone" autocomplete="off"
+                                           class="layui-input" value= #if(${userInfo.tel}) ${userInfo.tel} #else "" #end>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">QQ：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="qq" name="qq" lay-verify="" autocomplete="off"
+                                           class="layui-input" value= #if(${userInfo.qq}) ${userInfo.qq} #else "" #end>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">联系地址：</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="address" name="address" lay-verify="title" autocomplete="off"
+                                       placeholder="联系地址" class="layui-input" value= #if(${userInfo.address}) ${userInfo.address} #else "" #end>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                #if(${userInfo.status}==10)
+                                    <button class="layui-btn" lay-submit="" lay-filter="profile" type="submit">保存</button>
+                                #else
+                                    <button class="layui-btn" lay-submit="" lay-filter="profile" type="submit">下一步</button>
+                                #end
+
+                                <button type="reset" class="reset-btn layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="__hash__" value="b51c254fb856abf85f67a3ebaaeae11f_febd51c317b82e012155d1eabc0d7815" /></form>
+                    <!--用户信息-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'form', 'element'], function() {
+        var laydate = layui.laydate //日期
+                ,layer = layui.layer //弹层
+                ,form = layui.form //弹层
+                , element = layui.element; //元素操作
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+    });
+</script>
+</body>
+</html>

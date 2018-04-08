@@ -1,0 +1,153 @@
+<html><head><link id="layuicss-laydate" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/laydate/default/laydate.css?v=5.0.2')" media="all"><link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all"><link id="layuicss-skincodecss" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/code.css')" media="all"></head><body class="gray-bg"><div class="bread"><span class="bread-title">您的当前位置 : </span>账户管理 &gt;&gt; 账户列表</div>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit">
+<title>慧富宝支付系统---管理</title>
+<link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+<link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+<link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+<link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+<style>
+    .layui-form-label {width:110px;padding:4px}
+    .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+    .layui-form-switch {width:54px;margin-top:0px;}
+</style>
+
+
+<div class="wrapper wrapper-content animated">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <!--条件查询-->
+                <div class="ibox-title">
+                    <h5>账户管理</h5>
+                    <div class="ibox-tools">
+                        <i class="layui-icon" onclick="location.replace(location.href);" title="刷新" style="cursor:pointer;">ဂ</i>
+                    </div>
+                </div>
+                <!--条件查询-->
+                <div class="ibox-content">
+                    <form class="layui-form" action="#springUrl('/user/getAdminAccountList')" method="post" autocomplete="off" id="orderform">
+                        <input type="hidden" name="m" value="Admin">
+                        <input type="hidden" name="c" value="Order">
+                        <input type="hidden" name="a" value="index" id="action">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="mchId" autocomplete="off" placeholder="请输入商户号" class="layui-input" #if(${requestInfo.mchId}) value="${requestInfo.mchId}" #else value="" #end>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="name" autocomplete="off" placeholder="请输入商户名" class="layui-input" #if(${requestInfo.name}) value="${requestInfo.name}" #else value="" #end>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn"><span class="glyphicon glyphicon-search"></span> 搜索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--交易列表-->
+                <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
+                    <thead>
+                    <tr>
+                        <th lay-data="{field:'key',width:60}"></th>
+                        <th lay-data="{field:'mchId', width:90}">编号</th>
+                        <th lay-data="{field:'name', width:240,style:'color:#060;'}">账户名</th>
+                        <th lay-data="{field:'amount', width:90}">账户余额</th>
+                        <th lay-data="{field:'amount', width:90}">平台余额</th>
+                        <th lay-data="{field:'amount', width:90}">商户金额</th>
+                        <th lay-data="{field:'lockAmount', width:120}">提现申请金额</th>
+                        <th lay-data="{field:'processingAmount', width:100,style:'color:#060;'}">未入金额</th>
+                        <th lay-data="{field:'amount', width:90}">累计收入</th>
+                        <th lay-data="{field:'paidAmount', width:100,style:'color:#C00;'}">结算金额</th>
+                        <th lay-data="{field:'createTime', width:200}">创建时间</th>
+                        <th lay-data="{field:'updateTime', width:200}">最后更新时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($acc in ${pageInfo.data})
+                        <tr>
+                            <td>${acc.id}</td>
+                            <td>${acc.mchId}</td>
+                            <td>${acc.name}</td>
+                            <td style="text-align:center; color:#060">#if(${acc.amount})${acc.amount} #else 0.00 #end</td>
+                            <td style="text-align:center; color:#060">#if(${acc.companyAmount})${acc.companyAmount} #else 0.00 #end</td>
+                            <td style="text-align:center; color:#060">#if(${acc.customerAmount})${acc.customerAmount} #else 0.00 #end</td>
+                            <td style="text-align:center; color:#060">${acc.withdrawAmount}</td>
+                            <td style="text-align:center; color:#060">${acc.processingAmount}</td>
+                            <td style="text-align:center; color:#060">#if(${acc.totalAmount})${acc.totalAmount} #else 0.00 #end</td>
+                            <td style="text-align:center; color:#060">${acc.paidAmount}</td>
+                            <td style="text-align:center;">$!date.format('yyyy-MM-dd HH:mm:ss ',${acc.createTime})</td>
+                            <td style="text-align:center;">$!date.format('yyyy-MM-dd HH:mm:ss ',${acc.updateTime})</td>
+                            <td style="text-align:center; color:#369"><span style="color:#f00">#if(${acc.status}==0) 可用 #else 不可用 #end </span></td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+                <div class="pagex">
+                    <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">
+                        #if(${pageInfo.totalPage} == 1)
+                            <span class="layui-laypage-curr current"><em class="layui-laypage-em"></em><em>${pageInfo.totalPage}</em></span>
+                        #else
+                            #foreach($index in [1..${pageInfo.totalPage}])
+                                #if($index == ${pageInfo.currentPage})
+                                    <span class="layui-laypage-curr current"><em class="layui-laypage-em"></em><em>$index</em></span>
+                                #else
+                                    <a class="num" href='#springUrl("/common/admin_account_index?currentPage=$index")'>$index</a>
+                                #end
+                            #end
+                            <a class="next layui-laypage-next" href='#springUrl("/common/admin_account_index?currentPage=${pageInfo.nextPage}")'>下一页</a>
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.all.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'form'], function() {
+        var laydate = layui.laydate //日期
+                , laypage = layui.laypage //分页
+                ,layer = layui.layer //弹层
+                ,form = layui.form //表单
+                , table = layui.table; //表格
+        //日期时间范围
+        laydate.render({
+            elem: '#createtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+        //日期时间范围
+        laydate.render({
+            elem: '#successtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+    });
+    /*订单-查看*/
+    function order_view(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    $('#export').on('click',function(){
+        window.location.href
+                ="/Admin_Order_exportorder.html";
+    });
+</script>
+
+</body></html>

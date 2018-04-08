@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html><head><link id="layuicss-laydate" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/laydate/default/laydate.css?v=5.0.2')" media="all"><link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all"><link id="layuicss-skincodecss" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/code.css')" media="all"></head><body class="gray-bg"><div class="bread"><span class="bread-title">您的当前位置 : </span>提款管理 &gt;&gt; 代付管理</div>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---管理</title>
+    <link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+
+
+<div class="wrapper wrapper-content animated">
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="ibox float-e-margins">
+            <!--条件查询-->
+            <div class="ibox-title">
+                <h5>代付管理</h5>
+                <div class="ibox-tools">
+                    <i class="layui-icon" onclick="location.replace(location.href);" title="刷新" style="cursor:pointer;">ဂ</i>
+                </div>
+            </div>
+            <!--条件查询-->
+            <div class="ibox-content">
+                <form class="layui-form" action="" method="get" autocomplete="off" id="withdrawalform">
+                    <input type="hidden" name="m" value="Admin">
+                    <input type="hidden" name="c" value="Withdrawal">
+                    <input type="hidden" name="a" value="payment">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="memberid" autocomplete="off" placeholder="请输入商户号" class="layui-input" value="">
+                            </div>
+
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" name="createtime" id="createtime" placeholder="申请起始时间" value="" lay-key="1">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" name="successtime" id="successtime" placeholder="打款起始时间" value="" lay-key="2">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <select name="tongdao">
+                                    <option value="">全部通道</option>
+                                    <option value="WXJSAPI">微信公众号</option><option value="WXSCAN">微信扫码支付</option><option value="ALISCAN">支付宝扫码支付</option><option value="ALIWAP">支付宝手机</option><option value="QQWAP">QQ手机支付</option><option value="DBANK">网银支付</option><option value="QSCAN">QQ扫码支付</option><option value="BAIDU">百度钱包</option><option value="JDPAY">京东支付</option><option value="wxcode">牛支付微信扫码</option><option value="alipay">牛支付支付宝扫码</option><option value="ICBC">工商银行</option><option value="CMBCHINA">招商银行</option><option value="ABC">农业银行</option><option value="CCB">建设银行</option><option value="BOCO">交通银行</option><option value="CIB">兴业银行</option><option value="CMBC">民生银行</option><option value="CEB">光大银行</option><option value="BOC">中国银行</option><option value="ECITIC">中信银行</option><option value="SDB">深圳发展银行</option><option value="GDB">广发银行</option><option value="SPDB">上海浦东发展银行</option><option value="POST">中国邮政</option><option value="PINGANBANK">平安银行</option><option value="HXB">华夏银行</option><option value="tenpay">QQ钱包</option>                                </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="全部通道" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="" class="layui-select-tips">全部通道</dd><dd lay-value="WXJSAPI" class="">微信公众号</dd><dd lay-value="WXSCAN" class="">微信扫码支付</dd><dd lay-value="ALISCAN" class="">支付宝扫码支付</dd><dd lay-value="ALIWAP" class="">支付宝手机</dd><dd lay-value="QQWAP" class="">QQ手机支付</dd><dd lay-value="DBANK" class="">网银支付</dd><dd lay-value="QSCAN" class="">QQ扫码支付</dd><dd lay-value="BAIDU" class="">百度钱包</dd><dd lay-value="JDPAY" class="">京东支付</dd><dd lay-value="wxcode" class="">牛支付微信扫码</dd><dd lay-value="alipay" class="">牛支付支付宝扫码</dd><dd lay-value="ICBC" class="">工商银行</dd><dd lay-value="CMBCHINA" class="">招商银行</dd><dd lay-value="ABC" class="">农业银行</dd><dd lay-value="CCB" class="">建设银行</dd><dd lay-value="BOCO" class="">交通银行</dd><dd lay-value="CIB" class="">兴业银行</dd><dd lay-value="CMBC" class="">民生银行</dd><dd lay-value="CEB" class="">光大银行</dd><dd lay-value="BOC" class="">中国银行</dd><dd lay-value="ECITIC" class="">中信银行</dd><dd lay-value="SDB" class="">深圳发展银行</dd><dd lay-value="GDB" class="">广发银行</dd><dd lay-value="SPDB" class="">上海浦东发展银行</dd><dd lay-value="POST" class="">中国邮政</dd><dd lay-value="PINGANBANK" class="">平安银行</dd><dd lay-value="HXB" class="">华夏银行</dd><dd lay-value="tenpay" class="">QQ钱包</dd></dl></div>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="status">
+                                    <option value="">全部状态</option>
+                                    <option value="0">未处理</option>
+                                    <option value="1">处理中</option>
+                                    <option value="2">已打款</option>
+                                </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="全部状态" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="" class="layui-select-tips">全部状态</dd><dd lay-value="0" class="">未处理</dd><dd lay-value="1" class="">处理中</dd><dd lay-value="2" class="">已打款</dd></dl></div>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="T">
+                                    <option value="">全部类型</option>
+                                    <option value="0">T + 0</option>
+                                    <option value="1">T + 1</option>
+                                </select><div class="layui-unselect layui-form-select"><div class="layui-select-title"><input type="text" placeholder="全部类型" value="" readonly="" class="layui-input layui-unselect"><i class="layui-edge"></i></div><dl class="layui-anim layui-anim-upbit"><dd lay-value="" class="layui-select-tips">全部类型</dd><dd lay-value="0" class="">T + 0</dd><dd lay-value="1" class="">T + 1</dd></dl></div>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn"><span class="glyphicon glyphicon-search"></span> 搜索
+                            </button>
+                            <a href="javascript:;" id="export" class="layui-btn layui-btn-danger"><span class="glyphicon glyphicon-export"></span> 导出数据</a>
+                        </div>
+                
+
+                <!--交易列表-->
+                <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
+                    <thead>
+                    <tr>
+                        <th lay-data="{field:'key'}"></th>
+                        <th lay-data="{field:'t', width:60}">类型</th>
+                        <th lay-data="{field:'userid', width:100,style:'color:#060;'}">商户编号</th>
+                        <th lay-data="{field:'tkmoney', width:110}">结算金额</th>
+                        <th lay-data="{field:'sxfmoney', width:100,style:'color:#060;'}">手续费</th>
+                        <th lay-data="{field:'money', width:110}">到账金额</th>
+                        <th lay-data="{field:'bankname', width:120,style:'color:#C00;'}">银行名称</th>
+                        <th lay-data="{field:'bankzhiname', width:160}">支行名称</th>
+                        <th lay-data="{field:'banknumber', width:200}">银行卡号/开户名</th>
+                        <th lay-data="{field:'sheng', width:120}">所属省</th>
+                        <th lay-data="{field:'shi', width:120}">所属市</th>
+                        <th lay-data="{field:'payapiid', width:110}">通道</th>
+                        <th lay-data="{field:'sqdatetime', width:170}">申请时间</th>
+                        <th lay-data="{field:'cldatetime', width:170}">处理时间</th>
+                        <th lay-data="{field:'status', width:100}">状态</th>
+                        <th lay-data="{field:'op',width:80}">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                        </tbody>
+                </table><div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" style="width:100%px; "><div class="layui-table-header"><table cellspacing="0" cellpadding="0" border="0" class="layui-table"><thead><tr><th data-field="key"><div class="layui-table-cell laytable-cell-1-key"><span></span></div></th><th data-field="t"><div class="layui-table-cell laytable-cell-1-t"><span>类型</span></div></th><th data-field="userid"><div class="layui-table-cell laytable-cell-1-userid"><span>商户编号</span></div></th><th data-field="tkmoney"><div class="layui-table-cell laytable-cell-1-tkmoney"><span>结算金额</span></div></th><th data-field="sxfmoney"><div class="layui-table-cell laytable-cell-1-sxfmoney"><span>手续费</span></div></th><th data-field="money"><div class="layui-table-cell laytable-cell-1-money"><span>到账金额</span></div></th><th data-field="bankname"><div class="layui-table-cell laytable-cell-1-bankname"><span>银行名称</span></div></th><th data-field="bankzhiname"><div class="layui-table-cell laytable-cell-1-bankzhiname"><span>支行名称</span></div></th><th data-field="banknumber"><div class="layui-table-cell laytable-cell-1-banknumber"><span>银行卡号/开户名</span></div></th><th data-field="sheng"><div class="layui-table-cell laytable-cell-1-sheng"><span>所属省</span></div></th><th data-field="shi"><div class="layui-table-cell laytable-cell-1-shi"><span>所属市</span></div></th><th data-field="payapiid"><div class="layui-table-cell laytable-cell-1-payapiid"><span>通道</span></div></th><th data-field="sqdatetime"><div class="layui-table-cell laytable-cell-1-sqdatetime"><span>申请时间</span></div></th><th data-field="cldatetime"><div class="layui-table-cell laytable-cell-1-cldatetime"><span>处理时间</span></div></th><th data-field="status"><div class="layui-table-cell laytable-cell-1-status"><span>状态</span></div></th><th data-field="op"><div class="layui-table-cell laytable-cell-1-op"><span>操作</span></div></th></tr></thead></table></div><div class="layui-table-body layui-table-main"><div class="layui-none">无数据</div></div><style>.laytable-cell-1-key{ width:50px }.laytable-cell-1-t{ width:60px }.laytable-cell-1-userid{ width:100px }.laytable-cell-1-tkmoney{ width:110px }.laytable-cell-1-sxfmoney{ width:100px }.laytable-cell-1-money{ width:110px }.laytable-cell-1-bankname{ width:120px }.laytable-cell-1-bankzhiname{ width:160px }.laytable-cell-1-banknumber{ width:200px }.laytable-cell-1-sheng{ width:120px }.laytable-cell-1-shi{ width:120px }.laytable-cell-1-payapiid{ width:110px }.laytable-cell-1-sqdatetime{ width:170px }.laytable-cell-1-cldatetime{ width:170px }.laytable-cell-1-status{ width:100px }.laytable-cell-1-op{ width:80px }</style></div>
+                <!--交易列表-->
+                <div class="pagex"> </div>
+            </div></form>
+        </div>
+    </div>
+</div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.all.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'form'], function() {
+        var laydate = layui.laydate //日期
+            , laypage = layui.laypage //分页
+            ,layer = layui.layer //弹层
+            ,form = layui.form //表单
+            , table = layui.table; //表格
+        //日期时间范围
+        laydate.render({
+            elem: '#createtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+        //日期时间范围
+        laydate.render({
+            elem: '#successtime'
+            , type: 'datetime'
+            ,theme: 'molv'
+            , range: '|'
+        });
+    });
+    /*订单-查看*/
+    function set_wtop(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+    $('#export').on('click',function(){
+        window.location.href
+            ="/Admin_Withdrawal_exportweituo.html";
+    });
+</script>
+
+</div></body></html>

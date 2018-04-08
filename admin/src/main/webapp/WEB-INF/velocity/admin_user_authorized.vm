@@ -1,0 +1,349 @@
+<div class='bread'><span class='bread-title'>您的当前位置 : </span>用户管理 >> 商户认证</div><!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---管理</title>
+    <link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <!--条件查询-->
+                <div class="ibox-title">
+                    <h5>商户列表</h5>
+                    <div class="ibox-tools">
+                        <i class="layui-icon" onclick="location.replace(location.href);" title="刷新"
+                           style="cursor:pointer;">ဂ</i>
+                    </div>
+                </div>
+                <!--条件查询-->
+                <div class="ibox-content">
+                    <form class="layui-form" action="#springUrl('/user/get_user_group_list')" method="get" autocomplete="off">
+                        <input type="hidden" name="m" value="Admin">
+                        <input type="hidden" name="c" value="User">
+                        <input type="hidden" name="a" value="index">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="user" autocomplete="off" placeholder="商户号或用户名"
+                                           class="layui-input" #if(${userGroupRequest.user}) value="${userGroupRequest.user}" #else value="" #end >
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="agent" autocomplete="off" placeholder="代理号或用户名"
+                                           class="layui-input" #if(${userGroupRequest.agent}) value="${userGroupRequest.agent}" #else value="" #end>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">状态</option>
+                                        <option value="0" #if(${userGroupRequest.status}==0) selected #end>资料不全</option>
+                                        <option value="1" #if(${userGroupRequest.status}==1) selected #end>未认证</option>
+                                        <option value="10" #if(${userGroupRequest.status}==10) selected #end>已认证</option>
+                                        <option value="99" #if(${userGroupRequest.status}==99) selected #end>禁用</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="type">
+                                        <option value="">用户类型</option>
+                                        <option value="1" #if(${userGroupRequest.type}==1) selected #end>普通商户</option>
+                                        <option value="2" #if(${userGroupRequest.type}==2) selected #end>代理商</option>
+                                        <option value="3" #if(${userGroupRequest.type}==3) selected #end>分公司</option>
+                                        <option value="10" #if(${userGroupRequest.type}==10) selected #end>总部</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn lineblud"><span
+                                        class="glyphicon glyphicon-search"></span> 搜索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="layui-btn" onclick="group_add('添加商户','#springUrl("/common/admin_add_group")',800,600)">添加商户</button>
+                    <!--用户列表-->
+                    <table class="layui-table" lay-data="{width:'100%',height:'332',id:'userData'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'id',fixed: true,width:60}"></th>
+                            <th lay-data="{field:'groupNo', width:120}">商户编号</th>
+                            <th lay-data="{field:'name', width:120}">商户名</th>
+                            <th lay-data="{field:'ownerName', width:120}">法人</th>
+                            <th lay-data="{field:'idCard', width:120}">身份证号</th>
+                            <th lay-data="{field:'address', width:120}">地址</th>
+                            <th lay-data="{field:'tel', width:120}">联系电话</th>
+                            <th lay-data="{field:'cipherCode', width:120}">密钥</th>
+                            <th lay-data="{field:'callbackUrl', width:120}">回调地址</th>
+                            <th lay-data="{field:'parentid', width:120}">上级用户</th>
+                            <th lay-data="{field:'regdatetime', width:120}">注册时间</th>
+                            <th lay-data="{field:'op',width:500}">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            #foreach($group in ${pageInfo.data})
+                            <tr>
+                                <td>${group.id}</td>
+                                <td>${group.groupNo}</td>
+                                <td>${group.name}</td>
+                                <td>${group.ownerName}</td>
+                                <td>${group.idCard}</td>
+                                <td>${group.address}</td>
+                                <td>${group.tel}</td>
+                                <td>${group.cipherCode}</td>
+                                <td>${group.callbackUrl}</td>
+                                <td>${group.subGroupName}</td>
+                                <td>$!date.format('yyyy-MM-dd HH:mm:ss ',$!group.createTime)</td>
+                                <td>
+                                    <div class="layui-btn-group">
+                                        #if(${group.status}!=10 && ${group.status}!=99)
+                                            <button class="layui-btn layui-btn-small lineblud" onclick="member_edit('编辑','#springUrl("/common/admin_add_group?editedGroupId=${group.id}")',800)">编辑</button>
+                                        #end
+                                        #if(${group.status}==10 && ${group.type}!=10)
+                                            <button class="layui-btn layui-btn-small lineblud" onclick="member_edit('调整上级','#springUrl("/common/edit_sub_group?editedGroupId=${group.id}")',800)">调整上级</button>
+                                        #end
+
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="member_edit('查看银行','#springUrl("/common/user_bankcard?id=${group.id}")',800)">银行</button>
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="member_edit('用户列表','#springUrl("/common/group_user_list?groupId=${group.id}")',800)">用户列表</button>
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="member_edit('编辑通道','#springUrl("/common/user_channel_list?id=${group.id}")',1200,1200)">通道</button>
+##                                        <button class="layui-btn layui-btn-small lineblud" onclick="member_edit('设置结算账号','#springUrl("/common/admin_bank_profile?id=${group.id}")',800)">设置结算账号</button>
+                                        #if(${group.status}==1)
+                                            <button class="layui-btn layui-btn-small lineblud" onclick="member_back(this,'${group.id}')">退回</button>
+                                            <button class="layui-btn layui-btn-small lineblud" onclick="member_pass(this,'${group.id}')">验证通过</button>
+                                        #end
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="member_delete(this,'${group.id}')">删除商户</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    <div class="pagex">
+                        <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">
+                            #if(${pageInfo.totalPage} == 1)
+                                <span class="layui-laypage-curr current">
+                                    <em class="layui-laypage-em"></em><em>${pageInfo.totalPage}</em>
+                                </span>
+                            #else
+                                #foreach($index in [1,${pageInfo.totalPage}])
+                                    #if($index == ${pageInfo.currentPage})
+                                        <span class="layui-laypage-curr current">
+                                        <em class="layui-laypage-em"></em><em>$index</em>
+                                        </span>
+                                    #else
+                                        <a class="num" href='#springUrl("/common/admin_user_authorized?currentPage=$index")'>$index</a>
+                                    #end
+                                #end
+                                <a class="next layui-laypage-next" href='#springUrl("/common/admin_user_authorized?currentPage=${pageInfo.nextPage}")'>下一页</a>
+                            #end
+                        </div>
+                    </div>
+                    <!--用户列表-->
+                    <div class="page"><div  class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">    </div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.all.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['form','table',  'laydate', 'layer'], function () {
+        var form = layui.form
+                ,table = layui.table
+                , layer = layui.layer
+                , laydate = layui.laydate;
+
+        //日期时间范围
+        laydate.render({
+            elem: '#regtime'
+
+            , range: '-'
+        });
+        //监听表格复选框选择
+        table.on('checkbox(userData)', function(obj){
+            var child = jQuery(data.elem).parents('table').find('tbody input[lay-filter="ids"]');
+            child.each(function(index, item){
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        //监听工具条
+        table.on('tool(test1)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                layer.msg('ID：'+ data.id + ' 的查看操作');
+            } else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            }
+        });
+        //全选
+        form.on('checkbox(allChoose)', function (data) {
+            var child = jQuery(data.elem).parents('table').find('tbody input[lay-filter="ids"]');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+        //监听用户状态
+        form.on('switch(switchStatus)', function (data) {
+            var isopen = this.checked ? 1 : 0,
+                    uid = jQuery(this).attr('data-uid');
+            jQuery.ajax({
+                url: "/Admin_User_editStatus.html",
+                type: 'post',
+                data: "uid=" + uid + "&isopen=" + isopen,
+                success: function (res) {
+                    if (res.status) {
+                        layer.tips('温馨提示：开启成功', data.othis);
+                    } else {
+                        layer.tips('温馨提示：关闭成功', data.othis);
+                    }
+                }
+            });
+        });
+    });
+
+    function group_add(title,url,w,h){
+        x_admin_show(title,url,w,h);
+    }
+
+    //批量删除提交
+    function delAll() {
+        layer.confirm('确认要删除吗？', function (index) {
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+        });
+    }
+
+    /*用户-认证*/
+    function member_auth(title, url, w, h) {
+        x_admin_show(title, url, w, h);
+    }
+
+    /*用户-费率*/
+    function member_rate(title, url, w, h) {
+        x_admin_show(title, url, w, h);
+    }
+
+    // 用户-编辑
+    function member_edit(title, url, id, w, h) {
+        x_admin_show(title, url, w, h);
+    }
+
+    // 用户-提现
+    function member_withdrawal(title, url, id, w, h) {
+        x_admin_show(title, url, w, h);
+    }
+    // 用户-提现
+    function member_money(title, url, id, w, h) {
+        x_admin_show(title, url, w, h);
+    }
+
+    /*用户-删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            jQuery.ajax({
+                url:"/Admin_User_delUser.html",
+                type:'post',
+                data:'uid='+id,
+                success:function(res){
+                    if(res.status){
+                        jQuery(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    }
+                }
+            });
+        });
+    }
+
+    function member_back(obj, id) {
+        layer.confirm('确认要退回吗？', function (index) {
+            jQuery.ajax({
+                url:"#springUrl('/user/user_member_back')",
+                type:'post',
+                data:'uid='+id,
+                success:function(res){
+                    if(res.status){
+                        jQuery(obj).parents("tr").remove();
+                        layer.msg('已退回!',{icon:1,time:1000});
+                    }
+                }
+            });
+        });
+    }
+
+    function member_pass(obj, id) {
+        layer.confirm('确认要通过吗？', function (index) {
+            jQuery.ajax({
+                url:"#springUrl('/user/user_member_pass')",
+                type:'post',
+                data:'uid='+id,
+                success:function(res){
+                    if(res.status){
+                        jQuery(obj).parents("tr").remove();
+                        layer.msg('已通过!',{icon:1,time:1000});
+                    } else {
+                        layer.msg(res.msg,{icon:-1,time:1000});
+                    }
+                }
+            });
+        });
+    }
+
+    function member_delete(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            jQuery.ajax({
+                url:"#springUrl('/user/user_member_delete')",
+                type:'post',
+                data:'uid='+id,
+                success:function(res){
+                    if(res.status){
+                        jQuery(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    } else {
+                        layer.msg(res.msg,{icon:-1,time:1000});
+                    }
+                }
+            });
+        });
+    }
+
+    /*用户-配置*/
+    function member_peizhi(title, url, id, w, h){
+        x_admin_show(title, url, w, h);
+    }
+    jQuery('#export').on('click',function(){
+        window.location.href
+                ="/Admin_User_exportuser.html";
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link rel="shortcut icon" href="#springUrl('/images/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/head.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/nav.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+
+    <meta name="__hash__" content="72892c9eab5e706138a6249ab76ceb82_ba2259014d08fecb9e3dcfbb758d1339" /></head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div id="wrapper" style="background-color:transparent;overflow:visible">
+    <!-- 头部开始 -->
+    #parse("/header.vm")
+</div>
+    #parse("/sidebar.vm")
+
+<div id="page-wrapper" class="gray-bg dashbard-1" style="padding-right:0px;">
+
+    <div class="row J_mainContent" id="content-main">
+        <div class="navbar-header hidden"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a></div>
+##        $screen_content
+        <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${page}" frameborder="0"
+                data-id="${page}" seamless></iframe>
+
+    </div>
+
+
+</div>
+
+<!-- 全局js -->
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/metisMenu/jquery.metisMenu.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/slimscroll/jquery.slimscroll.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layer/layer.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/hplus.js')"></script>
+<script type="text/javascript" src="#springUrl('/Public/Front/js/contabs.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/pace/pace.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+
+<script>
+    $(".fa").click(function(){
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
+        $(this).children(".J_menuItem").toggleClass("in");
+        $(this).siblings().children(".J_menuItem").removeClass("in");
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.AdminAccountDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.AdminAccount" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="lock_amount" property="lockAmount" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="paid_amount" property="paidAmount" jdbcType="DECIMAL" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, amount, lock_amount, `status`, version, create_time, update_time, paid_amount, 
+    fee, total_amount
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_account
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from admin_account
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.AdminAccount" >
+    insert into admin_account (id, group_id, amount, 
+      lock_amount, `status`, version, 
+      create_time, update_time, paid_amount, 
+      fee, total_amount)
+    values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{amount,jdbcType=DECIMAL}, 
+      #{lockAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{paidAmount,jdbcType=DECIMAL}, 
+      #{fee,jdbcType=DECIMAL}, #{totalAmount,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.AdminAccount" >
+    insert into admin_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="lockAmount != null" >
+        lock_amount,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="paidAmount != null" >
+        paid_amount,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="lockAmount != null" >
+        #{lockAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paidAmount != null" >
+        #{paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.AdminAccount" >
+    update admin_account
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="lockAmount != null" >
+        lock_amount = #{lockAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paidAmount != null" >
+        paid_amount = #{paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.AdminAccount" >
+    update admin_account
+    set group_id = #{groupId,jdbcType=BIGINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      lock_amount = #{lockAmount,jdbcType=DECIMAL},
+      `status` = #{status,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      paid_amount = #{paidAmount,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      total_amount = #{totalAmount,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_account
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+
+  <update id="addAmount">
+    update admin_account
+    set
+    amount = amount + #{amount,jdbcType=DECIMAL},
+    total_amount = total_amount + #{amount,jdbcType=DECIMAL},
+    version = version+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByGroupIds" resultMap="BaseResultMap" parameterType="java.util.List" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_account
+    where group_id in
+    <foreach collection="groupIds" index="index" item="groupId" open="(" separator="," close=")">
+      #{groupId}
+    </foreach>
+  </select>
+
+  <update id="lockAmount" >
+    update admin_account
+    set
+    lock_amount = lock_amount+#{lockAmount,jdbcType=DECIMAL},
+    version = version+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+    and <![CDATA[ amount >= lock_amount+#{lockAmount,jdbcType=DECIMAL} ]]>
+    and status = 0
+  </update>
+
+  <update id="unlockAmount" >
+    update admin_account
+    set
+    lock_amount = lock_amount-#{lockAmount,jdbcType=DECIMAL},
+    version = version+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+    and <![CDATA[lock_amount-#{lockAmount,jdbcType=DECIMAL}>=0]]>
+    and status = 0
+  </update>
+
+  <update id="finishPay" >
+    update admin_account
+    set
+    lock_amount = lock_amount-#{lockAmount,jdbcType=DECIMAL},
+    amount = amount - #{lockAmount,jdbcType=DECIMAL},
+    paid_amount = paid_amount+ #{lockAmount,jdbcType=DECIMAL},
+    version = version+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+    and <![CDATA[ lock_amount-#{lockAmount,jdbcType=DECIMAL}>=0 ]]>
+    and <![CDATA[ amount - #{lockAmount,jdbcType=DECIMAL}>=0 ]]>
+    and status = 0
+  </update>
+</mapper>

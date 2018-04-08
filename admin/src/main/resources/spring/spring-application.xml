@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<context:component-scan
+		base-package="com.hf.*">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Component" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<task:annotation-driven executor="asyncExecutor" />
+	<task:executor id="asyncExecutor" pool-size="5-10" queue-capacity="200" rejection-policy="CALLER_RUNS"/>
+
+	<bean class="org.springframework.web.client.RestTemplate"/>
+
+	<bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/velocity/" /><!-- 模板存放的路径 -->
+		<property name="configLocation" value="classpath:velocity.properties"/>
+	</bean>
+
+	<bean id="ViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="true" />
+		<property name="prefix" value="/" /><!-- 视图文件的前缀，即存放的路径 -->
+		<property name="suffix" value=".vm" /><!-- 视图文件的后缀名 -->
+		<!--<property name="toolboxConfigLocation" value="/WEB-INF/tools.xml" /><!–toolbox配置文件路径–>-->
+		<property name="dateToolAttribute" value="date" /><!--日期函数名称-->
+		<property name="numberToolAttribute" value="number" /><!--数字函数名称-->
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="exposeSpringMacroHelpers" value="true" /><!--是否使用spring对宏定义的支持-->
+		<property name="exposeRequestAttributes" value="true" /><!--是否开放request属性-->
+		<property name="requestContextAttribute" value="rc"/><!--request属性引用名称-->
+		<property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml"/>
+	</bean>
+
+	<bean class="com.hf.base.client.DefaultClient">
+		<constructor-arg value="${hf}"></constructor-arg>
+	</bean>
+
+	<bean class="com.hf.admin.rpc.AdminClient">
+		<constructor-arg value="${hf}"></constructor-arg>
+	</bean>
+
+	<bean class="com.hf.admin.rpc.UserClient">
+		<constructor-arg value="${hf}"></constructor-arg>
+	</bean>
+
+	<bean id="defaultDispatcher" class="com.hf.base.dispatcher.DefaultDispatcher"></bean>
+
+	<bean id="dispatcherFactory" class="com.hf.base.dispatcher.DefaultDispatcherFactory">
+		<constructor-arg>
+			<map>
+				<entry key="index" value-ref="indexDispatcher"/>
+				<entry key="admin_user_authorized" value-ref="groupIndexDispatcher"/>
+				<entry key="user_bankcard" value-ref="userBankCardDispatcher"/>
+				<entry key="group_user_list" value-ref="groupUserListDispatcher"/>
+				<entry key="user_channel_list" value-ref="userChannelListDispatcher"/>
+				<entry key="user_add_channel" value-ref="userAddChannelDispatcher"/>
+				<entry key="admin_channel_index" value-ref="adminChannelDispatcher"/>
+				<entry key="admin_bank_profile" value-ref="adminBankProfileDispatcher"/>
+				<entry key="admin_group_index" value-ref="groupIndexDispatcher"/>
+				<entry key="user_add_bankcard" value-ref="userAddBankCardDispatcher"/>
+				<entry key="user_add_member" value-ref="userAddMemberDispatcher"/>
+				<entry key="admin_add_group" value-ref="adminAddGroupDispatcher"/>
+				<entry key="admin_add_channel" value-ref="adminAddChannelDispatcher"/>
+				<entry key="admin_order_index" value-ref="adminOrderDispatcher"/>
+				<entry key="admin_account_index" value-ref="adminAccountDispatcher"/>
+				<entry key="admin_account_admin" value-ref="adminAccountAdminDispatcher"/>
+				<entry key="admin_order_changeRecord" value-ref="changeRecordDispatcher"/>
+				<entry key="admin_withdrawal_index" value-ref="adminWithDrawDispatcher"/>
+				<entry key="dashboard" value-ref="dashboardDispatcher"/>
+				<entry key="admin_bank_index" value-ref="adminBankDispatcher"/>
+				<entry key="user_add_provider" value-ref="userAddProviderDispatcher"/>
+				<entry key="admin_sales_index" value-ref="adminSalesIndexDispatcher"/>
+				<entry key="admin_add_sale" value-ref="adminAddSaleDispatcher"/>
+				<entry key="edit_sub_group" value-ref="editSubGroupDispatcher"/>
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>

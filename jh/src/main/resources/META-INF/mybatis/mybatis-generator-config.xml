@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+		PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+	<classPathEntry location="/Users/tengfei/.m2/repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar" />
+
+	<context id="mysqltables" targetRuntime="MyBatis3">
+
+		<property name="autoDelimitKeywords" value="true" />
+		<property name="beginningDelimiter" value="`" />
+		<property name="endingDelimiter" value="`" />
+		<commentGenerator>
+			<property name="suppressAllComments" value="true"/>
+			<property name="suppressDate" value="true"/>
+		</commentGenerator>
+		<!--数据库链接地址账号密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+						connectionURL="jdbc:mysql://127.0.0.1:3306/db_jh" userId="root" password="tengfei" />
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<!--生成Model类存放位置 targetPackage 需要自定义 目录自动生成 basePackage -->
+		<javaModelGenerator targetPackage="com.hf.core.model.po" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!--生成映射文件存放位置 -->
+		<sqlMapGenerator targetPackage="/mapper" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!--生成Dao类存放位置 targetPackage 需要自定义 目录自动生成 basePackage-->
+		<javaClientGenerator targetPackage="com.hf.core.dao.local" targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- 正式生成之前需要删除 此事例 -->
+		<table tableName="tbl_sequence" domainObjectName="TblSequence"
+			   enableCountByExample="false" enableUpdateByExample="false"
+			   enableDeleteByExample="false" enableSelectByExample="false"
+			   selectByExampleQueryId="false">
+		</table>
+		<!-- 正式生成之前需要删除 此事例 -->
+	</context>
+</generatorConfiguration>

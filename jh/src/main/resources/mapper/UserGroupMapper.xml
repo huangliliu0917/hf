@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.UserGroupDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.UserGroup" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="group_no" property="groupNo" jdbcType="VARCHAR" />
+    <result column="sub_group_id" property="subGroupId" jdbcType="BIGINT" />
+    <result column="sub_group_no" property="subGroupNo" jdbcType="VARCHAR" />
+    <result column="sub_group_name" property="subGroupName" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="owner_name" property="ownerName" jdbcType="VARCHAR" />
+    <result column="cipher_code" property="cipherCode" jdbcType="VARCHAR" />
+    <result column="callback_url" property="callbackUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, id_card, tel, address, `type`, `status`, group_no,sub_group_id,sub_group_no,sub_group_name,company_id,create_time,owner_name,cipher_code,callback_url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_group
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_group
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.UserGroup" >
+    insert into user_group (id, `name`, id_card, 
+      tel, address, `type`, 
+      `status`, group_no)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{groupNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.hf.core.model.po.UserGroup" >
+    insert into user_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="idCard != null" >
+        id_card,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="type != null" >
+        `type`,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="groupNo != null" >
+        group_no,
+      </if>
+      <if test="subGroupId != null" >
+        sub_group_id,
+      </if>
+      <if test="subGroupNo != null" >
+        sub_group_no,
+      </if>
+      <if test="subGroupName != null" >
+        sub_group_name,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="ownerName != null" >
+        owner_name,
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code,
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="groupNo != null" >
+        #{groupNo,jdbcType=VARCHAR},
+      </if>
+      <if test="subGroupId != null" >
+        #{subGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="subGroupNo != null" >
+        #{subGroupNo,jdbcType=VARCHAR},
+      </if>
+      <if test="subGroupName != null" >
+        #{subGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="ownerName != null" >
+        #{ownerName,jdbcType=VARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        #{cipherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackUrl != null" >
+        #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.UserGroup" >
+    update user_group
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="groupNo != null" >
+        group_no = #{groupNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerName != null" >
+        owner_name = #{ownerName,jdbcType=VARCHAR},
+      </if>
+      <if test="cipherCode != null" >
+        cipher_code = #{cipherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="callbackUrl != null" >
+        callback_url = #{callbackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="subGroupId != null" >
+        sub_group_id = #{subGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="subGroupName != null" >
+        sub_group_name = #{subGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="subGroupNo != null" >
+        sub_group_no = #{subGroupNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.UserGroup" >
+    update user_group
+    set `name` = #{name,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER},
+      group_no = #{groupNo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByGroupNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where group_no = #{groupNo,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByGroupNos" resultMap="BaseResultMap" parameterType="java.util.Set" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where group_no in
+    <foreach item="item" index="index" collection="groupNos" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.util.Set" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where id in
+    <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where 1=1
+    <if test="status != null and status != ''" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="user != null and user != ''" >
+      and (group_no like concat(concat('%',#{user,jdbcType=VARCHAR}),'%') or name like concat(concat('%',#{user,jdbcType=VARCHAR}),'%'))
+    </if>
+    <if test="agent != null and agent != ''" >
+      and (sub_group_no like concat(concat('%',#{agent,jdbcType=VARCHAR}),'%') or sub_group_name like concat(concat('%',#{agent,jdbcType=VARCHAR}),'%'))
+    </if>
+    <if test="companyId != null and companyId != ''" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null and type!=''" >
+      and type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="exceptGroupId != null" >
+      and id != #{exceptGroupId,jdbcType=BIGINT}
+    </if>
+    <if test="mchId != null" >
+      and group_no like concat(concat('%',#{mchId,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="name != null" >
+      and name like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="notStatus != null and notStatus!=''" >
+      and status != #{notStatus,jdbcType=INTEGER}
+    </if>
+    and type != 4 and status != 101
+    order by id desc
+  </select>
+
+  <select id="select1" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where 1=1
+    <if test="status != null and status != ''" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="user != null and user != ''" >
+      and (group_no like concat(concat('%',#{user,jdbcType=VARCHAR}),'%') or name like concat(concat('%',#{user,jdbcType=VARCHAR}),'%'))
+    </if>
+    <if test="agent != null and agent != ''" >
+      and (sub_group_no like concat(concat('%',#{agent,jdbcType=VARCHAR}),'%') or sub_group_name like concat(concat('%',#{agent,jdbcType=VARCHAR}),'%'))
+    </if>
+    <if test="companyId != null and companyId != ''" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null and type!=''" >
+      and type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="exceptGroupId != null" >
+      and id != #{exceptGroupId,jdbcType=BIGINT}
+    </if>
+    <if test="mchId != null" >
+      and group_no like concat(concat('%',#{mchId,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="name != null" >
+      and name like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="notStatus != null and notStatus!=''" >
+      and status != #{notStatus,jdbcType=INTEGER}
+    </if>
+    and status != 101
+    order by id desc
+  </select>
+
+  <select id="selectBySubGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where sub_group_id = #{subGroupId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByCompanyId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectDefaultUserGroup" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where sub_group_id = 0 limit 1
+  </select>
+
+  <update id="updateStatusById" parameterType="com.hf.core.model.po.UserGroup" >
+    update user_group
+    set
+    status = #{targetStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT} and status = #{fromStatus,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where group_no = #{groupNo,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAdminBySubGroupId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from user_group
+    where sub_group_id = #{subGroupId,jdbcType=BIGINT}
+    and type in (3,10)
+  </select>
+</mapper>

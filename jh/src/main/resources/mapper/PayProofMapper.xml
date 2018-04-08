@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.PayProofDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.PayProof" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="outlet_no" property="outletNo" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="out_trade_no" property="outTradeNo" jdbcType="VARCHAR" />
+    <result column="errcode" property="errcode" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="code_url" property="codeUrl" jdbcType="VARCHAR" />
+    <result column="pay_info" property="payInfo" jdbcType="VARCHAR" />
+    <result column="actual_total" property="actualTotal" jdbcType="INTEGER" />
+    <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
+    <result column="paytime" property="paytime" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id,merchant_no,status,outlet_no,total,out_trade_no,errcode,message,no,code_url,pay_info,actual_total,transaction_id,paytime
+  </sql>
+
+  <insert id="insert" parameterType="com.hf.core.model.po.PayProof" >
+    insert into pay_proof (id, merchant_no, `status`, 
+      outlet_no, total, out_trade_no, 
+      errcode, message, `no`, 
+      code_url, pay_info, actual_total, 
+      transaction_id, paytime)
+    values (#{id,jdbcType=BIGINT}, #{merchantNo,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{outletNo,jdbcType=VARCHAR}, #{total,jdbcType=INTEGER}, #{outTradeNo,jdbcType=VARCHAR}, 
+      #{errcode,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, #{no,jdbcType=VARCHAR}, 
+      #{codeUrl,jdbcType=VARCHAR}, #{payInfo,jdbcType=VARCHAR}, #{actualTotal,jdbcType=INTEGER}, 
+      #{transactionId,jdbcType=VARCHAR}, #{paytime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.PayProof" >
+    insert into pay_proof
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="outletNo != null" >
+        outlet_no,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="outTradeNo != null" >
+        out_trade_no,
+      </if>
+      <if test="errcode != null" >
+        errcode,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="no != null" >
+        `no`,
+      </if>
+      <if test="codeUrl != null" >
+        code_url,
+      </if>
+      <if test="payInfo != null" >
+        pay_info,
+      </if>
+      <if test="actualTotal != null" >
+        actual_total,
+      </if>
+      <if test="transactionId != null" >
+        transaction_id,
+      </if>
+      <if test="paytime != null" >
+        paytime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="outletNo != null" >
+        #{outletNo,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=INTEGER},
+      </if>
+      <if test="outTradeNo != null" >
+        #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="errcode != null" >
+        #{errcode,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null" >
+        #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="payInfo != null" >
+        #{payInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="actualTotal != null" >
+        #{actualTotal,jdbcType=INTEGER},
+      </if>
+      <if test="transactionId != null" >
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="paytime != null" >
+        #{paytime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectByTrdNo" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_proof
+    where out_trade_no = #{outTradeNo,jdbcType=BIGINT}
+  </select>
+
+  <update id="update" parameterType="java.util.Map" >
+    update pay_refund_order
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="targetStatus != null" >
+        status = #{targetStatus,jdbcType=INTEGER},
+      </if>
+      <if test="outletNo != null" >
+        outlet_no = #{outletNo,jdbcType=VARCHAR},
+      </if>
+      <if test="actualTotal != null" >
+        actual_total = #{actualTotal,jdbcType=INTEGER},
+      </if>
+      <if test="outTradeNo != null" >
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="errcode != null" >
+        errcode = #{errcode,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="no != null" >
+        no = #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null" >
+        code_url = #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="payInfo != null" >
+        pay_info = #{payInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null" >
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="paytime != null" >
+        paytime = #{paytime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT} and status = 10
+  </update>
+</mapper>

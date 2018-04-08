@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---用户管理中心</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/User/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+
+    </style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>账户信息</h5>
+                </div>
+                <div class="ibox-content">
+                    <blockquote class="layui-elem-quote">
+                        <span class="text-danger">可提现：${amount} 元</span><br>
+                        <span class="text-muted">冻结：${lockAmount} 元</span><br>
+                        <span class="text-danger">累计结算：${paidAmount} 元</span><br>
+                        <span class="text-warning">扣费: ${fee}</span><br>
+                        <span class="text-danger">未入账：${logAmount} 元</span><br>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'layer','element'], function(){
+        var layer = layui.layer //弹层
+                ,form = layui.form
+                ,element = layui.element; //元素操作
+
+        //监听提交
+        form.on('submit(save)', function(data){
+            jQuery.ajax({
+                url:"#springUrl('/user/submit_withdraw')",
+                type:"post",
+                data:jQuery('#calculate').serialize(),
+                success:function(res){
+                    if(res.status){
+                        layer.alert("申请成功", {icon: 6},function () {
+                            location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }else{
+                        layer.alert(res.msg ? res.msg : "申请失败", {icon: 5},function () {
+                            location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
+
+    /*手续费计算*/
+    function calculate_rate(){
+        var settleAmount = jQuery('#settleAmount').val();
+        jQuery.ajax({
+            url:"#springUrl('/user/withdraw_caculate')",
+            type:'post',
+            data:'settleAmount='+settleAmount,
+            success:function(res){
+                if(res.status){
+                    jQuery('#amount').val(res.amount);
+                    jQuery('#brokerage').val(res.brokerage);
+                }else{
+                    layer.alert(res.msg ? res.msg :"操作失败", {icon: 5},function () {
+                        location.reload();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
