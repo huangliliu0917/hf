@@ -111,6 +111,8 @@ public class WwTradeBiz extends AbstractTradeBiz {
 
         if(StringUtils.equals(oriRespCode,"000000")) {
             resultMap.put("status",1);
+        } else {
+            resultMap.put("status",0);
         }
 //        else {
 //            resultMap.put("status",5);

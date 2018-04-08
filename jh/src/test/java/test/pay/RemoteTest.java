@@ -13,6 +13,7 @@ import com.hf.core.dao.remote.YsClient;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.utils.CipherUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import test.BaseCommitTestCase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RemoteTest extends BaseCommitTestCase {
@@ -116,7 +119,7 @@ public class RemoteTest extends BaseCommitTestCase {
         Map<String,Object> params = new HashMap<>();
         params.put("version","1.0");
         params.put("merchant_no","212000912");
-        params.put("out_trade_no","5132_20180122133710");
+        params.put("out_trade_no","5156_20180408171756169466");
         params.put("nonce_str",Utils.getRandomString(10));
         params.put("sign_type","MD5");
         String sign = Utils.encrypt(params,"38ntxf73xznze26bmnr1uw3er94rce8t");
@@ -132,14 +135,35 @@ public class RemoteTest extends BaseCommitTestCase {
 
     @Test
     public void testQuery() {
+        String ids = "5156_20180315134413,5156_20180401212034,5156_20180401212048,5156_1234542156235216,5156_20180404085452,5156_20180404163810,5156_20180404163823,5156_20180404163856,5156_20180404163907,5156_20180408144630920644,5156_20180408144729384307,5156_20180408150859248197,5156_20180408150937502157,5156_20180408151041575900,5156_20180408153120389766,5156_20180408153740231812,5156_20180408154013117566,5156_20180408154229526371,5156_20180408155940541277,5156_20180408160047303764,5156_20180408160125757022,5156_20180408160203157468,5156_20180408160214248636,5156_20180408160403834911,5156_20180408160554947518,5156_20180408162412266285,5156_20180408163527873721,5156_20180408171453379842,5156_20180408171606354955,5156_20180408171726649421,5156_20180408171756169466";
+        String[] idsarray = ids.split(",");
+        System.out.println(idsarray.length);
+        List<String> results = new ArrayList<>();
+        for(String id:idsarray) {
+            Map<String,Object> params = new HashMap<>();
+            params.put("memberCode","9010000025");
+            params.put("orderNum",id);
+            String signUrl = Utils.getEncryptStr(params);
+            String signStr = EpaySignUtil.sign(CipherUtils.private_key,signUrl);
+            params.put("signStr",signStr);
+            Map<String,Object> result = wwClient.orderinfo(params);
+            if(StringUtils.equals(String.valueOf(result.get("oriRespCode")),"000000")) {
+                results.add(id);
+            }
+        }
+        System.out.println(new Gson().toJson(results));
+//        System.out.println(new Gson().toJson(result));
+    }
+
+    @Test
+    public void testQueryww() {
         Map<String,Object> params = new HashMap<>();
         params.put("memberCode","9010000025");
-        params.put("orderNum","5161_2565611754388059");
+        params.put("orderNum","5156_20180408171756169466");
         String signUrl = Utils.getEncryptStr(params);
         String signStr = EpaySignUtil.sign(CipherUtils.private_key,signUrl);
         params.put("signStr",signStr);
         Map<String,Object> result = wwClient.orderinfo(params);
-
         System.out.println(new Gson().toJson(result));
     }
 
