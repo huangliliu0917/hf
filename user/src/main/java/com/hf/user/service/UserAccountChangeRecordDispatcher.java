@@ -7,6 +7,8 @@ import com.hf.base.model.AccountOprInfo;
 import com.hf.base.model.AccountOprRequest;
 import com.hf.base.utils.Pagenation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 public class UserAccountChangeRecordDispatcher implements Dispatcher {
     @Autowired
     private DefaultClient client;
+    protected Logger logger = LoggerFactory.getLogger(UserAccountChangeRecordDispatcher.class);
 
     @Override
     public DispatchResult dispatch(HttpServletRequest request, String page) {
@@ -33,6 +36,11 @@ public class UserAccountChangeRecordDispatcher implements Dispatcher {
 
         pagenation.getData().forEach(accountOprInfo -> {
             accountOprInfo.setAmount(accountOprInfo.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            try {
+                accountOprInfo.setOutTradeNo(accountOprInfo.getOutTradeNo().split("_")[1]);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
         });
 
         DispatchResult dispatchResult = new DispatchResult();
