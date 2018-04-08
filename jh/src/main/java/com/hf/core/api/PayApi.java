@@ -67,7 +67,7 @@ public class PayApi {
     @Autowired
     private PayService payService;
 
-    protected Logger logger = LoggerFactory.getLogger(PayApi.class);
+    `
 
     @RequestMapping(value = "/unifiedorder",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody

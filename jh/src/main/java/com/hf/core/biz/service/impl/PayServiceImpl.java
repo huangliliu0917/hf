@@ -175,6 +175,9 @@ public class PayServiceImpl implements PayService {
     @Override
     public void paySuccess(String outTradeNo) {
         PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
+        if(payRequest.getStatus() != PayRequestStatus.PROCESSING.getValue()) {
+            return;
+        }
         int count = payRequestDao.updatePayResult(payRequest.getId(),"0",payRequest.getVersion());
         if(count<=0) {
             throw new BizFailException("update payResult failed,%s",outTradeNo);

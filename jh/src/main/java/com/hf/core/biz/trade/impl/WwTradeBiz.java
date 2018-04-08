@@ -99,6 +99,7 @@ public class WwTradeBiz extends AbstractTradeBiz {
 
         logger.warn(String.format("%s query ww status : %s,%s",payRequest.getOutTradeNo(),oriRespCode,returnCode));
 
+//        上游无失败，只有成功
         if(!StringUtils.equals(returnCode,"0000")) {
             logger.warn(String.format("%s query failed,%s",payRequest.getOutTradeNo(),new Gson().toJson(resultMap)));
             throw new BizFailException("retry");
@@ -110,9 +111,10 @@ public class WwTradeBiz extends AbstractTradeBiz {
 
         if(StringUtils.equals(oriRespCode,"000000")) {
             resultMap.put("status",1);
-        } else {
-            resultMap.put("status",5);
         }
+//        else {
+//            resultMap.put("status",5);
+//        }
         return resultMap;
     }
 

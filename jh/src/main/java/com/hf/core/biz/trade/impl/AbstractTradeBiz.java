@@ -133,55 +133,57 @@ public abstract class AbstractTradeBiz implements TradeBiz {
         return new Gson().fromJson(result.getMsgBody(),new TypeToken<Map<String,Object>>(){}.getType());
     }
 
-    @Retryable(value= {BizFailException.class},maxAttempts = 3,backoff = @Backoff(delay = 2000L,multiplier = 1))
     @Override
     public void handleProcessingRequest(PayRequest payRequest) {
         payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
-        if(payRequest.getStatus() != PayRequestStatus.PROCESSING.getValue()) {
+        if(payRequest.getStatus() != PayRequestStatus.PROCESSING.getValue() && payRequest.getStatus() != PayRequestStatus.OPR_SUCCESS.getValue()) {
             logger.warn(String.format("payRequest not processing,%s,%s",payRequest.getOutTradeNo(),payRequest.getStatus()));
             return;
         }
-        Map<String,Object> payResult = query(payRequest);
 
-        if(MapUtils.isEmpty(payResult)) {
-            logger.warn(String.format("query failed,%s",payRequest.getOutTradeNo()));
-            return;
-        }
+        if(payRequest.getStatus() == PayRequestStatus.PROCESSING.getValue()) {
+            Map<String,Object> payResult = query(payRequest);
 
-        if(Objects.isNull(payResult.get("errcode"))) {
-            logger.warn(String.format("query failed,errcode is null,%s",payRequest.getOutTradeNo()));
-        }
-        int errcode = new BigDecimal(String.valueOf(payResult.get("errcode"))).intValue();
-        if(errcode != 0) {
-            return;
-        }
-
-        logger.info(String.format("%s,query result:%s",payRequest.getOutTradeNo(),new Gson().toJson(payResult)));
-
-        String message = String.valueOf(payResult.get("message"));
-        String service = String.valueOf(payResult.get("service"));
-        String no = String.valueOf(payResult.get("no"));
-        String out_trade_no = String.valueOf(payResult.get("out_trade_no"));
-        int status = new BigDecimal(String.valueOf(payResult.get("status"))).intValue();
-
-        switch (status) {
-            case 0:
-                logger.info(String.format("not paid,%s",payRequest.getOutTradeNo()));
+            if(MapUtils.isEmpty(payResult)) {
+                logger.warn(String.format("query failed,%s",payRequest.getOutTradeNo()));
                 return;
-            case 1:
-                logger.info(String.format("pay success,%s",payRequest.getOutTradeNo()));
-                payService.paySuccess(payRequest.getOutTradeNo());
-                notice(payRequest);
+            }
+
+            if(Objects.isNull(payResult.get("errcode"))) {
+                logger.warn(String.format("query failed,errcode is null,%s",payRequest.getOutTradeNo()));
+            }
+
+            int errcode = new BigDecimal(String.valueOf(payResult.get("errcode"))).intValue();
+            if(errcode != 0) {
                 return;
-            case 2:
-                logger.info(String.format("waiting pay,%s",payRequest.getOutTradeNo()));
-                return;
-            case 3:
-            case 4:
-            case 5:
-                payService.payFailed(payRequest.getOutTradeNo());
-                notice(payRequest);
+            }
+            logger.info(String.format("%s,query result:%s",payRequest.getOutTradeNo(),new Gson().toJson(payResult)));
+
+            String message = String.valueOf(payResult.get("message"));
+            String service = String.valueOf(payResult.get("service"));
+            String no = String.valueOf(payResult.get("no"));
+            String out_trade_no = String.valueOf(payResult.get("out_trade_no"));
+            int status = new BigDecimal(String.valueOf(payResult.get("status"))).intValue();
+
+            switch (status) {
+                case 0:
+                    logger.info(String.format("not paid,%s",payRequest.getOutTradeNo()));
+                    return;
+                case 1:
+                    logger.info(String.format("pay success,%s",payRequest.getOutTradeNo()));
+                    payService.paySuccess(payRequest.getOutTradeNo());
+                    return;
+                case 2:
+                    logger.info(String.format("waiting pay,%s",payRequest.getOutTradeNo()));
+                    return;
+                case 3:
+                case 4:
+                case 5:
+                    logger.info(String.format("pay failed,%s",payRequest.getOutTradeNo()));
+                    payService.payFailed(payRequest.getOutTradeNo());
+            }
         }
+        notice(payRequest);
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class PayJob {
         int page = 1;
         int pageSize = 500;
         while (page<100) {
-            Map<String,Object> map = MapUtils.buildMap("status", PayRequestStatus.PROCESSING.getValue(),
+            Map<String,Object> map = MapUtils.buildMap("statusList", Arrays.asList(PayRequestStatus.PROCESSING.getValue(),PayRequestStatus.OPR_SUCCESS.getValue()),
                     "type", TradeType.PAY.getValue(),"startId",startId,
                     "lastTime", DateUtils.addSeconds(new Date(),-3),
                     "startIndex",(page-1)*pageSize,
@@ -56,7 +57,7 @@ public class PayJob {
             page++;
             startId = list.get(list.size()-1).getId();
 
-            list.parallelStream().forEach(payRequest -> {
+            list.forEach(payRequest -> {
                 try {
                     TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
                     tradeBiz.handleProcessingRequest(payRequest);
@@ -67,15 +68,15 @@ public class PayJob {
         }
     }
 
-    @Scheduled(cron = "0 0/2 * * * ?")
-    public void handleNoNoticingRequest() {
-        logger.info("Start handleNoNoticingRequest");
+    @Scheduled(cron = "0 0 0,23 * * ?")
+    public void handleNoCallBackData() {
+        logger.info("Start handle no callback");
         Long startId = 0L;
         int page = 1;
         int pageSize = 500;
         while(page<100) {
-            Map<String,Object> map = MapUtils.buildMap("status", PayRequestStatus.OPR_SUCCESS.getValue(),
-                    "type", TradeType.PAY.getValue(),"startId",startId,"lastTime", DateUtils.addMinutes(new Date(),-3),
+            Map<String,Object> map = MapUtils.buildMap("status", PayRequestStatus.PROCESSING.getValue(),
+                    "type", TradeType.PAY.getValue(),"startId",startId,"lastTime", DateUtils.addHours(new Date(),-12),
                     "startIndex",(page-1)*pageSize,
                     "pageSize",pageSize,"sortType","asc");
             List<PayRequest> list = payRequestDao.select(map);
@@ -87,8 +88,9 @@ public class PayJob {
             page++;
             startId = list.get(list.size()-1).getId();
 
-            list.parallelStream().forEach(payRequest -> {
+            list.forEach(payRequest -> {
                 TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
+                payService.payFailed(payRequest.getOutTradeNo());
                 tradeBiz.notice(payRequest);
             });
         }
@@ -98,7 +100,7 @@ public class PayJob {
     @Scheduled(cron = "0 0/5 * * * ?")
     public void doPromote() {
         List<PayRequest> list = payRequestDao.selectWaitingPromote();
-        list.stream().forEach(payRequest -> {
+        list.forEach(payRequest -> {
             try {
                 payService.payPromote(payRequest.getOutTradeNo());
             } catch (Exception e) {
