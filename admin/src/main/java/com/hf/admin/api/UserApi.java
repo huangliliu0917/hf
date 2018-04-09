@@ -515,10 +515,10 @@ public class UserApi {
     Map<String,Object> finishWithDraw(HttpServletRequest request) {
         String id = request.getParameter("id");
         if(StringUtils.isBlank(id)){
-            return MapUtils.buildMap("res",false,"msg","参数错误");
+            return MapUtils.buildMap("status",false,"msg","参数错误");
         }
         boolean result = adminClient.finishWithDraw(Long.parseLong(id));
-        return MapUtils.buildMap("res",result);
+        return MapUtils.buildMap("status",result);
     }
 
     @RequestMapping(value = "/with_draw_failed",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")

@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,7 +67,7 @@ public class SettleBizImpl implements SettleBiz {
         settleTask.setFee(fee);
         settleTask.setFeeRate(feeRate);
         settleTask.setPayAmount(payAmount);
-        settleTask.setPayBankCard(payBankCard.getId());
+        settleTask.setPayBankCard(payBankCard==null?0L:payBankCard.getId());
         settleTask.setPayGroupId(userGroup.getCompanyId());
 
         settleTaskDao.insertSelective(settleTask);
@@ -270,9 +267,14 @@ public class SettleBizImpl implements SettleBiz {
         withDrawInfo.setPayName(payGroupMap.get(task.getPayGroupId()).getName());
 
         AdminBankCard adminBankCard = adminBankCardDao.selectByPrimaryKey(task.getPayBankCard());
-        com.hf.base.model.AdminBankCard adminCard = new com.hf.base.model.AdminBankCard();
-        BeanUtils.copyProperties(adminBankCard,adminCard);
-        withDrawInfo.setPayBank(adminCard);
+        if(Objects.isNull(adminBankCard)) {
+            com.hf.base.model.AdminBankCard adminCard = new com.hf.base.model.AdminBankCard();
+            withDrawInfo.setPayBank(adminCard);
+        } else {
+            com.hf.base.model.AdminBankCard adminCard = new com.hf.base.model.AdminBankCard();
+            BeanUtils.copyProperties(adminBankCard,adminCard);
+            withDrawInfo.setPayBank(adminCard);
+        }
 
         withDrawInfo.setStatus(task.getStatus());
         withDrawInfo.setStatusDesc(SettleStatus.parse(task.getStatus()).getDesc());

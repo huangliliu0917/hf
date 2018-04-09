@@ -10,6 +10,7 @@ import com.hf.base.model.*;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.ResponseResult;
+import com.hf.base.utils.Utils;
 import com.hf.user.client.UserClient;
 import com.hf.user.model.RegisterRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -262,8 +263,15 @@ public class UserController {
     public @ResponseBody
     Map<String,Object> submitWithDraw(HttpServletRequest request) {
         Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
+        Long userId = Long.parseLong(request.getSession().getAttribute("userId").toString());
         BigDecimal settleAmount = new BigDecimal(request.getParameter("settleAmount")).multiply(new BigDecimal("100"));
         Long cardId = Long.parseLong(request.getParameter("cardId"));
+
+        String password = request.getParameter("password");
+        UserInfo userInfo = client.getUserInfoById(userId);
+        if(!StringUtils.equals(Utils.convertPassword(password),userInfo.getPassword())) {
+            return MapUtils.buildMap("status",false,"msg","支付密码错误");
+        }
 
         List<UserBankCard> cardList = client.getUserBankCard(groupId);
         List<Long> cardIds = cardList.parallelStream().map(UserBankCard::getId).collect(Collectors.toList());

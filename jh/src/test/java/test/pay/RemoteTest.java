@@ -159,7 +159,7 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testQueryww() {
         Map<String,Object> params = new HashMap<>();
         params.put("memberCode","9010000025");
-        params.put("orderNum","5156_20180408171756169466");
+        params.put("orderNum","5156_20180408202057516017");
         String signUrl = Utils.getEncryptStr(params);
         String signStr = EpaySignUtil.sign(CipherUtils.private_key,signUrl);
         params.put("signStr",signStr);
