@@ -188,4 +188,8 @@ public class Utils {
     public static String getMchId() {
         return null;
     }
+
+    public static String nvl(Object obj) {
+        return null == obj?"":String.valueOf(obj);
+    }
 }

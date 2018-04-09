@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.PayRequestBackDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.PayRequestBack" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="out_trade_no" property="outTradeNo" jdbcType="VARCHAR" />
+    <result column="mch_id" property="mchId" jdbcType="VARCHAR" />
+    <result column="errcode" property="errcode" jdbcType="VARCHAR" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="pay_info" property="payInfo" jdbcType="VARCHAR" />
+    <result column="code_url" property="codeUrl" jdbcType="VARCHAR" />
+    <result column="page_content" property="pageContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, out_trade_no, mch_id, errcode, message, pay_info, code_url, page_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from pay_request_back
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pay_request_back
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.PayRequestBack" >
+    insert into pay_request_back (id, out_trade_no, mch_id, 
+      errcode, message, pay_info, 
+      code_url, page_content)
+    values (#{id,jdbcType=BIGINT}, #{outTradeNo,jdbcType=VARCHAR}, #{mchId,jdbcType=VARCHAR}, 
+      #{errcode,jdbcType=VARCHAR}, #{message,jdbcType=VARCHAR}, #{payInfo,jdbcType=VARCHAR}, 
+      #{codeUrl,jdbcType=VARCHAR}, #{pageContent,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.PayRequestBack" >
+    insert into pay_request_back
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="outTradeNo != null" >
+        out_trade_no,
+      </if>
+      <if test="mchId != null" >
+        mch_id,
+      </if>
+      <if test="errcode != null" >
+        errcode,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="payInfo != null" >
+        pay_info,
+      </if>
+      <if test="codeUrl != null" >
+        code_url,
+      </if>
+      <if test="pageContent != null" >
+        page_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="outTradeNo != null" >
+        #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null" >
+        #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="errcode != null" >
+        #{errcode,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="payInfo != null" >
+        #{payInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null" >
+        #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pageContent != null" >
+        #{pageContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.PayRequestBack" >
+    update pay_request_back
+    <set >
+      <if test="outTradeNo != null" >
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="mchId != null" >
+        mch_id = #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="errcode != null" >
+        errcode = #{errcode,jdbcType=VARCHAR},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="payInfo != null" >
+        pay_info = #{payInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="codeUrl != null" >
+        code_url = #{codeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pageContent != null" >
+        page_content = #{pageContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.PayRequestBack" >
+    update pay_request_back
+    set out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      mch_id = #{mchId,jdbcType=VARCHAR},
+      errcode = #{errcode,jdbcType=VARCHAR},
+      message = #{message,jdbcType=VARCHAR},
+      pay_info = #{payInfo,jdbcType=VARCHAR},
+      code_url = #{codeUrl,jdbcType=VARCHAR},
+      page_content = #{pageContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByTradeNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from pay_request_back
+    where out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
+  </select>
+</mapper>

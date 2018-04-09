@@ -25,9 +25,9 @@ public class AgentChannelDispatcher implements Dispatcher {
         dispatchResult.setPage(page);
         dispatchResult.addObject("channels",channels);
 
-        dispatchResult.addObject("payUrl","http://huifufu.cn/hf-pay/pay");
-        dispatchResult.addObject("refundUrl","http://huifufu.cn/hf-pay/refund");
-        dispatchResult.addObject("queryUrl","http://huifufu.cn/hf-pay/queryOrder");
+        dispatchResult.addObject("payUrl","http://huifufu.cn/openapi/unifiedorder");
+        dispatchResult.addObject("refundUrl","http://huifufu.cn/openapi/refundorder");
+        dispatchResult.addObject("queryUrl","http://huifufu.cn/openapi/queryOrder");
 
         UserGroup userGroup = client.getUserGroupById(groupId);
         dispatchResult.addObject("groupNo",userGroup.getGroupNo());

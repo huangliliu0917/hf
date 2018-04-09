@@ -11,6 +11,7 @@ import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.PayService;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserChannelDao;
 import com.hf.core.dao.local.UserGroupDao;
@@ -37,6 +38,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/pay")
 public class PayApi {
+    @Autowired
+    @Qualifier("wwTradingBiz")
+    private TradingBiz wwTradingBiz;
     @Autowired
     private PayRequestDao payRequestDao;
     @Autowired
@@ -80,8 +84,7 @@ public class PayApi {
             BigDecimal total = new BigDecimal(params.get("total").toString());
             params.put("total",String.valueOf(total.intValue()));
 
-            TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(mchId,service);
-            Map<String,Object> resultMap = tradeBiz.pay(params);
+            Map<String,Object> resultMap = wwTradingBiz.pay(params);
             return new Gson().toJson(resultMap);
         } catch (BizFailException e) {
             Map<String,Object> result = com.hf.base.utils.MapUtils.buildMap("errcode",e.getCode(),"message",e.getMessage());

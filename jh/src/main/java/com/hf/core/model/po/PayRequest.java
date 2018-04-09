@@ -52,6 +52,10 @@ public class PayRequest {
 
     private int noticeStatus;
 
+    private String createIp;
+
+    private String bankCode;
+
     public PayRequest() {
 
     }
@@ -252,5 +256,21 @@ public class PayRequest {
 
     public void setNoticeStatus(int noticeStatus) {
         this.noticeStatus = noticeStatus;
+    }
+
+    public String getCreateIp() {
+        return createIp;
+    }
+
+    public void setCreateIp(String createIp) {
+        this.createIp = createIp;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 }

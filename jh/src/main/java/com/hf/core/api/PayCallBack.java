@@ -1,6 +1,7 @@
 package com.hf.core.api;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
@@ -8,13 +9,11 @@ import com.hf.core.utils.BeanContextUtils;
 import com.hf.core.utils.CallBackCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 
 public class PayCallBack extends HttpServlet {
@@ -35,22 +34,16 @@ public class PayCallBack extends HttpServlet {
         String receivedData = getPostString(req);
         logger.info("ww callback received data:"+receivedData);
 
-        req.setCharacterEncoding("UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html;charset=utf-8");
-
-        Map<String,String[]> paramMap = req.getParameterMap();
-        Map<String,String> params = new HashMap<>();
-        paramMap.keySet().forEach(s -> params.put(s,paramMap.get(s)[0]));
+        Map<String,String> paramMap = new Gson().fromJson(receivedData,new TypeToken<Map<String,String>>(){}.getType());
 
         if(null != paramMap.get("orderNum")) {
             CallBackCache.noticedList.add(String.valueOf(paramMap.get("orderNum")));
         }
 
-        logger.info("ww callback param data:"+new Gson().toJson(params));
+        logger.info("ww callback param data:"+new Gson().toJson(paramMap));
 
-        String result = wwTradeBiz.handleCallBack(params);
-        String tradeNo = params.get("orderNum");
+        String result = wwTradeBiz.handleCallBack(paramMap);
+        String tradeNo = paramMap.get("orderNum");
         PayRequest payRequest = payRequestDao.selectByTradeNo(tradeNo);
         wwTradeBiz.notice(payRequest);
 

@@ -58,6 +58,8 @@ public class PayServiceImpl implements PayService {
     private AccountDailyLimitDao accountDailyLimitDao;
     @Autowired
     private AdminBankCardDao adminBankCardDao;
+    @Autowired
+    private PayRequestBackDao payRequestBackDao;
 
     @Override
     @Transactional
@@ -211,7 +213,13 @@ public class PayServiceImpl implements PayService {
         if(count<=0) {
             throw new BizFailException("update status failed");
         }
-        payMsgRecordDao.insertSelective(hfResultMsg);
+    }
+
+    @Transactional
+    @Override
+    public void payFailed(String outTradeNo, PayRequestBack payRequestBack) {
+        payFailed(outTradeNo);
+        payRequestBackDao.insertSelective(payRequestBack);
     }
 
     @Transactional
@@ -401,12 +409,22 @@ public class PayServiceImpl implements PayService {
 
     @Transactional
     @Override
+    public void remoteSuccess(PayRequest payRequest, PayRequestBack payRequestBack) {
+        int count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_GENERATED.getValue(),PayRequestStatus.PROCESSING.getValue());
+        if(count<=0) {
+            throw new BizFailException("update pay request status failed,%s",payRequest.getOutTradeNo());
+        }
+        payRequestBackDao.insertSelective(payRequestBack);
+    }
+
+    @Transactional
+    @Override
     public void remoteSuccess(PayRequest payRequest,PayMsgRecord hfResultMsg) {
         int count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_GENERATED.getValue(),PayRequestStatus.PROCESSING.getValue());
         if(count<=0) {
             throw new BizFailException("update pay request status failed,%s",payRequest.getOutTradeNo());
         }
-        payMsgRecordDao.insertSelective(hfResultMsg);
+//        payMsgRecordDao.insertSelective(hfResultMsg);
     }
 
     @Transactional
