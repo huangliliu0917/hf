@@ -61,11 +61,7 @@ public class PayJob {
             list.forEach(payRequest -> {
                 try {
                     TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
-                    if(!CallBackCache.noticedList.contains(payRequest.getOutTradeNo())) {
-                        return;
-                    }
                     tradeBiz.handleProcessingRequest(payRequest);
-                    CallBackCache.noticedList.remove(payRequest.getOutTradeNo());
                 } catch (BizFailException e) {
                     logger.error(String.format("pay processing job failed,%s,%s",e.getMessage(),payRequest.getOutTradeNo()));
                 }

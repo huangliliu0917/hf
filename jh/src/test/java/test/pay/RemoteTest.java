@@ -119,7 +119,7 @@ public class RemoteTest extends BaseCommitTestCase {
         Map<String,Object> params = new HashMap<>();
         params.put("version","1.0");
         params.put("merchant_no","212000912");
-        params.put("out_trade_no","5156_20180408171756169466");
+        params.put("out_trade_no","5166_app213110100002201745420");
         params.put("nonce_str",Utils.getRandomString(10));
         params.put("sign_type","MD5");
         String sign = Utils.encrypt(params,"38ntxf73xznze26bmnr1uw3er94rce8t");
@@ -159,7 +159,7 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testQueryww() {
         Map<String,Object> params = new HashMap<>();
         params.put("memberCode","9010000025");
-        params.put("orderNum","5156_20180408202057516017");
+        params.put("orderNum","5166_app213110100002201745420");
         String signUrl = Utils.getEncryptStr(params);
         String signStr = EpaySignUtil.sign(CipherUtils.private_key,signUrl);
         params.put("signStr",signStr);

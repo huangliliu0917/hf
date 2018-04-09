@@ -3,6 +3,7 @@ package com.hf.core.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.utils.BeanContextUtils;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class PayCallBack extends HttpServlet {
 
     protected Logger logger = LoggerFactory.getLogger(PayCallBack.class);
-    private TradeBiz wwTradeBiz = BeanContextUtils.getBean("wwTradeBiz");
+    private TradingBiz wwTradingBiz = BeanContextUtils.getBean("wwTradingBiz");
     private PayRequestDao payRequestDao = BeanContextUtils.getBean("payRequestDao");
 
     @Override
@@ -42,10 +43,10 @@ public class PayCallBack extends HttpServlet {
 
         logger.info("ww callback param data:"+new Gson().toJson(paramMap));
 
-        String result = wwTradeBiz.handleCallBack(paramMap);
+        String result = wwTradingBiz.handleCallBack(paramMap);
         String tradeNo = paramMap.get("orderNum");
         PayRequest payRequest = payRequestDao.selectByTradeNo(tradeNo);
-        wwTradeBiz.notice(payRequest);
+        wwTradingBiz.notice(payRequest);
 
         resp.getWriter().write(result);
     }
