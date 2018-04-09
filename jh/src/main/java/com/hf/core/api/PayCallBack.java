@@ -5,6 +5,7 @@ import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.utils.BeanContextUtils;
+import com.hf.core.utils.CallBackCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,10 @@ public class PayCallBack extends HttpServlet {
         Map<String,String[]> paramMap = req.getParameterMap();
         Map<String,String> params = new HashMap<>();
         paramMap.keySet().forEach(s -> params.put(s,paramMap.get(s)[0]));
+
+        if(null != paramMap.get("orderNum")) {
+            CallBackCache.noticedList.add(String.valueOf(paramMap.get("orderNum")));
+        }
 
         logger.info("ww callback param data:"+new Gson().toJson(params));
 

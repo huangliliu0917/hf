@@ -1,5 +1,6 @@
 package com.hf.core.api;
 
+import com.google.gson.Gson;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.GroupStatus;
 import com.hf.base.exceptions.BizFailException;
@@ -15,6 +16,7 @@ import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.job.pay.PayJob;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserGroup;
+import com.hf.core.utils.CallBackCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/jhAdmin")
 public class AdminApi {
     @Autowired
     private UserGroupDao userGroupDao;
@@ -91,5 +93,10 @@ public class AdminApi {
         TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
         tradeBiz.handleProcessingRequest(payRequest);
         return "finished";
+    }
+
+    @RequestMapping(value = "/getCallBackCache",method = RequestMethod.GET)
+    public void getCallBackCache() {
+        System.out.println(new Gson().toJson(CallBackCache.noticedList));
     }
  }
