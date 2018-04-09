@@ -8,6 +8,7 @@ import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.*;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
+import com.hf.base.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -162,6 +163,13 @@ public class UserController {
         Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
         BigDecimal settleAmount = new BigDecimal(request.getParameter("settleAmount")).multiply(new BigDecimal("100"));
         Long cardId = Long.parseLong(request.getParameter("cardId"));
+
+        Long userId = Long.parseLong(request.getSession().getAttribute("userId").toString());
+        String password = request.getParameter("password")== null?"":request.getParameter("password");
+        UserInfo userInfo = client.getUserInfoById(userId);
+        if(!StringUtils.equals(userInfo.getPassword(), Utils.convertPassword(password))) {
+            return MapUtils.buildMap("status",false,"msg","支付密码错误");
+        }
 
         List<UserBankCard> cardList = client.getUserBankCard(groupId);
         List<Long> cardIds = cardList.parallelStream().map(UserBankCard::getId).collect(Collectors.toList());

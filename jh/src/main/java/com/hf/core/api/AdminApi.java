@@ -96,7 +96,8 @@ public class AdminApi {
     }
 
     @RequestMapping(value = "/getCallBackCache",method = RequestMethod.GET)
-    public void getCallBackCache() {
+    public @ResponseBody String getCallBackCache() {
         System.out.println(new Gson().toJson(CallBackCache.noticedList));
+        return new Gson().toJson(CallBackCache.noticedList);
     }
  }
