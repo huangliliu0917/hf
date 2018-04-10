@@ -19,4 +19,6 @@ public interface CacheService {
     String getPublicKey();
 
     String getPrivateKey();
+
+    String getRootPath();
 }

@@ -2,22 +2,27 @@ package test;
 
 import com.google.gson.Gson;
 import com.hf.base.enums.GroupType;
+import com.hf.base.enums.OprType;
 import com.hf.base.model.*;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.TypeConverter;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.AccountBiz;
+import com.hf.core.dao.local.AccountOprLogDao;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AccountTest extends BaseTestCase {
     @Autowired
     private AccountBiz accountBiz;
+    @Autowired
+    private AccountOprLogDao accountOprLogDao;
 
     @Test
     public void testGetAccountPageInfo() {
@@ -128,12 +133,6 @@ public class AccountTest extends BaseTestCase {
 
     @Test
     public void testGetUrlParams(){
-        AccountOprRequest accountOprRequest = new AccountOprRequest();
-        accountOprRequest.setOprType(1);
-        accountOprRequest.setStatus(10);
-        accountOprRequest.setOutTradeNo("112345");
-        accountOprRequest.setName("test");
-        String params = Utils.getUrlParam(accountOprRequest,AccountOprRequest.class);
-        System.out.println(params);
+        BigDecimal finishAmount = accountOprLogDao.sumFinishAmount(Arrays.asList(3166L),Arrays.asList(OprType.PAY.getValue()));
     }
 }

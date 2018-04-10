@@ -2,10 +2,7 @@ package com.hf.core.api;
 
 import com.hf.base.contants.CodeManager;
 import com.hf.base.contants.Constants;
-import com.hf.base.enums.GroupStatus;
-import com.hf.base.enums.GroupType;
-import com.hf.base.enums.UserStatus;
-import com.hf.base.enums.UserType;
+import com.hf.base.enums.*;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.*;
 import com.hf.base.utils.Pagenation;
@@ -27,6 +24,7 @@ import com.hf.core.model.po.Account;
 import com.hf.core.model.po.AdminAccount;
 import com.hf.core.model.po.AdminBankCard;
 import com.hf.core.model.po.Channel;
+import com.hf.core.model.po.ChannelProvider;
 import com.hf.core.model.po.UserBankCard;
 import com.hf.core.model.po.UserChannel;
 import com.hf.core.model.po.UserGroup;
@@ -81,6 +79,8 @@ public class UserApi {
     private UserGroupExtDao userGroupExtDao;
     @Autowired
     private ArchService archService;
+    @Autowired
+    private AccountOprLogDao accountOprLogDao;
 
     @RequestMapping(value = "/get_user_list",method = RequestMethod.POST)
     public @ResponseBody
@@ -817,5 +817,12 @@ public class UserApi {
         userGroup.setCallbackUrl(callBackUrl);
         userGroupDao.updateByPrimaryKeySelective(userGroup);
         return ResponseResult.success(true);
+    }
+
+    @RequestMapping(value = "/get_sum_finish_amount",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseResult<BigDecimal> getSumFinishAmount(@RequestBody Map<String,Object> data) {
+        Long groupId = new BigDecimal(data.get("groupId").toString()).longValue();
+        BigDecimal finishAmount = accountOprLogDao.sumFinishAmount(Arrays.asList(groupId),Arrays.asList(OprType.PAY.getValue()));
+        return ResponseResult.success(finishAmount);
     }
 }

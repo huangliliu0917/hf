@@ -13,6 +13,8 @@ public class PropertyConfig {
     @Value("#{commonConfig[outNotifyLimit]}")
     private Integer outNotifyLimit;
 
+    private String hefuCallBackUrl;
+
     public String getCallbackUrl() {
         return callbackUrl;
     }
@@ -23,5 +25,9 @@ public class PropertyConfig {
 
     public Integer getOutNotifyLimit() {
         return outNotifyLimit;
+    }
+
+    public String getHefuCallBackUrl() {
+        return hefuCallBackUrl;
     }
 }

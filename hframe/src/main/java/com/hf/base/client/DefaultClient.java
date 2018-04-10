@@ -43,6 +43,7 @@ public class DefaultClient extends BaseClient {
     private static final String DELETE_CHANNEL = "/user/del_channel";
     private static final String GET_USER_EXT_BY_ID = "/user/get_user_group_ext_by_id";
     private static final String SAVE_USER_GROUP_EXT = "/user/save_user_group_ext";
+    private static final String GET_SUM_FINISH_AMOUNT = "/user/get_sum_finish_amount";
 
     private static final String GET_USER_CHANNEL_INFO = "/user/get_user_channel_info";
 
@@ -287,6 +288,13 @@ public class DefaultClient extends BaseClient {
             return responseResult.getData();
         }
         throw new BizFailException(responseResult.getCode(),responseResult.getMsg());
+    }
+
+    public BigDecimal getSumFinishAmount(Long groupId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_SUM_FINISH_AMOUNT).withParam("groupId",groupId);
+        String result = super.post(remoteParams);
+        ResponseResult<BigDecimal> response = new Gson().fromJson(result,new TypeToken<ResponseResult<BigDecimal>>(){}.getType());
+        return response.getData();
     }
 
     private boolean parseResult(String result) {

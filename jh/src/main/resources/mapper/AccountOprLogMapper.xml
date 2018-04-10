@@ -301,4 +301,21 @@
       </foreach>
     </if>
   </select>
+
+  <select id="sumFinishAmount" resultType="java.math.BigDecimal">
+    select sum(amount) from account_opr_log where status = 10
+    <if test="groupIds != null and groupIds.size()>0" >
+      and group_id in
+      <foreach collection="groupIds" index="index" item="groupId" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="types != null and types.size()>0" >
+      and type in
+      <foreach collection="types" index="index" item="type" open="(" separator="," close=")">
+        #{type}
+      </foreach>
+    </if>
+    and create_time >= curdate()
+  </select>
 </mapper>

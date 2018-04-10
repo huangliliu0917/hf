@@ -3,6 +3,7 @@ package com.hf.user.service;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.Dispatcher;
+import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.model.TradeRequest;
 import com.hf.base.model.TradeRequestDto;
 import com.hf.base.model.UserChannel;
@@ -42,6 +43,8 @@ public class UserOrderRecordDispatcher implements Dispatcher {
         }
         if(StringUtils.isNotEmpty(request.getParameter("status"))) {
             tradeRequest.setStatus(Integer.parseInt(request.getParameter("status")));
+        } else {
+            tradeRequest.setStatus(PayRequestStatus.PAY_SUCCESS.getValue());
         }
         if(StringUtils.isNotEmpty(request.getParameter("outTradeNo"))) {
             tradeRequest.setOutTradeNo(request.getParameter("outTradeNo"));

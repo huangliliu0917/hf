@@ -1,4 +1,4 @@
-package com.hf.user.service;
+package com.hf.agent.service;
 
 import com.hf.base.client.DefaultClient;
 import com.hf.base.dispatcher.DispatchResult;
@@ -6,11 +6,12 @@ import com.hf.base.dispatcher.Dispatcher;
 import com.hf.base.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 @Service
-public class UserAccountInfoDispatcher implements Dispatcher {
+public class UserAccountDispatcher implements Dispatcher {
     @Autowired
     private DefaultClient defaultClient;
 

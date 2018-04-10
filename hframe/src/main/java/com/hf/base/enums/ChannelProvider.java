@@ -5,7 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 public enum  ChannelProvider {
     YS("ys","友收宝"),
     FXT("fxt","富信通"),
-    WW("ww","微微");
+    WW("ww","微微"),
+    HFB("hfb","合付宝");
 
     private String code;
     private String name;

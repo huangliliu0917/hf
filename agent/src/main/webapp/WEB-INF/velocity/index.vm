@@ -83,6 +83,7 @@
                     <ul class="nav nav-second-level">
                         <li><a href="#springUrl('/common/agent_personal')" class="J_menuItem"><strong>个人信息</strong></a> </li>
                         <li><a href="#springUrl('/common/agent_group')" class="J_menuItem"><strong>商户信息</strong></a> </li>
+                        <li><a href="#springUrl('/common/user_account_info')" class="J_menuItem"><strong>账户信息</strong></a> </li>
                         <li><a href="#springUrl('/common/agent_channel_index')" class="J_menuItem"><strong>商户费率</strong></a> </li>
                     </ul>
                 </li>

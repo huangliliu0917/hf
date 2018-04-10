@@ -317,6 +317,12 @@
         #{status}
       </foreach>
     </if>
+    <if test="notInStatusList != null and notInStatusList.size()>0">
+      and status not in
+      <foreach item="status" index="index" collection="notInStatusList" open="(" separator="," close=")">
+        #{status}
+      </foreach>
+    </if>
     <if test="type != null">
       and trade_type = #{type,jdbcType=INTEGER}
     </if>
