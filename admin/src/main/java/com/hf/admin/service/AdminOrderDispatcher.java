@@ -4,6 +4,7 @@ import com.hf.admin.rpc.AdminClient;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.Dispatcher;
+import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.model.Channel;
 import com.hf.base.model.TradeRequest;
 import com.hf.base.model.TradeRequestDto;
@@ -49,6 +50,8 @@ public class AdminOrderDispatcher implements Dispatcher {
 
         if(StringUtils.isNotEmpty(request.getParameter("status"))) {
             tradeRequest.setStatus(Integer.parseInt(request.getParameter("status")));
+        } else {
+            tradeRequest.setStatus(PayRequestStatus.PAY_SUCCESS.getValue());
         }
 
         if(StringUtils.isNotEmpty(request.getParameter("type"))) {

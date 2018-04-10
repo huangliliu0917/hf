@@ -64,12 +64,9 @@
               <div class="layui-inline">
                   <div class="layui-input-inline">
                       <select name="status">
-                          <option value="">全部状态</option>
-                          <option value="0" #if(${requestInfo.status}==0) selected #end>未处理</option>
-                          <option value="1" #if(${requestInfo.status}==1) selected #end>处理中</option>
-                          <option value="2" #if(${requestInfo.status}==2) selected #end>成功,未返回</option>
-                          <option value="5" #if(${requestInfo.status}==5) selected #end>成功,已返回</option>
-                          <option value="10" #if(${requestInfo.status}==10) selected #end>交易成功</option>
+                          <option value="-1" #if(${requestInfo.status}==-1) selected #end>全部状态</option>
+                          <option value="100" #if(${requestInfo.status}==100) selected #end>交易成功</option>
+                          <option value="0" #if(${requestInfo.status}!=100 && ${requestInfo.status}!= 99) selected #end>处理中</option>
                           <option value="99" #if(${requestInfo.status}==99) selected #end>交易失败</option>
                       </select>
                   </div>
