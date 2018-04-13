@@ -545,6 +545,20 @@ public class UserApi {
         }
     }
 
+    @RequestMapping(value = "/get_trade_statistics_request_list",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public @ResponseBody
+    ResponseResult<Pagenation<TradeStatisticsRequestDto>> getTradeStatisticsRequestList(@RequestBody Map<String,Object> params) {
+        try {
+            TradeStatisticsRequest tradeRequest = TypeConverter.convert(params, TradeStatisticsRequest.class);
+            Pagenation<TradeStatisticsRequestDto> page = trdBiz.getTradeStatisticsList(tradeRequest);
+            return ResponseResult.success(page);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseResult.failed(CodeManager.BIZ_FAIELD,e.getMessage(),new Pagenation<TradeStatisticsRequestDto>(Collections.EMPTY_LIST));
+        }
+    }
+
+
     @RequestMapping(value = "/get_account_list",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody
     ResponseResult<Pagenation<AccountPageInfo>> getAccountList(@RequestBody Map<String,Object> params) {

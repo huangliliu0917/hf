@@ -1,5 +1,6 @@
 package com.hf.core.dao.local;
 
+import com.hf.base.model.TradeStatisticsRequestDto;
 import com.hf.core.model.po.PayRequest;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,7 +32,11 @@ public interface PayRequestDao {
 
     List<PayRequest> select(Map<String, Object> params);
 
+    List<TradeStatisticsRequestDto> selectStatistics(Map<String, Object> params);
+
     int selectCount(Map<String, Object> params);
+
+    int selectStatisticsCount(Map<String, Object> params);
 
     int updateFailed(@Param("id") Long id, @Param("fromStatus") int fromStatus, @Param("remark") String remark);
 

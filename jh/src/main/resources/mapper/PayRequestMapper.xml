@@ -347,6 +347,77 @@
     limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
+
+  <select id="selectStatistics" resultType="com.hf.base.model.TradeStatisticsRequestDto">
+      SELECT
+          date_format(log.create_time,'%Y-%m-%d') as "createTime",
+          SUM(log.amount)  as "amoun",
+          t2.group_no as "groupNo",
+          t2.name as "name",
+          t1.service  as "service",
+          t1.channel_provider_code as "channelProviderCode"
+      FROM
+          account_opr_log log
+      LEFT JOIN
+          pay_request t1
+      ON
+          log.out_trade_no = t1.out_trade_no
+      LEFT JOIN
+          user_group t2
+      ON
+          log.group_id = t2.id
+      WHERE
+          log.status = 10
+          <if test="groupNo != null">
+            and t2.group_no = #{groupNo,jdbcType=VARCHAR}
+          </if>
+          <if test="createTime != null">
+            and t2.group_no = #{groupNo,jdbcType=TIMESTAMP}
+            and date_format(log.create_time,'%Y-%m-%d') = date_format(#{createTime,jdbcType=TIMESTAMP},'%Y-%m-%d')
+          </if>
+      GROUP BY
+          date_format(log.create_time,'%Y-%m-%d'),
+          t2.group_no,
+          t2.name,
+          t1.service,
+          t1.channel_provider_code
+      limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectStatisticsCount" resultType="java.lang.Integer">
+
+    SELECT count(*) FROM (
+      select
+        1
+      from
+        account_opr_log log
+      LEFT JOIN
+        pay_request t1
+      ON
+        log.out_trade_no = t1.out_trade_no
+      LEFT JOIN
+        user_group t2
+      ON
+        log.group_id = t2.id
+      WHERE
+        log.status = 10
+        <if test="groupNo != null">
+          and t2.group_no = #{groupNo,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime != null">
+          and t2.group_no = #{groupNo,jdbcType=TIMESTAMP}
+          and date_format(log.create_time,'%Y-%m-%d') = date_format(#{createTime,jdbcType=TIMESTAMP},'%Y-%m-%d')
+        </if>
+      GROUP BY
+        date_format(log.create_time,'%Y-%m-%d'),
+        t2.group_no,
+        t2.name,
+        t1.service,
+        t1.channel_provider_code
+    )a
+
+  </select>
+
   <select id="selectCount" resultType="java.lang.Integer">
     select count(1) from pay_request where 1=1
     <if test="outTradeNo != null">

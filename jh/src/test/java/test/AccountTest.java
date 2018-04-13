@@ -126,7 +126,7 @@ public class AccountTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetSumAmount() {
+        public void testGetSumAmount() {
         BigDecimal logAmount = accountBiz.getLockedAmount(13L);
         System.out.println(logAmount);
     }

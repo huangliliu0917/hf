@@ -79,6 +79,7 @@
                 <li class="nav-menu"><a href="#"> <i class="fa fa fa-sellsy"></i> <span class="nav-label">订单管理</span></a>
                 <ul class="nav nav-second-level">
                     <li><a href="#springUrl('/common/admin_order_index')" class="J_menuItem">交易管理</a></li>
+                    <li><a href="#springUrl('/user/getTrdOrderStatisticsList')" class="J_menuItem">交易统计管理</a></li>
                     <li><a href="#springUrl('/common/admin_order_changeRecord')" class="J_menuItem">资金变动管理</a></li>
                 </ul>
                 </li>

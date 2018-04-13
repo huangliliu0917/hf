@@ -1,9 +1,9 @@
 package test;
 
 import com.google.gson.Gson;
-import com.hfb.merchant.code.handler.ModelPay;
-import com.hfb.merchant.code.model.Barcode;
-import com.hfb.merchant.code.sercret.CertUtil;
+//import com.hfb.merchant.code.handler.ModelPay;
+//import com.hfb.merchant.code.model.Barcode;
+//import com.hfb.merchant.code.sercret.CertUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 
@@ -91,18 +91,18 @@ public class HefuTest {
         String contact = "13734107865";
 
         // 创建加密的工具类
-        CertUtil certUtil = new CertUtil(publicKey, privateKey, KeyPass, true);
-
-        // 实体化对象数据封装，并对数据进行校验
-        Barcode barcode = new Barcode(merchantNo, tranDate, tranTime, amount, remark, ext1, ext2, yUL1, yUL2, yUL3,
-                tranFlow, payType, bindId, scene, authCode, notifyUrl, bizType, goodsName, goodsInfo, goodsNum,
-                buyerName, contact, buyerId);
-
-        // 对发送的信息，进行加密，加签，发送至网关，并对网关返回的信息内容进行解析，验签操作
-        Map<String, String> map = ModelPay.sendModelPay(certUtil, barcode, paygateReqUrl);
+//        CertUtil certUtil = new CertUtil(publicKey, privateKey, KeyPass, true);
+//
+//        // 实体化对象数据封装，并对数据进行校验
+//        Barcode barcode = new Barcode(merchantNo, tranDate, tranTime, amount, remark, ext1, ext2, yUL1, yUL2, yUL3,
+//                tranFlow, payType, bindId, scene, authCode, notifyUrl, bizType, goodsName, goodsInfo, goodsNum,
+//                buyerName, contact, buyerId);
+//
+//        // 对发送的信息，进行加密，加签，发送至网关，并对网关返回的信息内容进行解析，验签操作
+//        Map<String, String> map = ModelPay.sendModelPay(certUtil, barcode, paygateReqUrl);
 
         //输出网关返回的内容
-        System.out.println("条码支付的响应报文"+new Gson().toJson(map));
+//        System.out.println("条码支付的响应报文"+new Gson().toJson(map));
     }
 
     @Test

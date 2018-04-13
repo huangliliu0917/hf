@@ -9,6 +9,8 @@ import com.hf.admin.utils.MapUtils;
 import com.hf.base.biz.CacheService;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.contants.Constants;
+import com.hf.base.enums.ChannelCode;
+import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.UserType;
 import com.hf.base.enums.WithDrawRole;
 import com.hf.base.model.*;
@@ -27,6 +29,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -376,6 +382,7 @@ public class UserApi {
         }
     }
 
+
     @RequestMapping(value = "/getTrdOrderList",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public ModelAndView getTradeOrderList(HttpServletRequest request) {
         Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
@@ -421,6 +428,70 @@ public class UserApi {
                 StringUtils.isEmpty(tradeRequest.getChannelCode())?"":tradeRequest.getChannelCode(),
                 tradeRequest.getStatus()==null?"":tradeRequest.getStatus(),
                 tradeRequest.getType()==null?"":tradeRequest.getType()));
+        return modelAndView;
+    }
+
+    /**
+     *  订单统计查询
+     * @param request   method = RequestMethod.POST
+     * @return
+     */
+    @RequestMapping(value = "/getTrdOrderStatisticsList" ,produces = "application/json;charset=UTF-8")
+    public ModelAndView getTradeOrderStatisticsList(HttpServletRequest request) {
+        Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
+        int currentPage = 1;
+        TradeStatisticsRequest tradeRequest = new TradeStatisticsRequest();
+        tradeRequest.setCurrentPage(1);
+        tradeRequest.setPageSize(15);
+        tradeRequest.setGroupId(groupId);
+        tradeRequest.setCurrentPage(currentPage);
+
+        String groupNo = "";
+        String createTime = "";
+
+        if(!StringUtils.isEmpty(request.getParameter("createTime"))) {
+            createTime=request.getParameter("createTime");
+            tradeRequest.setCreateTime(createTime);
+        }
+        if(!StringUtils.isEmpty(request.getParameter("groupNo"))) {
+            groupNo = request.getParameter("groupNo");
+            tradeRequest.setGroupNo(groupNo);
+        }
+
+        Pagenation<TradeStatisticsRequestDto> pagenation = client.getTradeOrderStatisticsList(tradeRequest);
+        //处理代码中文
+        List<TradeStatisticsRequestDto> tlist = pagenation.getData();
+        for (TradeStatisticsRequestDto tsrd:tlist) {
+            if(tsrd ==null)
+                break;
+            if (tsrd.getService() != null && tsrd.getService().length()>0){
+                String serviceName = ChannelCode.parseFromCode(tsrd.getService()).getDesc();                    //通道
+                tsrd.setServiceName(serviceName);
+            }else{
+                tsrd.setService(" ");
+                tsrd.setServiceName(" ");
+            }
+
+            if (tsrd.getChannelProviderCode() != null && tsrd.getChannelProviderCode().length()>0) {
+                String channelProviderName = ChannelProvider.parse(tsrd.getChannelProviderCode()).getName();    //供应商
+                tsrd.setChannelProviderName(channelProviderName);
+            }else {
+                tsrd.setChannelProviderCode(" ");
+                tsrd.setChannelProviderName(" ");
+            }
+        }
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin_order_statistics");
+        modelAndView.addObject("pageInfo",pagenation);
+        modelAndView.addObject("requestInfo",tradeRequest);
+
+        //分页url
+        modelAndView.addObject("urlParams",
+                String.format("groupNo=%s&createTime=%s",
+                    StringUtils.isEmpty(groupNo)?"":groupNo,
+                    StringUtils.isEmpty(createTime)?"":createTime)
+                );
         return modelAndView;
     }
 
@@ -515,10 +586,10 @@ public class UserApi {
     Map<String,Object> finishWithDraw(HttpServletRequest request) {
         String id = request.getParameter("id");
         if(StringUtils.isBlank(id)){
-            return MapUtils.buildMap("status",false,"msg","参数错误");
+            return MapUtils.buildMap("res",false,"msg","参数错误");
         }
         boolean result = adminClient.finishWithDraw(Long.parseLong(id));
-        return MapUtils.buildMap("status",result);
+        return MapUtils.buildMap("res",result);
     }
 
     @RequestMapping(value = "/with_draw_failed",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")

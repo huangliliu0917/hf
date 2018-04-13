@@ -29,6 +29,7 @@ public class DefaultClient extends BaseClient {
     private static final String GET_SUB_USER_GROUP = "/user/get_sub_user_group";
     private static final String GET_CHANNEL_BY_ID = "/user/get_channel_by_id";
     private static final String GET_TRADE_REQUEST_LIST = "/user/get_trade_request_list";
+    private static final String GET_TRADE_STATISTICS_REQUEST_LIST = "/user/get_trade_statistics_request_list";
     private static final String GET_ACCOUNT_LIST = "/user/get_account_list";
     private static final String GET_ADMIN_ACCOUNT_LIST = "/user/get_admin_account_list";
     private static final String GET_ACCOUNT_OPR_LOG_LIST = "/user/get_account_opr_log_list";
@@ -140,6 +141,21 @@ public class DefaultClient extends BaseClient {
         RemoteParams remoteParams = new RemoteParams(url).withPath(GET_TRADE_REQUEST_LIST).withParams(MapUtils.beanToMap(tradeRequest));
         String result = super.post(remoteParams);
         ResponseResult<Pagenation<TradeRequestDto>> response = new Gson().fromJson(result,new TypeToken<ResponseResult<Pagenation<TradeRequestDto>>>(){}.getType());
+        if(response.isSuccess()) {
+            return response.getData();
+        }
+        throw new BizFailException(response.getCode(),response.getMsg());
+    }
+
+    /**
+     * 根据商户id及日期获取统计数据
+     * @param tradeRequest
+     * @return
+     */
+    public Pagenation<TradeStatisticsRequestDto> getTradeOrderStatisticsList(TradeStatisticsRequest tradeRequest) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_TRADE_STATISTICS_REQUEST_LIST).withParams(MapUtils.beanToMap(tradeRequest));
+        String result = super.post(remoteParams);
+        ResponseResult<Pagenation<TradeStatisticsRequestDto>> response = new Gson().fromJson(result,new TypeToken<ResponseResult<Pagenation<TradeStatisticsRequestDto>>>(){}.getType());
         if(response.isSuccess()) {
             return response.getData();
         }
