@@ -6,6 +6,8 @@ import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.enums.TradeType;
 import com.hf.base.model.TradeRequest;
 import com.hf.base.model.TradeRequestDto;
+import com.hf.base.model.TradeStatisticsRequest;
+import com.hf.base.model.TradeStatisticsRequestDto;
 import com.hf.base.utils.EpaySignUtil;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
@@ -79,6 +81,31 @@ public class TrdBizImpl implements TrdBiz {
         Integer totalSize = payRequestDao.selectCount(params);
 
         return new Pagenation<>(result,totalSize,request.getCurrentPage(),request.getPageSize());
+    }
+
+    /**
+     * 获取交易统计数据
+     * @param request
+     * @return
+     */
+    @Override
+    public Pagenation<TradeStatisticsRequestDto> getTradeStatisticsList(TradeStatisticsRequest request) {
+
+        //分页信息
+        Map<String,Object> params = MapUtils.beanToMap(request);
+        Integer startIndex = (request.getCurrentPage()-1)*request.getPageSize();
+        params.put("startIndex",startIndex);
+        params.put("pageSize",request.getPageSize());
+
+        //查询数据
+        Integer totalSize = payRequestDao.selectStatisticsCount(params);                //查询条数
+        List<TradeStatisticsRequestDto> list = payRequestDao.selectStatistics(params);  //查询结果集
+
+        if(CollectionUtils.isEmpty(list)) {
+            return new Pagenation(new ArrayList(),list.size(),request.getCurrentPage(),request.getPageSize());
+        }
+
+        return new Pagenation<>(list,totalSize,request.getCurrentPage(),request.getPageSize());
     }
 
     private TradeRequestDto buildPayRequest(PayRequest payRequest,Map<String,UserGroup> map) {
