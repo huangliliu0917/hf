@@ -5,7 +5,7 @@ import com.hf.base.enums.ChannelCode;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.ChannelStatus;
 import com.hf.base.exceptions.BizFailException;
-import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.ChannelDao;
 import com.hf.core.dao.local.UserChannelDao;
 import com.hf.core.model.po.Channel;
@@ -27,41 +27,34 @@ public class TradeBizFactory {
     @Autowired
     private UserChannelDao userChannelDao;
     @Autowired
-    @Qualifier("fxtTradeBiz")
-    private TradeBiz fxtTradeBiz;
+    @Qualifier("wwTradingBiz")
+    private TradingBiz wwTradingBiz;
     @Autowired
-    @Qualifier("ysTradeBiz")
-    private TradeBiz ysTradeBiz;
-    @Autowired
-    @Qualifier("wwTradeBiz")
-    private TradeBiz wwTradeBiz;
+    @Qualifier("hfbTradingBiz")
+    private TradingBiz hfbTradingBiz;
 
-    public TradeBiz getTradeBiz(String providerCode) {
+    public TradingBiz getTradingBiz(String providerCode) {
         ChannelProvider channelProvider = ChannelProvider.parse(providerCode);
         if(null == channelProvider) {
             throw new BizFailException(String.format("no provider found,%s",providerCode));
         }
         switch (channelProvider) {
-            case FXT:
-                return fxtTradeBiz;
-            case YS:
-                return ysTradeBiz;
             case WW:
-                return wwTradeBiz;
+                return wwTradingBiz;
+            case HFB:
+                return hfbTradingBiz;
         }
         throw new BizFailException(String.format("no provider found,%s",providerCode));
     }
 
-    public TradeBiz getTradeBiz(String mchId,String service) {
+    public TradingBiz getTradingBiz(String mchId,String service) {
         if(StringUtils.isEmpty(mchId) || StringUtils.isEmpty(service)) {
             throw new BizFailException(CodeManager.PARAM_CHECK_FAILED,"商户编号参数错误");
         }
-
         ChannelCode channelCode = ChannelCode.parseFromCode(service);
         if(null == channelCode) {
             throw new BizFailException(CodeManager.PARAM_CHECK_FAILED,String.format("服务类型错误,%s",service));
         }
-
         UserGroup userGroup = cacheService.getGroup(mchId);
         for(ChannelProvider provider:ChannelProvider.values()) {
             Channel channel = channelDao.selectByCode(service,provider.getCode());
@@ -75,19 +68,14 @@ public class TradeBizFactory {
                 continue;
             }
 
-            if(ChannelProvider.FXT == provider) {
-                return fxtTradeBiz;
-            }
-
-            if(ChannelProvider.YS == provider) {
-                return ysTradeBiz;
-            }
-
             if(ChannelProvider.WW == provider) {
-                return wwTradeBiz;
+                return wwTradingBiz;
+            }
+
+            if(ChannelProvider.HFB == provider) {
+                return hfbTradingBiz;
             }
         }
-
         throw new BizFailException("用户无收单权限");
     }
 }

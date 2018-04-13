@@ -7,6 +7,7 @@ import com.hf.base.utils.MapUtils;
 import com.hf.core.biz.service.PayService;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.utils.CallBackCache;
@@ -60,8 +61,8 @@ public class PayJob {
 
             list.forEach(payRequest -> {
                 try {
-                    TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
-                    tradeBiz.handleProcessingRequest(payRequest);
+                    TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
+                    tradingBiz.handleProcessingRequest(payRequest);
                 } catch (BizFailException e) {
                     logger.error(String.format("pay processing job failed,%s,%s",e.getMessage(),payRequest.getOutTradeNo()));
                 }
@@ -90,7 +91,7 @@ public class PayJob {
             startId = list.get(list.size()-1).getId();
 
             list.forEach(payRequest -> {
-                TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
+                TradingBiz tradeBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
                 payService.payFailed(payRequest.getOutTradeNo());
                 tradeBiz.notice(payRequest);
             });
@@ -98,7 +99,7 @@ public class PayJob {
 
     }
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void doPromote() {
         List<PayRequest> list = payRequestDao.selectWaitingPromote();
         list.forEach(payRequest -> {

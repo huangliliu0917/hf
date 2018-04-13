@@ -1,21 +1,24 @@
 package com.hf.core.biz.trade;
 
+import com.google.gson.Gson;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.*;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
-import com.hf.core.api.PayApi;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.PayService;
 import com.hf.core.dao.local.*;
+import com.hf.core.dao.remote.CallBackClient;
+import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.po.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +40,12 @@ public abstract class AbstractTradingBiz implements TradingBiz {
     protected PayRequestBackDao payRequestBackDao;
     @Autowired
     protected PayService payService;
+    @Autowired
+    private UserGroupDao userGroupDao;
+    @Autowired
+    private CallBackClient callBackClient;
+    @Autowired
+    private PropertyConfig propertyConfig;
 
     protected Logger logger = LoggerFactory.getLogger(AbstractTradingBiz.class);
 
@@ -66,7 +75,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
 
         UserGroup userGroup = cacheService.getGroup(merchant_no);
         if(Objects.isNull(userGroup) || userGroup.getStatus() != GroupStatus.AVAILABLE.getValue()) {
-            throw new BizFailException(CodeManager.PERMISSION_DENY,"没有权限");
+            throw new BizFailException(CodeManager.PERMISSION_DENY,"userGroup没有权限");
         }
 
         if(!Utils.checkEncrypt(requestMap,userGroup.getCipherCode())) {
@@ -75,12 +84,12 @@ public abstract class AbstractTradingBiz implements TradingBiz {
 
         UserChannel userChannel = userChannelDao.selectByGroupChannelCode(userGroup.getId(),service, getChannelProvider().getCode());
         if(Objects.isNull(userChannel) || userChannel.getStatus() != UserChannelStatus.VALID.getValue()) {
-            throw new BizFailException(CodeManager.PERMISSION_DENY,"没有权限");
+            throw new BizFailException(CodeManager.PERMISSION_DENY,"userChannel没有权限");
         }
 
         Channel channel = channelDao.selectByPrimaryKey(userChannel.getChannelId());
         if(Objects.isNull(channel) || channel.getStatus() != ChannelStatus.VALID.getStatus()) {
-            throw new BizFailException(CodeManager.PERMISSION_DENY,"没有权限");
+            throw new BizFailException(CodeManager.PERMISSION_DENY,"channel没有权限");
         }
 
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),getChannelProvider().getCode());
@@ -119,7 +128,11 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         PayRequest payRequest = new PayRequest();
         payRequest.setAppid("");
         payRequest.setBankCode(bank_code);
-        payRequest.setBody(Utils.merge(",",name,remark));
+        if(StringUtils.isEmpty(name) && StringUtils.isEmpty(remark)) {
+            payRequest.setBody("转账:"+total);
+        } else {
+            payRequest.setBody(Utils.merge(",",name,remark));
+        }
         payRequest.setBuyerId(buyer_id);
         payRequest.setChannelProviderCode(getChannelProvider().getCode());
         payRequest.setCreateIp(create_ip);
@@ -172,5 +185,127 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         resultMap.put("sign",sign);
 
         return resultMap;
+    }
+
+    @Override
+    public void handleProcessingRequest(PayRequest payRequest) {
+        payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
+        if(payRequest.getStatus() != PayRequestStatus.PROCESSING.getValue() && payRequest.getStatus() != PayRequestStatus.OPR_SUCCESS.getValue()) {
+            logger.warn(String.format("payRequest not processing,%s,%s",payRequest.getOutTradeNo(),payRequest.getStatus()));
+            return;
+        }
+
+        if(payRequest.getStatus() == PayRequestStatus.PROCESSING.getValue()) {
+            Map<String,Object> payResult = query(payRequest);
+
+            if(org.apache.commons.collections.MapUtils.isEmpty(payResult)) {
+                logger.warn(String.format("query failed,%s",payRequest.getOutTradeNo()));
+                return;
+            }
+
+            if(Objects.isNull(payResult.get("errcode"))) {
+                logger.warn(String.format("query failed,errcode is null,%s",payRequest.getOutTradeNo()));
+            }
+
+            int errcode = new BigDecimal(String.valueOf(payResult.get("errcode"))).intValue();
+            if(errcode != 0) {
+                return;
+            }
+            logger.info(String.format("%s,query result:%s",payRequest.getOutTradeNo(),new Gson().toJson(payResult)));
+
+            String message = String.valueOf(payResult.get("message"));
+            String service = String.valueOf(payResult.get("service"));
+            String no = String.valueOf(payResult.get("no"));
+            String out_trade_no = String.valueOf(payResult.get("out_trade_no"));
+            int status = new BigDecimal(String.valueOf(payResult.get("status"))).intValue();
+
+            switch (status) {
+                case 0:
+                    logger.info(String.format("not paid,%s",payRequest.getOutTradeNo()));
+                    return;
+                case 1:
+                    logger.info(String.format("pay success,%s",payRequest.getOutTradeNo()));
+                    payService.paySuccess(payRequest.getOutTradeNo());
+                    return;
+                case 2:
+                    logger.info(String.format("waiting pay,%s",payRequest.getOutTradeNo()));
+                    return;
+                case 3:
+                case 4:
+                case 5:
+                    logger.info(String.format("pay failed,%s",payRequest.getOutTradeNo()));
+                    payService.payFailed(payRequest.getOutTradeNo());
+            }
+        }
+        notice(payRequest);
+    }
+
+    @Override
+    public void notice(PayRequest payRequest) {
+        payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
+        if(payRequest.getStatus() != PayRequestStatus.OPR_SUCCESS.getValue()
+                && payRequest.getStatus() != PayRequestStatus.PAY_FAILED.getValue()
+                && payRequest.getStatus() != PayRequestStatus.OPR_FINISHED.getValue()
+                && payRequest.getStatus() != PayRequestStatus.PAY_SUCCESS.getValue()) {
+            return;
+        }
+        if(payRequest.getNoticeRetryTime()>=propertyConfig.getOutNotifyLimit()) {
+            payRequestDao.updateNoticeStatus(payRequest.getId());
+            return;
+        }
+
+        payRequestDao.updateNoticeRetryTime(payRequest.getId());
+
+        UserGroup userGroup = userGroupDao.selectByGroupNo(payRequest.getMchId());
+        String url = StringUtils.isEmpty(payRequest.getOutNotifyUrl())?userGroup.getCallbackUrl():payRequest.getOutNotifyUrl();
+        if(StringUtils.isEmpty(url)) {
+            logger.warn(String.format("callback url is null,%s",url));
+            payRequestDao.updateNoticeStatus(payRequest.getId());
+            return;
+        }
+
+        Map<String,Object> resutMap = new HashMap<>();
+        boolean noticeResult = false;
+
+        if(StringUtils.equalsIgnoreCase(payRequest.getPayResult(),"0")) {
+            //code 0成功 99失败
+            resutMap.put("errcode","0");
+            //msg
+            resutMap.put("message","支付成功");
+
+            resutMap.put("no",payRequest.getId());
+            //out_trade_no
+            resutMap.put("out_trade_no",payRequest.getOutTradeNo().split("_")[1]);
+            //mch_id
+            resutMap.put("merchant_no",payRequest.getMchId());
+            //total
+            resutMap.put("total",payRequest.getTotalFee());
+            //fee
+            resutMap.put("fee",payRequest.getFee());
+            //trade_type 1:收单 2:撤销 3:退款
+            resutMap.put("trade_type","1");
+            //sign_type
+            resutMap.put("sign_type","MD5");
+            String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
+            resutMap.put("sign",sign);
+
+            noticeResult = callBackClient.post(url,resutMap);
+        } else {
+            resutMap.put("errcode","99");
+            resutMap.put("message","支付失败");
+            resutMap.put("no",payRequest.getId());
+            resutMap.put("out_trade_no",payRequest.getOutTradeNo());
+            resutMap.put("merchant_no",payRequest.getMchId());
+            resutMap.put("trade_type","1");
+            resutMap.put("sign_type","MD5");
+            String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
+            resutMap.put("sign",sign);
+
+            noticeResult = callBackClient.post(url,resutMap);
+        }
+
+        if(noticeResult) {
+            payRequestDao.updateNoticeStatus(payRequest.getId());
+        }
     }
 }

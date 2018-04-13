@@ -7,8 +7,6 @@ import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.PayBiz;
-import com.hf.core.biz.service.CacheService;
-import com.hf.core.biz.service.PayService;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.biz.trade.TradingBiz;
@@ -39,9 +37,6 @@ import java.util.Map;
 @RequestMapping("/pay")
 public class PayApi {
     @Autowired
-    @Qualifier("wwTradingBiz")
-    private TradingBiz wwTradingBiz;
-    @Autowired
     private PayRequestDao payRequestDao;
     @Autowired
     @Qualifier("ysPayBiz")
@@ -66,10 +61,6 @@ public class PayApi {
     private UserGroupExtDao userGroupExtDao;
     @Autowired
     private TradeBizFactory tradeBizFactory;
-    @Autowired
-    private CacheService cacheService;
-    @Autowired
-    private PayService payService;
 
     protected Logger logger = LoggerFactory.getLogger(PayApi.class);
 
@@ -81,15 +72,20 @@ public class PayApi {
             String mchId = String.valueOf(params.get("merchant_no"));
             String service = String.valueOf(params.get("service"));
 
+            TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(mchId,service);
+            logger.info("tradingBiz:"+tradingBiz.getClass().getName());
             BigDecimal total = new BigDecimal(params.get("total").toString());
             params.put("total",String.valueOf(total.intValue()));
 
-            Map<String,Object> resultMap = wwTradingBiz.pay(params);
+            Map<String,Object> resultMap = tradingBiz.pay(params);
             return new Gson().toJson(resultMap);
+
         } catch (BizFailException e) {
+            logger.error(e.getMessage());
             Map<String,Object> result = com.hf.base.utils.MapUtils.buildMap("errcode",e.getCode(),"message",e.getMessage());
             return new Gson().toJson(result);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             Map<String,Object> result = com.hf.base.utils.MapUtils.buildMap("errcode", CodeManager.FAILED);
             return new Gson().toJson(result);
         }
@@ -210,9 +206,6 @@ public class PayApi {
                 map.put("status","2");
                 break;
             case OPR_SUCCESS:
-                map.put("status",1);
-                break;
-            case USER_NOTIFIED:
                 map.put("status",1);
                 break;
             case PAY_SUCCESS:

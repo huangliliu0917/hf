@@ -5,6 +5,7 @@ import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.*;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.exceptions.BizFailException;
+import com.hf.base.utils.EpaySignUtil;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
@@ -13,10 +14,11 @@ import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.local.UserGroupExtDao;
 import com.hf.core.dao.remote.CallBackClient;
-import com.hf.core.dao.remote.WwClient;
+import com.hf.core.dao.remote.PayClient;
 import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.dto.trade.unifiedorder.WwPayRequest;
 import com.hf.core.model.po.*;
+import com.hf.core.utils.CipherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
     @Autowired
     private PropertyConfig propertyConfig;
     @Autowired
-    private WwClient wwClient;
+    private PayClient wwClient;
     @Autowired
     private PayService payService;
     @Autowired
@@ -192,82 +194,49 @@ public class WwTradingBiz extends AbstractTradingBiz {
     }
 
     @Override
-    public void notice(PayRequest payRequest) {
-        payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
-        if(payRequest.getStatus() != PayRequestStatus.OPR_SUCCESS.getValue()) {
-            return;
+    public Map<String, Object> query(PayRequest payRequest) {
+        UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
+        UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(), ChannelProvider.WW.getCode());
+        Map<String,Object> params = new HashMap<>();
+        params.put("memberCode",userGroupExt.getMerchantNo());
+        params.put("orderNum",payRequest.getOutTradeNo());
+        String signUrl = Utils.getEncryptStr(params);
+        String signStr = EpaySignUtil.sign(CipherUtils.private_key,signUrl);
+        params.put("signStr",signStr);
+        Map<String,Object> resultMap = wwClient.orderinfo(params);
+        if(org.apache.commons.collections.MapUtils.isEmpty(resultMap)) {
+            resultMap.put("errcode",99);
+            throw new BizFailException("result is null");
         }
-        payRequestDao.updateNoticeRetryTime(payRequest.getId());
+        resultMap.put("errcode",0);
+        String orderCode = String.valueOf(resultMap.get("orderCode"));
+        String oriRespCode = String.valueOf(resultMap.get("oriRespCode"));
+        String returnCode = String.valueOf(resultMap.get("returnCode"));
+        String oriRespMsg = String.valueOf(resultMap.get("oriRespMsg"));
 
-        UserGroup userGroup = userGroupDao.selectByGroupNo(payRequest.getMchId());
-        String url = StringUtils.isEmpty(payRequest.getOutNotifyUrl())?userGroup.getCallbackUrl():payRequest.getOutNotifyUrl();
-        if(StringUtils.isEmpty(url)) {
-            logger.warn(String.format("callback url is null,%s",url));
-            if(StringUtils.equalsIgnoreCase(payRequest.getPayResult(),"0")) {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.USER_NOTIFIED.getValue());
-            } else {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.OPR_FINISHED.getValue());
-            }
-            payRequestDao.updateNoticeStatus(payRequest.getId());
-            return;
+        resultMap.put("out_trade_no",orderCode);
+        resultMap.put("message",oriRespMsg);
+
+        logger.warn(String.format("%s query ww status : %s,%s",payRequest.getOutTradeNo(),oriRespCode,returnCode));
+
+//        上游无失败，只有成功
+        if(!StringUtils.equals(returnCode,"0000")) {
+            logger.warn(String.format("%s query failed,%s",payRequest.getOutTradeNo(),new Gson().toJson(resultMap)));
+            throw new BizFailException("retry");
         }
 
-        Map<String,Object> resutMap = new HashMap<>();
+        if(StringUtils.equals(oriRespCode,"555555")) {
+            throw new BizFailException("retry");
+        }
 
-        if(StringUtils.equalsIgnoreCase(payRequest.getPayResult(),"0")) {
-            //code 0成功 99失败
-            resutMap.put("errcode","0");
-            //msg
-            resutMap.put("message","支付成功");
-
-            resutMap.put("no",payRequest.getId());
-            //out_trade_no
-            resutMap.put("out_trade_no",payRequest.getOutTradeNo().split("_")[1]);
-            //mch_id
-            resutMap.put("merchant_no",payRequest.getMchId());
-            //total
-            resutMap.put("total",payRequest.getTotalFee());
-            //fee
-            resutMap.put("fee",payRequest.getFee());
-            //trade_type 1:收单 2:撤销 3:退款
-            resutMap.put("trade_type","1");
-            //sign_type
-            resutMap.put("sign_type","MD5");
-            String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
-            resutMap.put("sign",sign);
-
-            boolean result = callBackClient.post(url,resutMap);
-
-            if(result) {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.USER_NOTIFIED.getValue());
-                payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
-                payRequestDao.updateNoticeStatus(payRequest.getId());
-            } else {
-                if(payRequest.getNoticeRetryTime() > propertyConfig.getOutNotifyLimit()) {
-                    payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.USER_NOTIFIED.getValue());
-                }
-            }
+        if(StringUtils.equals(oriRespCode,"000000")) {
+            resultMap.put("status",1);
         } else {
-            resutMap.put("errcode","99");
-            resutMap.put("message","支付失败");
-            resutMap.put("no",payRequest.getId());
-            resutMap.put("out_trade_no",payRequest.getOutTradeNo());
-            resutMap.put("merchant_no",payRequest.getMchId());
-            resutMap.put("trade_type","1");
-            resutMap.put("sign_type","MD5");
-            String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
-            resutMap.put("sign",sign);
-
-            boolean result = callBackClient.post(url,resutMap);
-            if(result) {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.OPR_FINISHED.getValue());
-                payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
-                payRequestDao.updateNoticeStatus(payRequest.getId());
-            } else {
-                if(payRequest.getNoticeRetryTime() > propertyConfig.getOutNotifyLimit()) {
-                    payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.OPR_FINISHED.getValue());
-                }
-            }
+            resultMap.put("status",0);
         }
+//        else {
+//            resultMap.put("status",5);
+//        }
+        return resultMap;
     }
 }

@@ -371,6 +371,14 @@
         </dependency>
 
         <dependency>
+            <groupId>com.hf</groupId>
+            <artifactId>hfb-quik</artifactId>
+            <version>3.0.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/hfb-merchant-quick.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
@@ -467,7 +475,15 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>2.6</version>
                     <configuration>
-                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <webResources>
+                            <resource>
+                                <directory>${basedir}/lib/</directory>
+                                <targetPath>WEB-INF/lib</targetPath>
+                                <includes>
+                                    <include>**/*.jar</include>
+                                </includes>
+                            </resource>
+                        </webResources>
                     </configuration>
                 </plugin>
 

@@ -13,6 +13,7 @@ import com.hf.core.dao.remote.YsClient;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.utils.CipherUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
@@ -74,22 +75,22 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testRemotePay() {
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","1.0");
-        payParams.put("service", "04");
-        payParams.put("merchant_no","5161");
-        payParams.put("total","10000");//10000.00
-        payParams.put("out_trade_no","247103585651230");
-        payParams.put("create_ip","192_168_2_123");
-        payParams.put("nonce_str", "st1523080979677");
-        payParams.put("name","H247103585651230");
+        payParams.put("service", "12");
+        payParams.put("merchant_no","5132");
+        payParams.put("total","52");//10000.00
+        payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
+        payParams.put("create_ip","47.52.111.205");
+        payParams.put("nonce_str", "1681452188");
         payParams.put("sign_type","MD5");
-        payParams.put("out_notify_url","http://gate.8zhongyi.com/scan/callback/trade/pay_notify_huifu");
-        String cipherCode = "s3r7tWx7NQ8h78zrhNeyEyFAhNT62kXB";
+        payParams.put("out_notify_url","http://huifufu.cn/openapi/test/pay_notice");
+        String cipherCode = "sdadafag1234";
         String sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
         RestTemplate restTemplate = new RestTemplate();
 //        ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8080/jh/pay/unifiedorder",payParams,String.class, new Object[0]);
         ResponseEntity<String> entity = restTemplate.postForEntity("http://huifufu.cn/openapi/unifiedorder",payParams,String.class, new Object[0]);
+        System.out.println(payParams.get("out_trade_no"));
         System.out.println(entity.getBody());
     }
 

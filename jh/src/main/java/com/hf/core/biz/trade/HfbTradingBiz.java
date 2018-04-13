@@ -1,13 +1,21 @@
 package com.hf.core.biz.trade;
 
+import com.google.gson.Gson;
+import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.ChannelProvider;
+import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.exceptions.BizFailException;
+import com.hf.base.utils.MapUtils;
 import com.hf.core.model.po.PayRequest;
+import com.hf.core.model.po.PayRequestBack;
 import com.hf.core.model.po.UserGroup;
 import com.hfb.merchant.code.handler.ModelPay;
-import com.hfb.merchant.code.model.Barcode;
 import com.hfb.merchant.code.model.ScanPay;
 import com.hfb.merchant.code.sercret.CertUtil;
+import com.hfb.merchant.quick.common.Status;
+import com.hfb.merchant.quick.entity.Pay;
+import com.hfb.merchant.quick.handler.QuickEntityPay;
+import com.hfb.merchant.quick.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
@@ -25,19 +33,86 @@ public class HfbTradingBiz extends AbstractTradingBiz {
         return ChannelProvider.HFB;
     }
 
-    @Override
-    public void doPay(PayRequest payRequest) {
+    private void quickPay(PayRequest payRequest) {
         UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
         // 私钥文件路径
-        String privateKey = cacheService.getRootPath()+"/certs/CS20180409031247_20180410075945426.pfx";
+        String privateKey = cacheService.getRootPath()+"/certs/CS20180409031247_20180411131244514.pfx";
         // 公钥文件路径
-        String publicKey = cacheService.getRootPath()+"/certs/SS20180409031247_20180410075945426.cer";
+        String publicKey = cacheService.getRootPath()+"/certs/SS20180409031247_20180411131244514.cer";
         // 密钥密码
         String KeyPass = "408916";
         // 网关路径
         String paygateReqUrl = "https://cashier.hefupal.com/paygate/v1/smpay";
         //todo 动态选择
         String merchantNo = "S20180409031247";
+        String notifyUrl = "http://huifufu.cn/openapi/hfb/quik_pay_notice";
+        String tranSerialNum = DateUtil.getTimeMillis();                 //交易流水号
+        String tranDate = DateUtil.getDate();                            //交易日期
+        String tranTime = DateUtil.getTime();                            //交易时间
+        String bindId = "YSM201804091743160525443053023";                  //绑卡ID
+        String amount = String.valueOf(payRequest.getTotalFee());                  //交易金额
+        String bizType = "";//payRequest.getBizType();                //业务代码
+        String buyerName = "";//payRequest.getBuyerName();            //买家姓名
+        String contact = "";//payRequest.getContact();        //买家联系方式
+        String goodsName = StringUtils.isEmpty(payRequest.getRemark())?"支付"+amount:payRequest.getRemark();
+        String goodsInfo = payRequest.getBody();
+
+        // 加密工具类的创建
+        com.hfb.merchant.quick.sercret.CertUtil certUtil = new com.hfb.merchant.quick.sercret.CertUtil(publicKey, privateKey, KeyPass, true);
+
+        String remark = "";
+        String ext1 = "";
+        String ext2 = "";
+        String yUL1 = "";
+        String yUL2 = "";
+        String yUL3 = "";
+        String valid = "";
+        String cvn2 = "";
+
+        try {
+            // 实体类数据的封装 并进行数据校验
+            Pay pay = new Pay(merchantNo, tranDate, tranTime, remark, ext1, ext2, yUL1, yUL2, yUL3, tranSerialNum, bindId, amount, bizType,
+                    valid, cvn2, goodsName, goodsInfo, notifyUrl, buyerName, contact);
+            Map<String,String> resultMap = QuickEntityPay.sendModelPay(certUtil, pay, paygateReqUrl);
+
+            String rtnCode = resultMap.get("rtnCode");
+            String rtnMsg = resultMap.get("rtnMsg");
+            if(RtnCode.successCode().contains(RtnCode.parse(rtnCode))) {
+                PayRequestBack payRequestBack = new PayRequestBack();
+                payRequestBack.setMchId(payRequest.getMchId());
+                payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+                payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                payRequestBack.setMessage(rtnMsg);
+                payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
+                payService.remoteSuccess(payRequest,payRequestBack);
+            } else {
+                PayRequestBack payRequestBack = new PayRequestBack();
+                payRequestBack.setMchId(payRequest.getMchId());
+                payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+                payRequestBack.setErrcode(CodeManager.PAY_FAILED);
+                payRequestBack.setMessage(rtnMsg);
+                payService.payFailed(payRequest.getOutTradeNo());
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage()+",tradeNo:"+payRequest.getOutTradeNo());
+            throw new BizFailException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void doPay(PayRequest payRequest) {
+        UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
+        String merchantNo = "S20180409031247";
+        // 私钥文件路径
+        String privateKey = cacheService.getRootPath()+"/certs/CS20180409031247_20180411131244514.pfx";
+        // 公钥文件路径
+        String publicKey = cacheService.getRootPath()+"/certs/SS20180409031247_20180411131244514.cer";
+        String bindId = "YSM201804091743160525443053023";
+        // 密钥密码
+        String KeyPass = "408916";
+        // 网关路径
+        String paygateReqUrl = "https://cashier.hefupal.com/paygate/v1/smpay";
+        //todo 动态选择
         String version = "v1";
         String channelNo = "05";
         String tranCode = "YS1003";
@@ -50,9 +125,29 @@ public class HfbTradingBiz extends AbstractTradingBiz {
         String tranTime = DateFormatUtils.format(date,"HHmmss");
         // 交易金额
         String amount = String.valueOf(payRequest.getTotalFee());
-        String payType = PayType.QQ.code;
-        String bindId = "YSM201804091743160525443053023";
-        String notifyUrl = StringUtils.isEmpty(payRequest.getOutNotifyUrl())?userGroup.getCallbackUrl():payRequest.getOutNotifyUrl();
+        String payType;
+
+        String yUrl1 = null;
+        String yUL2 = null;
+
+        if(payRequest.getService().equals("11")) {
+            payType = PayType.QQ.code;
+        } else if(payRequest.getService().equals("10")) {
+            payType = PayType.QQ_WAP.code;
+            yUrl1 = StringUtils.isEmpty(payRequest.getOutNotifyUrl())?userGroup.getCallbackUrl():payRequest.getOutNotifyUrl();
+        } else if(payRequest.getService().equals("12")) {
+            merchantNo = "S20180412032071";
+            // 私钥文件路径
+            privateKey = cacheService.getRootPath()+"/certs/CS20180412032071_20180412184836627.pfx";
+            // 公钥文件路径
+            publicKey = cacheService.getRootPath()+"/certs/SS20180412032071_20180412184836627.cer";
+            bindId = "YSM201804121611034636133884014";
+            payType = PayType.YL.code;
+        } else {
+            throw new BizFailException("hfb未开通:"+payRequest.getService());
+        }
+
+        String notifyUrl = "http://huifufu.cn/openapi/hfb/pay_notice";
         String bizType = "01";
         String goodsName = StringUtils.isEmpty(payRequest.getRemark())?"支付"+amount:payRequest.getRemark();
         String goodsInfo = payRequest.getBody();
@@ -64,20 +159,36 @@ public class HfbTradingBiz extends AbstractTradingBiz {
 
         // 创建加密的工具类
         CertUtil certUtil = new CertUtil(publicKey, privateKey, KeyPass, true);
-        String ext1 = "";
-        String ext2 = "";
-        String yUrl1 = "";
-        String yUL2 = "";
+        String ext1 = "22";
+        String ext2 = "22";
         try {
             ScanPay scanPay = new ScanPay(merchantNo,tranDate,tranTime,amount,remark,ext1,ext2,yUrl1,yUL2,yUL3,tranFlow,payType,bindId,notifyUrl,bizType,goodsName,goodsInfo,"1",buyerName,contact,buyerId);
             // 对发送的信息，进行加密，加签，发送至网关，并对网关返回的信息内容进行解析，验签操作
             Map<String, String> map = ModelPay.sendModelPay(certUtil, scanPay, paygateReqUrl);
-
+            logger.info("hfb pay result:"+new Gson().toJson(map));
             String rtnCode = map.get("rtnCode");
             String rtnMsg = map.get("rtnMsg");
             String qrCodeURL = map.get("qrCodeURL");
+            logger.info("hfb pay result :"+rtnCode+","+rtnMsg+","+qrCodeURL);
 
-
+            if(RtnCode.successCode().contains(RtnCode.parse(rtnCode))) {
+                PayRequestBack payRequestBack = new PayRequestBack();
+                payRequestBack.setMchId(payRequest.getMchId());
+                payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+                payRequestBack.setCodeUrl(qrCodeURL);
+                payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                payRequestBack.setMessage("下单成功");
+                payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
+                payService.remoteSuccess(payRequest,payRequestBack);
+            } else {
+                PayRequestBack payRequestBack = new PayRequestBack();
+                payRequestBack.setMchId(payRequest.getMchId());
+                payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+                payRequestBack.setErrcode(CodeManager.PAY_FAILED);
+                payRequestBack.setMessage(rtnMsg);
+                payRequestBackDao.insertSelective(payRequestBack);
+                payService.payFailed(payRequest.getOutTradeNo());
+            }
         } catch (Exception e) {
             logger.error(e.getMessage()+",tradeNo:"+payRequest.getOutTradeNo());
             throw new BizFailException(e.getMessage());
@@ -86,12 +197,38 @@ public class HfbTradingBiz extends AbstractTradingBiz {
 
     @Override
     public String handleCallBack(Map<String, String> map) {
-        return null;
-    }
+        String merchantNo = map.get("merchantNo");
+        String version = map.get("version");
+        String channelNo = map.get("channelNo");
+        String tranCode = map.get("tranCode");
+        String amount = map.get("amount");
+        String tranFlow = map.get("tranFlow");
+        String rtnCode = map.get("rtnCode");
+        String rtnMsg = map.get("rtnMsg");
+        String paySerialNo = map.get("paySerialNo");
 
-    @Override
-    public void notice(PayRequest payRequest) {
+        PayRequest payRequest = payRequestDao.selectByTradeNo(tranFlow);
+        PayRequestStatus payRequestStatus = PayRequestStatus.parse(payRequest.getStatus()) ;
 
+        if(payRequestStatus == PayRequestStatus.OPR_SUCCESS) {
+            return new Gson().toJson(MapUtils.buildMap("resCode","0000"));
+        }
+
+        if(payRequestStatus != PayRequestStatus.PROCESSING && payRequestStatus!=PayRequestStatus.OPR_GENERATED) {
+            throw new BizFailException("status invalid");
+        }
+
+        logger.info("hfb call back ,rtnCode:"+rtnCode+",tranflow:"+tranFlow);
+
+        if("0000".equals(rtnCode)) {
+            payService.paySuccess(tranFlow);
+        }
+
+        if("0001".equals(rtnCode)) {
+            payService.payFailed(tranFlow);
+        }
+
+        throw new BizFailException("handle failed");
     }
 
     enum PayType {
@@ -126,6 +263,11 @@ public class HfbTradingBiz extends AbstractTradingBiz {
             this.code = code;
             this.name = name;
         }
+    }
+
+    @Override
+    public Map<String, Object> query(PayRequest payRequest) {
+        return null;
     }
 
     enum RtnCode {
@@ -171,12 +313,21 @@ public class HfbTradingBiz extends AbstractTradingBiz {
             this.desc = desc;
         }
 
-        public List<RtnCode> successCode() {
+        public static List<RtnCode> successCode() {
             return Arrays.asList(_000,_002,_021,_029);
         }
 
-        public List<RtnCode> failedCode() {
+        public static List<RtnCode> failedCode() {
             return Arrays.asList(_001,_004,_008,_009,_010,_011,_012,_013,_014,_015,_016,_017,_018,_019,_020,_022,_023,_024,_025,_026);
+        }
+
+        public static RtnCode parse(String code) {
+            for(RtnCode rtnCode:RtnCode.values()) {
+                if(StringUtils.equals(rtnCode.code,code)) {
+                    return rtnCode;
+                }
+            }
+            return null;
         }
     }
 }

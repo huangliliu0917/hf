@@ -74,4 +74,87 @@
     <servlet-name>wwPayCallBack</servlet-name>
     <url-pattern>/payCallBack/ww</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>hfbCallBack</servlet-name>
+    <servlet-class>com.hf.core.callback.NotifyServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>hfbCallBack</servlet-name>
+    <url-pattern>/payCallBack/hfb</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>verify</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.VerifyCodeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>verify</servlet-name>
+    <url-pattern>/verify.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>bindCard</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.BindCardServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bindCard</servlet-name>
+    <url-pattern>/bindCard.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>pay</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.PayServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pay</servlet-name>
+    <url-pattern>/pay.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>payNotCard</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.PayNotCardServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>payNotCard</servlet-name>
+    <url-pattern>/payNotCard.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>refund</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.RefundServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>refund</servlet-name>
+    <url-pattern>/refund.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>query</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.QueryServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>query</servlet-name>
+    <url-pattern>/query.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>BindCardnotify</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.BindCardNotifyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BindCardnotify</servlet-name>
+    <url-pattern>/notify.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>paynotify</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.PayNotifyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>paynotify</servlet-name>
+    <url-pattern>/payNotify.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>NotCardpayNotify</servlet-name>
+    <servlet-class>com.hf.core.callback.quik.PayNotCardNotifyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotCardpayNotify</servlet-name>
+    <url-pattern>/payNotCardNotify.do</url-pattern>
+  </servlet-mapping>
 </web-app>

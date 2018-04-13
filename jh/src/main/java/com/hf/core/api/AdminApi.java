@@ -11,6 +11,7 @@ import com.hf.core.biz.TrdBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.job.pay.PayJob;
@@ -86,15 +87,6 @@ public class AdminApi {
         return trdBiz.orderInfo(outTradeNo);
     }
 
-    @RequestMapping(value = "/runJob",method = RequestMethod.GET)
-    public @ResponseBody
-    String runJob(String outTradeNo) {
-        PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
-        TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
-        tradeBiz.handleProcessingRequest(payRequest);
-        return "finished";
-    }
-
     @RequestMapping(value = "/getCallBackCache",method = RequestMethod.GET)
     public @ResponseBody String getCallBackCache() {
         System.out.println(new Gson().toJson(CallBackCache.noticedList));
@@ -104,7 +96,7 @@ public class AdminApi {
     @RequestMapping(value = "/notice",method = RequestMethod.GET)
     public @ResponseBody String notice(String outTradeNo) {
         PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
-        TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
+        TradingBiz tradeBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
         tradeBiz.notice(payRequest);
         return "SUCCESS";
     }

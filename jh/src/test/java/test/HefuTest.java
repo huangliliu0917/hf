@@ -56,7 +56,7 @@ public class HefuTest {
         // 交易流水号
         String tranFlow = String.valueOf(new Date().getTime());
         // 支付类型
-        String payType = "7";
+        String payType = "15";
         // 入驻ID
         String bindId = "YSM201709141140144958595809101";
         // 结果通知地址

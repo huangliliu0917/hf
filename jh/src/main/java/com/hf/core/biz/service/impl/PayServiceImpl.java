@@ -229,7 +229,7 @@ public class PayServiceImpl implements PayService {
         if(payRequest.getStatus() != PayRequestStatus.OPR_GENERATED.getValue() && payRequest.getStatus() != PayRequestStatus.PROCESSING.getValue()) {
             throw new BizFailException(String.format("status:%s,not valid,%s",payRequest.getStatus(),outTradeNo));
         }
-        int count = payRequestDao.updateStatusById(payRequest.getId(),payRequest.getStatus(),PayRequestStatus.OPR_SUCCESS.getValue());
+        int count = payRequestDao.updateStatusById(payRequest.getId(),payRequest.getStatus(),PayRequestStatus.PAY_FAILED.getValue());
         if(count <=0) {
             logger.warn(String.format("update payRequest status failed,%s",outTradeNo));
             throw new BizFailException(String.format("update payRequest status failed,%s",outTradeNo));
@@ -258,9 +258,15 @@ public class PayServiceImpl implements PayService {
     @Override
     public void payPromote(String outTradeNo) {
         PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
-        int count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.USER_NOTIFIED.getValue(),PayRequestStatus.PAY_SUCCESS.getValue());
+        int count = 0;
+        if(payRequest.getStatus() == 20) {
+            count = payRequestDao.updateStatusById(payRequest.getId(),20,PayRequestStatus.PAY_SUCCESS.getValue());
+        } else {
+            count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.PAY_SUCCESS.getValue());
+        }
+
         if(count<=0) {
-            throw new BizFailException(String.format("update payrequest status from 5 to 10 failed,tradeNo:%s",outTradeNo));
+            throw new BizFailException(String.format("update payrequest status from 10 to 100 failed,tradeNo:%s",outTradeNo));
         }
 
         AdminAccountOprLog adminAccountOprLog = adminAccountOprLogDao.selectByNo(outTradeNo);
@@ -430,12 +436,7 @@ public class PayServiceImpl implements PayService {
     @Transactional
     @Override
     public void startRefund(PayRequest payRequest, PayMsgRecord payMsgRecord) {
-        int count = 0;
-        if(PayRequestStatus.USER_NOTIFIED == PayRequestStatus.parse(payRequest.getStatus())) {
-            count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.USER_NOTIFIED.getValue(),PayRequestStatus.REFUNDING.getValue());
-        } else if(PayRequestStatus.OPR_SUCCESS == PayRequestStatus.parse(payRequest.getStatus())) {
-            count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.REFUNDING.getValue());
-        }
+        int count = payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.REFUNDING.getValue());
         if(count<=0) {
             throw new BizFailException("update payrequest refunding failed");
         }

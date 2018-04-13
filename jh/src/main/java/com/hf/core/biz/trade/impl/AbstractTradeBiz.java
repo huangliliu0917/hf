@@ -203,11 +203,6 @@ public abstract class AbstractTradeBiz implements TradeBiz {
         String url = StringUtils.isEmpty(payRequest.getOutNotifyUrl())?userGroup.getCallbackUrl():payRequest.getOutNotifyUrl();
         if(StringUtils.isEmpty(url)) {
             logger.warn(String.format("callback url is null,%s",url));
-            if(StringUtils.equalsIgnoreCase(payRequest.getPayResult(),"0")) {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.USER_NOTIFIED.getValue());
-            } else {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.OPR_FINISHED.getValue());
-            }
             payRequestDao.updateNoticeStatus(payRequest.getId());
             return;
         }
@@ -239,13 +234,8 @@ public abstract class AbstractTradeBiz implements TradeBiz {
             boolean result = callBackClient.post(url,resutMap);
 
             if(result) {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.USER_NOTIFIED.getValue());
                 payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
                 payRequestDao.updateNoticeStatus(payRequest.getId());
-            } else {
-                if(payRequest.getNoticeRetryTime() > propertyConfig.getOutNotifyLimit()) {
-                    payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.USER_NOTIFIED.getValue());
-                }
             }
         } else {
             resutMap.put("errcode","99");
@@ -260,13 +250,8 @@ public abstract class AbstractTradeBiz implements TradeBiz {
 
             boolean result = callBackClient.post(url,resutMap);
             if(result) {
-                payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.OPR_FINISHED.getValue());
                 payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
                 payRequestDao.updateNoticeStatus(payRequest.getId());
-            } else {
-                if(payRequest.getNoticeRetryTime() > propertyConfig.getOutNotifyLimit()) {
-                    payRequestDao.updateStatusById(payRequest.getId(),PayRequestStatus.OPR_SUCCESS.getValue(),PayRequestStatus.OPR_FINISHED.getValue());
-                }
             }
         }
     }

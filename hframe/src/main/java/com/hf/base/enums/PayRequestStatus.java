@@ -8,8 +8,6 @@ public enum PayRequestStatus {
     PAY_FAILED(98,"交易失败"),
     //异步通知
     OPR_SUCCESS(10,"已接收回复"),
-    //异步通知失败
-    USER_NOTIFIED(20,"已通知客户"),
     REFUNDING(30,"退款中"),
     REFUNDED(98,"已退款"),
     OPR_FINISHED(99,"交易失败"),

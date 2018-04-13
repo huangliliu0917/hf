@@ -7,6 +7,7 @@ import com.hf.base.utils.Utils;
 import com.hf.core.api.PayApi;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.*;
 import com.hf.core.dao.remote.WwClient;
 import com.hf.core.job.pay.PayJob;
@@ -38,6 +39,8 @@ public class WwTradeBizTest extends BaseTestCase {
     @Autowired
     private TradeBiz wwTradeBiz;
     @Autowired
+    private TradingBiz wwTradingBiz;
+    @Autowired
     private PayRequestDao payRequestDao;
     @Autowired
     private AdminAccountDao adminAccountDao;
@@ -54,8 +57,8 @@ public class WwTradeBizTest extends BaseTestCase {
     public void init() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(payApi,"tradeBizFactory",mockTradeBizFactory);
-        Mockito.when(mockTradeBizFactory.getTradeBiz(Mockito.anyString(), Mockito.anyString())).thenReturn(wwTradeBiz);
-        Mockito.when(mockTradeBizFactory.getTradeBiz(Mockito.anyString())).thenReturn(wwTradeBiz);
+        Mockito.when(mockTradeBizFactory.getTradingBiz(Mockito.anyString(), Mockito.anyString())).thenReturn(wwTradingBiz);
+        Mockito.when(mockTradeBizFactory.getTradingBiz(Mockito.anyString())).thenReturn(wwTradingBiz);
         ReflectionTestUtils.setField(wwTradeBiz,"wwClient",mockWwClient);
     }
 
@@ -140,7 +143,7 @@ public class WwTradeBizTest extends BaseTestCase {
         payApi.wwCallBack(callbackMap);
 
         payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
-        Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.USER_NOTIFIED.getValue());
+        Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.OPR_SUCCESS.getValue());
         Assert.assertEquals(payRequest.getPayResult(),"0");
 
         adminAccountOprLog = adminAccountOprLogDao.selectByNo(tradeNo);

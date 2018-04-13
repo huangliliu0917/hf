@@ -11,6 +11,8 @@ import com.hf.core.biz.ChannelBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradeBiz;
+import com.hf.core.biz.trade.TradingBiz;
+import com.hf.core.biz.trade.WwTradingBiz;
 import com.hf.core.dao.local.*;
 import com.hf.core.dao.remote.CallBackClient;
 import com.hf.core.dao.remote.PayClient;
@@ -56,10 +58,9 @@ public class TradeBizTest extends BaseTestCase {
     @Mock
     private TradeBizFactory mockTradeBizFactory;
     @Autowired
-    @Qualifier("fxtTradeBiz")
-    private TradeBiz fxtTradeBiz;
+    private WwTradingBiz wwTradingBiz;
     @Mock
-    private PayClient fxtPayClient;
+    private PayClient wwPayClient;
     @Autowired
     private TradeBizFactory tradeBizFactory;
     @Autowired
@@ -211,16 +212,16 @@ public class TradeBizTest extends BaseTestCase {
 
             ReflectionTestUtils.setField(payApi,"tradeBizFactory",mockTradeBizFactory);
             ReflectionTestUtils.setField(payJob,"tradeBizFactory",mockTradeBizFactory);
-            Mockito.when(mockTradeBizFactory.getTradeBiz(Mockito.anyString(), Mockito.anyString())).thenReturn(fxtTradeBiz);
-            Mockito.when(mockTradeBizFactory.getTradeBiz(Mockito.anyString())).thenReturn(fxtTradeBiz);
-            ReflectionTestUtils.setField(fxtTradeBiz,"payClient",fxtPayClient);
+            Mockito.when(mockTradeBizFactory.getTradingBiz(Mockito.anyString(), Mockito.anyString())).thenReturn(wwTradingBiz);
+            Mockito.when(mockTradeBizFactory.getTradingBiz(Mockito.anyString())).thenReturn(wwTradingBiz);
+            ReflectionTestUtils.setField(wwTradingBiz,"payClient",wwPayClient);
         }
     }
 
     @Test
     public void testGetTradeBiz() {
         UserGroup userGroup = userGroupDao.selectByPrimaryKey(groupIds.get(0));
-        TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(userGroup.getGroupNo(),"01");
+        TradingBiz tradeBiz = tradeBizFactory.getTradingBiz(userGroup.getGroupNo(),"01");
         System.out.println(tradeBiz.getClass());
     }
 
@@ -236,7 +237,7 @@ public class TradeBizTest extends BaseTestCase {
         successMap.put("out_trade_no",String.format("%s_%s",userGroup.getGroupNo(),"123456231"));
         successMap.put("sign_type","MD5");
         successMap.put("sign",Utils.getRandomString(8));
-        Mockito.when(fxtPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
+        Mockito.when(wwPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
 
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","1.0");
@@ -333,7 +334,7 @@ public class TradeBizTest extends BaseTestCase {
         successMap.put("out_trade_no",String.format("%s_%s",userGroup.getGroupNo(),payParams.get("out_trade_no")));
         successMap.put("sign_type","MD5");
         successMap.put("sign",Utils.getRandomString(8));
-        Mockito.when(fxtPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
+        Mockito.when(wwPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
 
         result = payApi.unifiedorder(payParams);
         System.out.println(result);
@@ -386,7 +387,7 @@ public class TradeBizTest extends BaseTestCase {
         Map<String,Object> failedMap = new HashMap<>();
         failedMap.put("errcode","1");
         failedMap.put("message","失败");
-        Mockito.when(fxtPayClient.unifiedorder(Mockito.anyMap())).thenReturn(failedMap);
+        Mockito.when(wwPayClient.unifiedorder(Mockito.anyMap())).thenReturn(failedMap);
 
         payParams = new HashMap<>();
         payParams.put("version","1.0");
@@ -433,7 +434,7 @@ public class TradeBizTest extends BaseTestCase {
         successMap.put("out_trade_no",String.format("%s_%s",userGroup.getGroupNo(),outTradeNo));
         successMap.put("sign_type","MD5");
         successMap.put("sign",Utils.getRandomString(8));
-        Mockito.when(fxtPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
+        Mockito.when(wwPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
 
         payParams = new HashMap<>();
         payParams.put("version","1.0");
@@ -478,12 +479,12 @@ public class TradeBizTest extends BaseTestCase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Mockito.when(fxtPayClient.orderinfo(Mockito.anyMap())).thenReturn(MapUtils.buildMap("errcode","0","status","1"));
+        Mockito.when(wwPayClient.orderinfo(Mockito.anyMap())).thenReturn(MapUtils.buildMap("errcode","0","status","1"));
         payJob.handleProcessingPayRequest();
 
         tradeNo = String.format("%s_%s",payParams.get("merchant_no"),payParams.get("out_trade_no"));
         payRequest = payRequestDao.selectByTradeNo(tradeNo);
-        Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.USER_NOTIFIED.getValue());
+        Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.OPR_SUCCESS.getValue());
         List<AccountOprLog> logs = accountOprLogDao.selectByTradeNo(tradeNo);
         for(AccountOprLog oprLog:logs) {
             Assert.assertEquals(oprLog.getStatus().intValue(),OprStatus.PAY_SUCCESS.getValue());
@@ -569,10 +570,10 @@ public class TradeBizTest extends BaseTestCase {
 
         payRequest = payRequestDao.selectByTradeNo(outTradeNo);
         Mockito.when(callBackClient.post(Mockito.anyString(), Mockito.any())).thenReturn(false);
-        ReflectionTestUtils.setField(fxtTradeBiz,"callBackClient",callBackClient);
+        ReflectionTestUtils.setField(wwTradingBiz,"callBackClient",callBackClient);
         int i=0;
         while (i<5) {
-            fxtTradeBiz.notice(payRequest);
+            wwTradingBiz.notice(payRequest);
             i++;
             payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
             Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.OPR_SUCCESS.getValue());
@@ -581,9 +582,9 @@ public class TradeBizTest extends BaseTestCase {
         }
 
         Mockito.when(callBackClient.post(Mockito.anyString(), Mockito.any())).thenReturn(true);
-        fxtTradeBiz.notice(payRequest);
+        wwTradingBiz.notice(payRequest);
         payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
-        Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.USER_NOTIFIED.getValue());
+        Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.OPR_SUCCESS.getValue());
         Assert.assertEquals(payRequest.getNoticeStatus(),1);
         Assert.assertEquals(payRequest.getNoticeRetryTime(),i+1);
     }
