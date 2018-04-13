@@ -100,4 +100,12 @@ public class AdminApi {
         System.out.println(new Gson().toJson(CallBackCache.noticedList));
         return new Gson().toJson(CallBackCache.noticedList);
     }
+
+    @RequestMapping(value = "/notice",method = RequestMethod.GET)
+    public @ResponseBody String notice(String outTradeNo) {
+        PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
+        TradeBiz tradeBiz = tradeBizFactory.getTradeBiz(payRequest.getChannelProviderCode());
+        tradeBiz.notice(payRequest);
+        return "SUCCESS";
+    }
  }

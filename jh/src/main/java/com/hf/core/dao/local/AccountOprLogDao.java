@@ -35,4 +35,6 @@ public interface AccountOprLogDao {
     AccountOprLog selectByUnq(@Param("outTradeNo") String outTradeNo, @Param("groupId") Long groupId, @Param("type") Integer type);
 
     BigDecimal sumLockAmount(@Param("groupIds") List<Long> groupIds, @Param("types") List<Integer> types);
+
+    BigDecimal sumFinishAmount(@Param("groupIds") List<Long> groupIds, @Param("types") List<Integer> types);
 }

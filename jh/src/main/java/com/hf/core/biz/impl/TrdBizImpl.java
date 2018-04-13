@@ -61,6 +61,15 @@ public class TrdBizImpl implements TrdBiz {
         params.put("pageSize",request.getPageSize());
         params.put("service",request.getChannelCode());
 
+        if(request.getStatus() != null && request.getStatus()==0) {
+            params.put("notInStatusList",Arrays.asList(100,99));
+            params.remove("status");
+        }
+
+        if(request.getStatus() != null && request.getStatus()==-1) {
+            params.remove("status");
+        }
+
         List<UserGroup> groups = userService.getChildMchIds(request.getGroupId());
         List<String> mchIds = groups.parallelStream().map(UserGroup::getGroupNo).collect(Collectors.toList());
 
@@ -122,8 +131,10 @@ public class TrdBizImpl implements TrdBiz {
         if(payRequest.getActualAmount().compareTo(BigDecimal.ZERO)<=0) {
             if(null!=map.get(payRequest.getMchId())) {
                 AccountOprLog accountOprLog = accountOprLogDao.selectByUnq(payRequest.getOutTradeNo(),map.get(payRequest.getMchId()).getId(), OprType.PAY.getValue());
-                tradeRequestDto.setActualAmount(accountOprLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-                tradeRequestDto.setFee((new BigDecimal(payRequest.getTotalFee()).subtract(accountOprLog.getAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP) );
+                if(null != accountOprLog) {
+                    tradeRequestDto.setActualAmount(accountOprLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+                    tradeRequestDto.setFee((new BigDecimal(payRequest.getTotalFee()).subtract(accountOprLog.getAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP) );
+                }
             }
         }
 

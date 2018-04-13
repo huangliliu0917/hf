@@ -192,4 +192,15 @@ public class Utils {
     public static String nvl(Object obj) {
         return null == obj?"":String.valueOf(obj);
     }
+
+    public static String merge(String split,String... strs) {
+        StringBuilder sb = new StringBuilder("");
+        for(String str:strs) {
+            if(StringUtils.isEmpty(str)) {
+                continue;
+            }
+            sb = sb.append(str).append(split);
+        }
+        return sb.substring(0,sb.length()-1);
+    }
 }

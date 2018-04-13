@@ -174,23 +174,23 @@ public class RemoteTest extends BaseCommitTestCase {
         //msg
         resutMap.put("message","支付成功");
 
-        resutMap.put("no","198");
+        resutMap.put("no","280");
         //out_trade_no
-        resutMap.put("out_trade_no","2499897009406918");
+        resutMap.put("out_trade_no","appu13110100002215447015");
         //mch_id
-        resutMap.put("merchant_no","5161");
+        resutMap.put("merchant_no","5166");
         //total
-        resutMap.put("total","1000");
+        resutMap.put("total","2800");
         //fee
-        resutMap.put("fee","38");
+        resutMap.put("fee","280");
         //trade_type 1:收单 2:撤销 3:退款
         resutMap.put("trade_type","1");
         //sign_type
         resutMap.put("sign_type","MD5");
-        String sign = Utils.encrypt(resutMap,"s3r7tWx7NQ8h78zrhNeyEyFAhNT62kXB");
+        String sign = Utils.encrypt(resutMap,"2k7aoqhp");
         resutMap.put("sign",sign);
 
-        boolean result = callBackClient.post("http://gate.8zhongyi.com/scan/callback/trade/pay_notify_huifu",resutMap);
+        boolean result = callBackClient.post("http://un.iranhong.com/pay/notifyUrlhuifu/",resutMap);
 
         System.out.println(result);
     }

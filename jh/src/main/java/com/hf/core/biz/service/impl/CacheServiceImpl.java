@@ -14,8 +14,13 @@ import com.hf.core.model.po.UserGroup;
 import com.hf.core.model.po.UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class CacheServiceImpl implements CacheService {
+public class CacheServiceImpl implements CacheService,ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private UserInfoDao userInfoDao;
     @Autowired
@@ -33,6 +38,8 @@ public class CacheServiceImpl implements CacheService {
     private UserGroupDao userGroupDao;
     @Autowired
     private HfPropertiesDao hfPropertiesDao;
+
+    private String rootPath;
 
     private Map<String,String> cacheMap = new ConcurrentHashMap<>();
 
@@ -177,6 +184,21 @@ public class CacheServiceImpl implements CacheService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new BizFailException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if(StringUtils.isEmpty(rootPath)) {
+            ApplicationContext applicationContext = event.getApplicationContext();
+            WebApplicationContext webApplicationContext = (WebApplicationContext)applicationContext;
+            ServletContext servletContext = webApplicationContext.getServletContext();
+            rootPath = servletContext.getRealPath("/WEB-INF");
         }
     }
 }

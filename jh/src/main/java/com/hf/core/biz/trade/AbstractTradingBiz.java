@@ -119,7 +119,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         PayRequest payRequest = new PayRequest();
         payRequest.setAppid("");
         payRequest.setBankCode(bank_code);
-        payRequest.setBody(String.format("%s_%s",name,remark));
+        payRequest.setBody(Utils.merge(",",name,remark));
         payRequest.setBuyerId(buyer_id);
         payRequest.setChannelProviderCode(getChannelProvider().getCode());
         payRequest.setCreateIp(create_ip);
