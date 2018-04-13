@@ -74,6 +74,7 @@
 				<entry key="admin_add_group" value-ref="adminAddGroupDispatcher"/>
 				<entry key="admin_add_channel" value-ref="adminAddChannelDispatcher"/>
 				<entry key="admin_order_index" value-ref="adminOrderDispatcher"/>
+				<entry key="admin_order_statistics" value-ref="adminOrderStatisticsDispatcher"/>
 				<entry key="admin_account_index" value-ref="adminAccountDispatcher"/>
 				<entry key="admin_account_admin" value-ref="adminAccountAdminDispatcher"/>
 				<entry key="admin_order_changeRecord" value-ref="changeRecordDispatcher"/>
