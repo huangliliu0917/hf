@@ -34,7 +34,7 @@ public class MapUtils {
         if (bean != null) {
             BeanMap beanMap = BeanMap.create(bean);
             for (Object key : beanMap.keySet()) {
-                if(StringUtils.isEmpty(String.valueOf(beanMap.get(key)))) {
+                if(Utils.isEmpty(String.valueOf(beanMap.get(key)))) {
                     continue;
                 }
                 map.put(String.valueOf(key), beanMap.get(key));

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 import test.BaseTestCase;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +110,7 @@ public class WwTradeBizTest extends BaseTestCase {
         payMap.put("sign_type","MD5");
         String sign = Utils.encrypt(payMap,cipherCode);
         payMap.put("sign",sign);
-        payApi.unifiedorder(payMap);
+        payApi.unifiedorder(null,null);
 
         PayRequest payRequest = payRequestDao.selectByTradeNo(tradeNo);
         Assert.assertNotNull(payRequest);

@@ -6,8 +6,10 @@ import com.hf.base.client.BaseClient;
 import com.hf.base.model.RemoteParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Component
@@ -58,4 +60,10 @@ public class YsClient extends BaseClient implements PayClient {
 ////        String result = super.post(params);
 ////        return new Gson().fromJson(result,new TypeToken<Map<String,String>>(){}.getType());
 //    }
+
+
+    @Override
+    public Map<String, Object> unifiedorder(HttpHeaders headers, Map<String, Object> params) {
+        return null;
+    }
 }

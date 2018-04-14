@@ -17,10 +17,15 @@
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="bank" property="bank" jdbcType="VARCHAR" />
+    <result column="deposit" property="deposit" jdbcType="VARCHAR" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="bank_no" property="bankNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, group_id, account_id, settle_bank_card, settle_amount, fee_rate, pay_account_id, 
-    pay_group_id, pay_bank_card, fee, pay_amount, `status`, version, create_time, update_time
+    pay_group_id, pay_bank_card, fee, pay_amount, `status`, version, create_time, update_time,
+    bank,deposit,owner,bank_no
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -94,6 +99,18 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="owner != null" >
+        owner,
+      </if>
+      <if test="bankNo != null" >
+        bank_no,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -140,6 +157,18 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="deposit != null" >
+        #{deposit,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNo != null" >
+        #{bankNo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -233,7 +262,11 @@
     t1.`status`,
     t1.version,
     t1.create_time,
-    t1.update_time
+    t1.update_time,
+    t1.bank,
+    t1.bank_no,
+    t1.deposit,
+    t1.owner
     from settle_task t1 left join user_group t2 on t1.group_id = t2.id
     where 1=1
     <if test="status != null and status != ''" >

@@ -1,0 +1,83 @@
+#head-bar {
+  height: 100px;
+  background-color: #22252a;
+  line-height: 100px;
+}
+#head-bar .head-left {
+  height: 100px;
+}
+#head-bar .head-left img {
+  margin-left: 40px;
+}
+#head-bar .head-left span {
+  font-size: 18px;
+  color: #ffffff;
+  margin-left: 58px;
+}
+#head-bar .head-right {
+  height: 100px;
+}
+#head-bar .head-right > div {
+  float: right;
+}
+#head-bar .head-right div:first-of-type {
+  margin-left: 44px;
+}
+#head-bar .head-right div:first-of-type a {
+  font-size: 14px;
+  color: #ffffff;
+  vertical-align: middle;
+}
+#head-bar .head-right div:first-of-type .index::before {
+  content: url(/agent/Public/Admin/images/index.png);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+#head-bar .head-right div:first-of-type .qchc::before {
+  content: url(/agent/Public/Admin/images/qchc.png);
+  margin-left: 14px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+#head-bar .head-right div:first-of-type .edit::before {
+  content: url(/agent/Public/Admin/images/edit.png);
+  margin-left: 14px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+#head-bar .head-right div:first-of-type .loginout {
+  width: 60px;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  border: 1px solid #999999;
+  margin-right: 40px;
+  margin-left: 30px;
+  display: inline-block;
+}
+#head-bar .head-right div:nth-of-type(2) .clear {
+  margin-top: 40px;
+  margin-left: 7px;
+}
+#head-bar .head-right div:nth-of-type(2) .clear > span {
+  height: 20px;
+  line-height: 20px;
+}
+#head-bar .head-right div:nth-of-type(2) .clear .m-t-xs {
+  color: #fff;
+}
+#head-bar .head-right div:nth-of-type(2) .clear .text-muted {
+  color: #004ea2;
+}
+#head-bar .head-right div:nth-of-type(3) img {
+  width: 64px;
+  height: 64px;
+}
+#head-bar .head-right div:last-of-type {
+  margin-right: 20px;
+}
+@media screen and (max-width: 768px) {
+  .dropdown {
+    margin-right: 20px;
+  }
+}

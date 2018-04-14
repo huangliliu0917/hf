@@ -518,4 +518,35 @@ public class BaseCommitTestCase {
             userChannelDao.insertSelective(userChannel);
         }
     }
+
+    @Test
+    public void testSaveOprLog() {
+        List<Long> groupIds = Arrays.asList(8770L,8771L);
+        for(Long groupId:groupIds) {
+            UserGroup userGroup = userGroupDao.selectByPrimaryKey(groupId);
+            for(int i=0;i<100;i++) {
+                String outTradeNo = String.valueOf(RandomUtils.nextLong());
+                PayRequest payRequest = new PayRequest();
+                payRequest.setOutTradeNo(outTradeNo);
+                payRequest.setOutNotifyUrl("www.baidu.com");
+                payRequest.setActualAmount(new BigDecimal("3000"));
+                payRequest.setStatus(PayRequestStatus.OPR_SUCCESS.getValue());
+                payRequest.setBody("1234");
+                payRequest.setMchId(userGroup.getGroupNo());
+                payRequest.setService("11");
+                payRequest.setSign(String.valueOf(RandomUtils.nextLong()));
+                payRequestDao.insertSelective(payRequest);
+
+                AccountOprLog log = new AccountOprLog();
+                log.setRemark("21342edwdsa");
+                log.setGroupId(userGroup.getId());
+                log.setType(OprType.PAY.getValue());
+                log.setAmount(new BigDecimal("1000"));
+                log.setOutTradeNo(outTradeNo);
+                log.setAccountId(RandomUtils.nextLong());
+
+                accountOprLogDao.insertSelective(log);
+            }
+        }
+    }
 }

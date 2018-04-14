@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpHeaders;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,9 +50,9 @@ public abstract class AbstractTradingBiz implements TradingBiz {
     protected Logger logger = LoggerFactory.getLogger(AbstractTradingBiz.class);
 
     public abstract ChannelProvider getChannelProvider();
-    public abstract void doPay(PayRequest payRequest);
+    public abstract void doPay(PayRequest payRequest, HttpHeaders headers);
 
-    public Map<String,Object> pay(Map<String,Object> requestMap) {
+    public Map<String,Object> pay(Map<String,Object> requestMap,HttpHeaders headers) {
         for(String needField:needFields) {
             if(Objects.isNull(requestMap.get(needField)) || Utils.isEmpty(String.valueOf(requestMap.get(needField)))) {
                 throw new BizFailException(String.format("%s不能为空",needField));
@@ -97,12 +97,12 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             throw new BizFailException("未注册，权限不足");
         }
 
-        payRequest = remotePay(requestMap);
+        payRequest = remotePay(requestMap,headers);
 
         return finishRemotePay(payRequest);
     }
 
-    private PayRequest remotePay(Map<String,Object> requestMap) {
+    private PayRequest remotePay(Map<String,Object> requestMap,HttpHeaders headers) {
 
         String version = Utils.nvl(requestMap.get("version"));
         String service = Utils.nvl(requestMap.get("service"));
@@ -150,7 +150,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         payService.saveOprLog(payRequest);
         payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
 
-        doPay(payRequest);
+        doPay(payRequest,headers);
 
         return payRequest;
     }

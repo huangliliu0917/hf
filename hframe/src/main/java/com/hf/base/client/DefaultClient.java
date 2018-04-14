@@ -30,6 +30,7 @@ public class DefaultClient extends BaseClient {
     private static final String GET_CHANNEL_BY_ID = "/user/get_channel_by_id";
     private static final String GET_TRADE_REQUEST_LIST = "/user/get_trade_request_list";
     private static final String GET_TRADE_STATISTICS_REQUEST_LIST = "/user/get_trade_statistics_request_list";
+    private static final String GET_USER_TRADE_STATISTICS_REQUEST_LIST = "/user/get_user_trade_statistics_request_list";
     private static final String GET_ACCOUNT_LIST = "/user/get_account_list";
     private static final String GET_ADMIN_ACCOUNT_LIST = "/user/get_admin_account_list";
     private static final String GET_ACCOUNT_OPR_LOG_LIST = "/user/get_account_opr_log_list";
@@ -162,6 +163,16 @@ public class DefaultClient extends BaseClient {
         throw new BizFailException(response.getCode(),response.getMsg());
     }
 
+    public List<UserStatistic> getUserStatistic(TradeStatisticsRequest tradeRequest) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_USER_TRADE_STATISTICS_REQUEST_LIST).withParams(MapUtils.beanToMap(tradeRequest));
+        String result = super.post(remoteParams);
+        ResponseResult<List<UserStatistic>> response = new Gson().fromJson(result,new TypeToken<ResponseResult<List<UserStatistic>>>(){}.getType());
+        if(response.isSuccess()) {
+            return response.getData();
+        }
+        throw new BizFailException(response.getCode(),response.getMsg());
+    }
+
     public Pagenation<AccountPageInfo> getAccountList(AccountRequest accountRequest) {
         RemoteParams remoteParams = new RemoteParams(url).withPath(GET_ACCOUNT_LIST).withParams(MapUtils.beanToMap(accountRequest));
         String result = super.post(remoteParams);
@@ -212,8 +223,9 @@ public class DefaultClient extends BaseClient {
         throw new BizFailException(response.getCode(),response.getMsg());
     }
 
-    public Boolean newSettleRequest(Long groupId,Long cardId,BigDecimal amount) {
-        RemoteParams remoteParams = new RemoteParams(url).withPath(NEW_SETTLE_REQUEST).withParam("groupId",groupId).withParam("settleBankCard",cardId).withParam("settleAmount",amount);
+    public Boolean newSettleRequest(Long groupId,BigDecimal amount,String bank,String deposit,String owner,String bankNo) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(NEW_SETTLE_REQUEST).withParam("groupId",groupId).withParam("settleAmount",amount).withParam("bank",bank)
+                .withParam("deposit",deposit).withParam("owner",owner).withParam("bankNo",bankNo);
         String result = super.post(remoteParams);
         ResponseResult<Boolean> response = new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
         if(response.isSuccess()) {

@@ -85,11 +85,8 @@
                         <th lay-data="{field:'bankname', width:120,style:'color:#C00;'}">银行名称</th>
                         <th lay-data="{field:'bankzhiname', width:160}">支行名称</th>
                         <th lay-data="{field:'banknumber', width:198}">银行卡号/开户名</th>
-                        <th lay-data="{field:'sheng', width:100}">所属省</th>
-                        <th lay-data="{field:'shi', width:120}">所属市</th>
                         <th lay-data="{field:'payGroupNo', width:80,style:'color:#060;'}">付款商户编号</th>
                         <th lay-data="{field:'t', width:100}">付款商户</th>
-                        <th lay-data="{field:'banknumber', width:198}">付款银行卡号/开户名</th>
                         <th lay-data="{field:'sqdatetime', width:170}">申请时间</th>
                         <th lay-data="{field:'cldatetime', width:170}">处理时间</th>
                         <th lay-data="{field:'status', width:100}">状态</th>
@@ -110,11 +107,8 @@
                             <td>${wd.withdrawBank.bank}</td>
                             <td>${wd.withdrawBank.deposit}</td>
                             <td>${wd.withdrawBank.bankNo}/${wd.withdrawBank.owner}</td>
-                            <td>${wd.withdrawBank.province}</td>
-                            <td>${wd.withdrawBank.city}</td>
                             <td>${wd.payGroupId}</td>
                             <td>${wd.payName}</td>
-                            <td>${wd.payBank.bankNo}/${wd.payBank.owner}</td>
                             <td style="text-align:center;">$!date.format('yyyy-MM-dd HH:mm:ss ',${wd.createTime})</td>
                             <td style="text-align:center;">$!date.format('yyyy-MM-dd HH:mm:ss ',${wd.updateTime})</td>
                             <td>${wd.statusDesc}</td>

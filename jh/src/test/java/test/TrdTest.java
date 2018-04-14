@@ -1,19 +1,30 @@
 package test;
 
 import com.google.gson.Gson;
+import com.hf.base.enums.OprType;
 import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.enums.TradeType;
 import com.hf.base.model.TradeRequest;
 import com.hf.base.model.TradeRequestDto;
+import com.hf.base.model.TradeStatisticsRequest;
+import com.hf.base.model.UserStatistic;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.TypeConverter;
 import com.hf.core.biz.TrdBiz;
+import com.hf.core.dao.local.AccountOprLogDao;
+import com.hf.core.dao.local.PayRequestDao;
+import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.model.PropertyConfig;
+import com.hf.core.model.po.AccountOprLog;
+import com.hf.core.model.po.PayRequest;
+import com.hf.core.model.po.UserGroup;
+import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,6 +33,12 @@ public class TrdTest extends BaseTestCase {
     private TrdBiz trdBiz;
     @Autowired
     private PropertyConfig propertyConfig;
+    @Autowired
+    private PayRequestDao payRequestDao;
+    @Autowired
+    private AccountOprLogDao accountOprLogDao;
+    @Autowired
+    private UserGroupDao userGroupDao;
 
     @Test
     public void testConvertDate() throws Exception {
@@ -93,5 +110,41 @@ public class TrdTest extends BaseTestCase {
     @Test
     public void testGetConfig() {
         System.out.println(propertyConfig.getCallbackUrl());
+    }
+
+    @Test
+    public void testSelectUserStatistics() {
+        List<Long> groupIds = Arrays.asList(8656L,5204L);
+
+        for(Long groupId:groupIds) {
+            UserGroup userGroup = userGroupDao.selectByPrimaryKey(groupId);
+            for(int i=0;i<100;i++) {
+                String outTradeNo = String.valueOf(RandomUtils.nextLong());
+                PayRequest payRequest = new PayRequest();
+                payRequest.setOutTradeNo(outTradeNo);
+                payRequest.setOutNotifyUrl("www.baidu.com");
+                payRequest.setActualAmount(new BigDecimal("1000"));
+                payRequest.setStatus(PayRequestStatus.OPR_SUCCESS.getValue());
+                payRequest.setBody("1234");
+                payRequest.setMchId(userGroup.getGroupNo());
+                payRequest.setService("04");
+                payRequest.setSign(String.valueOf(RandomUtils.nextLong()));
+                payRequestDao.insertSelective(payRequest);
+
+                AccountOprLog log = new AccountOprLog();
+                log.setRemark("21342edwdsa");
+                log.setGroupId(userGroup.getId());
+                log.setType(OprType.PAY.getValue());
+                log.setAmount(new BigDecimal("1000"));
+                log.setOutTradeNo(outTradeNo);
+                log.setAccountId(RandomUtils.nextLong());
+
+                accountOprLogDao.insertSelective(log);
+            }
+        }
+
+        TradeStatisticsRequest request = new TradeStatisticsRequest();
+        List<UserStatistic> list = trdBiz.getUserStatistics(request);
+        System.out.println(new Gson().toJson(list));
     }
 }

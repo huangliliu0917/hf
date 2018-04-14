@@ -21,8 +21,10 @@ import com.hf.core.model.po.*;
 import com.hf.core.utils.CipherUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
     }
 
     @Override
-    public void doPay(PayRequest payRequest) {
+    public void doPay(PayRequest payRequest, HttpHeaders headers) {
         UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
         ChannelProvider channelProvider = ChannelProvider.parse(payRequest.getChannelProviderCode());
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),channelProvider.getCode());
@@ -96,17 +98,17 @@ public class WwTradingBiz extends AbstractTradingBiz {
             throw new BizFailException("no channel defined");
         }
 
-        Map<String,Object> response = wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest));
+        Map<String,Object> responseMap = wwClient.unifiedorder(headers,MapUtils.beanToMap(wwPayRequest));
         PayRequestBack payRequestBack = new PayRequestBack();
         payRequestBack.setMchId(payRequest.getMchId());
         payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
-        String payContent = String.valueOf(response.get("payResult"));
+        String payContent = String.valueOf(responseMap.get("payResult"));
 
         switch (channelCode) {
             case WX_H5:
             case QQ_H5:
                 if(StringUtils.isEmpty(payContent) || !payContent.contains("var url = ")) {
-                    String payResult = response.get("payResult") == null?"":String.valueOf(response.get("payResult"));
+                    String payResult = responseMap.get("payResult") == null?"":String.valueOf(responseMap.get("payResult"));
                     try {
                         String message = payResult.substring(payResult.indexOf("<span>")+6,payResult.lastIndexOf("</span>")).replace("<b>","").replace("</b>","").replace("\n","").replace("<p>","").replace("</p>","").replace("，",",").replace("\t","").replace("<span>","").replace("</span>","").replace("\r","");
                         payRequestBack.setMessage(message);
@@ -125,7 +127,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
                 break;
             case WY:
                 if(StringUtils.isEmpty(payContent) || !payContent.contains("pGateWayReq")) {
-                    String payResult = response.get("payResult") == null?"":String.valueOf(response.get("payResult"));
+                    String payResult = responseMap.get("payResult") == null?"":String.valueOf(responseMap.get("payResult"));
                     try {
                         String message = payResult.substring(payResult.indexOf("<span>")+6,payResult.lastIndexOf("</span>")).replace("<b>","").replace("</b>","").replace("\n","").replace("<p>","").replace("</p>","").replace("，",",").replace("\t","").replace("<span>","").replace("</span>","").replace("\r","");
                         payRequestBack.setMessage(message);

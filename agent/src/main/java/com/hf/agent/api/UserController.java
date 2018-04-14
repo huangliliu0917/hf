@@ -3,9 +3,12 @@ package com.hf.agent.api;
 import com.hf.base.biz.CacheService;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.contants.Constants;
+import com.hf.base.enums.ChannelCode;
+import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.UserType;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.*;
+import com.hf.base.utils.HttpClient;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.Utils;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -166,6 +170,16 @@ public class UserController {
 
         Long userId = Long.parseLong(request.getSession().getAttribute("userId").toString());
         String password = request.getParameter("password")== null?"":request.getParameter("password");
+
+        String bank = request.getParameter("bank");
+        String deposit = request.getParameter("deposit");
+        String owner = request.getParameter("owner");
+        String bankNo = request.getParameter("bankNo");
+
+        if(StringUtils.isEmpty(bank) || StringUtils.isEmpty(deposit) || StringUtils.isEmpty(owner) || StringUtils.isEmpty(bankNo)) {
+            return MapUtils.buildMap("status",false,"msg","银行信息不能为空");
+        }
+
         UserInfo userInfo = client.getUserInfoById(userId);
         if(!StringUtils.equals(userInfo.getPassword(), Utils.convertPassword(password))) {
             return MapUtils.buildMap("status",false,"msg","支付密码错误");
@@ -184,7 +198,7 @@ public class UserController {
         }
 
         try {
-            Boolean result = client.newSettleRequest(groupId,cardId,settleAmount);
+            Boolean result = client.newSettleRequest(groupId,settleAmount,bank,deposit,owner,bankNo);
             return MapUtils.buildMap("status",result);
         } catch (BizFailException e) {
             return MapUtils.buildMap("status",false,"msg",e.getMessage());
@@ -225,5 +239,39 @@ public class UserController {
 
         boolean result = client.editPassword(userId,ypassword,newpassword,newpasswordok);
         return MapUtils.buildMap("status",result);
+    }
+
+    @RequestMapping(value = "/getTrdOrderStatisticsList",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public ModelAndView getTrdOrderStatisticsList(HttpServletRequest request, HttpServletResponse response) {
+        String currentPage = StringUtils.isEmpty(request.getParameter("currentPage"))?"1":request.getParameter("currentPage");
+        int pageSize = 15;
+        String groupNo = request.getParameter("groupNo");
+        String createTime = request.getParameter("createTime");
+        String createTime2 = request.getParameter("createTime2");
+        String groupId = String.valueOf(request.getSession().getAttribute("groupId"));
+
+        TradeStatisticsRequest tradeStatisticsRequest = new TradeStatisticsRequest();
+        tradeStatisticsRequest.setCurrentPage(Integer.parseInt(currentPage));
+        tradeStatisticsRequest.setCreateTime(createTime);
+        tradeStatisticsRequest.setCreateTime2(createTime2);
+        tradeStatisticsRequest.setPageSize(pageSize);
+        tradeStatisticsRequest.setGroupNo(groupNo);
+        tradeStatisticsRequest.setGroupId(Long.parseLong(groupId));
+
+        List<UserStatistic> list = client.getUserStatistic(tradeStatisticsRequest);
+
+        //处理代码中文
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("agent_order_statistics");
+        modelAndView.addObject("pageInfo",list);
+        modelAndView.addObject("requestInfo",tradeStatisticsRequest);
+
+        //分页url
+        modelAndView.addObject("urlParams",
+                String.format("groupNo=%s&createTime=%s",
+                        StringUtils.isEmpty(groupNo)?"":groupNo,
+                        StringUtils.isEmpty(createTime)?"":createTime)
+        );
+        return modelAndView;
     }
 }

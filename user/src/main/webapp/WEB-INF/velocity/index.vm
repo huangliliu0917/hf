@@ -85,7 +85,7 @@
                     <ul class="nav nav-second-level">
                         <li><a href="#springUrl('/common/user_order_record')" class="J_menuItem"><strong>交易记录</strong></a>
                         </li>
-
+                        <li><a href="#springUrl('/common/user_order_statistics')" class="J_menuItem"><strong>交易统计</strong></a></li>
                     </ul>
                 </li>
                 <li><a href="#"> <i class="fa fa fa-bank"></i> <span class="nav-label">API管理</span> </a>

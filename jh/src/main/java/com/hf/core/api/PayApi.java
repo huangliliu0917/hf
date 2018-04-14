@@ -1,6 +1,7 @@
 package com.hf.core.api;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.PayRequestStatus;
@@ -23,13 +24,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,9 +75,33 @@ public class PayApi {
 
     @RequestMapping(value = "/unifiedorder",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody
-    String unifiedorder(@RequestBody Map<String,Object> params) {
+    String unifiedorder(HttpServletRequest request, HttpServletResponse response) {
+        BufferedReader br;
+        StringBuilder sb = null;
+        String reqBody = null;
+
+        HttpHeaders headers = new HttpHeaders();
+
+        Enumeration<String> enumeration = request.getHeaderNames();
+        while (enumeration.hasMoreElements()) {
+            String key = enumeration.nextElement();
+            String value = request.getHeader(key);
+            headers.add(key,value);
+        }
+
         try {
-            logger.info("new pay request :" +new Gson().toJson(params));
+            br = new BufferedReader(new InputStreamReader(
+                    request.getInputStream()));
+            String line = null;
+            sb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            reqBody = URLDecoder.decode(sb.toString(), "UTF-8");
+            reqBody = reqBody.substring(reqBody.indexOf("{"));
+            System.out.println("JsonReq reqBody>>>>>" + reqBody);
+
+            Map<String,Object> params = new Gson().fromJson(reqBody,new TypeToken<Map<String,Object>>(){}.getType());
             String mchId = String.valueOf(params.get("merchant_no"));
             String service = String.valueOf(params.get("service"));
 
@@ -77,7 +110,7 @@ public class PayApi {
             BigDecimal total = new BigDecimal(params.get("total").toString());
             params.put("total",String.valueOf(total.intValue()));
 
-            Map<String,Object> resultMap = tradingBiz.pay(params);
+            Map<String,Object> resultMap = tradingBiz.pay(params,headers);
             return new Gson().toJson(resultMap);
 
         } catch (BizFailException e) {
@@ -88,6 +121,34 @@ public class PayApi {
             logger.error(e.getMessage());
             Map<String,Object> result = com.hf.base.utils.MapUtils.buildMap("errcode", CodeManager.FAILED);
             return new Gson().toJson(result);
+        }
+    }
+
+    @RequestMapping(value = "/unifiedorder2",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody String  unifiedorder2(HttpServletRequest request) {
+        BufferedReader br;
+        StringBuilder sb = null;
+        String reqBody = null;
+        String  browserDetails  =   request.getHeader("User-Agent");
+        String  userAgent       =   browserDetails;
+        String  user            =   userAgent.toLowerCase();
+        try {
+            br = new BufferedReader(new InputStreamReader(
+                    request.getInputStream()));
+            String line = null;
+            sb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            reqBody = URLDecoder.decode(sb.toString(), "UTF-8");
+            reqBody = reqBody.substring(reqBody.indexOf("{"));
+            System.out.println("JsonReq reqBody>>>>>" + reqBody);
+
+            return reqBody;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "jsonerror";
         }
     }
 

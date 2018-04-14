@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -558,6 +559,18 @@ public class UserApi {
         }
     }
 
+    @RequestMapping(value = "/get_user_trade_statistics_request_list",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public @ResponseBody
+    ResponseResult<List<UserStatistic>> getUserTradeStatisticsRequestList(@RequestBody Map<String,Object> params) {
+        try {
+            TradeStatisticsRequest tradeRequest = TypeConverter.convert(params, TradeStatisticsRequest.class);
+            List<UserStatistic> list = trdBiz.getUserStatistics(tradeRequest);
+            return ResponseResult.success(list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseResult.failed(CodeManager.BIZ_FAIELD,e.getMessage(),Collections.EMPTY_LIST);
+        }
+    }
 
     @RequestMapping(value = "/get_account_list",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody

@@ -1,11 +1,9 @@
 package com.hf.core.biz;
 
-import com.hf.base.model.TradeRequest;
-import com.hf.base.model.TradeStatisticsRequest;
-import com.hf.base.model.TradeRequestDto;
-import com.hf.base.model.TradeStatisticsRequestDto;
+import com.hf.base.model.*;
 import com.hf.base.utils.Pagenation;
 
+import java.util.List;
 import java.util.Map;
 
 public interface TrdBiz {
@@ -15,4 +13,6 @@ public interface TrdBiz {
     Pagenation<TradeStatisticsRequestDto> getTradeStatisticsList(TradeStatisticsRequest  request);
 
     Map<String,Object> orderInfo(String outTradeNo);
+
+    List<UserStatistic> getUserStatistics(TradeStatisticsRequest  request);
 }

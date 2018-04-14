@@ -252,9 +252,11 @@ public class SettleBizImpl implements SettleBiz {
         withDrawInfo.setGroupId(task.getGroupId());
         withDrawInfo.setAccountId(task.getAccountId());
 
-        UserBankCard userBankCard = userBankCardDao.selectByPrimaryKey(task.getSettleBankCard());
         com.hf.base.model.UserBankCard card = new com.hf.base.model.UserBankCard();
-        BeanUtils.copyProperties(userBankCard,card);
+        card.setBank(task.getBank());
+        card.setBankNo(task.getBankNo());
+        card.setOwner(task.getOwner());
+        card.setDeposit(task.getDeposit());
         withDrawInfo.setWithdrawBank(card);
 
         withDrawInfo.setFee(task.getFee().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));

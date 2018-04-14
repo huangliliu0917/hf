@@ -54,6 +54,8 @@ public class UserOrderRecordDispatcher implements Dispatcher {
         }
 
         Pagenation<TradeRequestDto> pagenation =  client.getTradeList(tradeRequest);
+
+        pagenation.getData().stream().forEach(tradeRequestDto -> tradeRequestDto.setOutTradeNo(tradeRequestDto.getOutTradeNo().split("_")[1]));
         dispatchResult.addObject("pageInfo",pagenation);
         dispatchResult.addObject("requestInfo",tradeRequest);
 

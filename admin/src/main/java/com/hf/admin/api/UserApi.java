@@ -440,11 +440,15 @@ public class UserApi {
     public ModelAndView getTradeOrderStatisticsList(HttpServletRequest request) {
         Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
         int currentPage = 1;
+        String page = request.getParameter("currentPage");
         TradeStatisticsRequest tradeRequest = new TradeStatisticsRequest();
-        tradeRequest.setCurrentPage(1);
+        try {
+            tradeRequest.setCurrentPage(StringUtils.isEmpty(page) ? 1 : Integer.parseInt(page));
+        } catch (Exception e) {
+            tradeRequest.setCurrentPage(1);
+        }
         tradeRequest.setPageSize(15);
         tradeRequest.setGroupId(groupId);
-        tradeRequest.setCurrentPage(currentPage);
 
         String groupNo = "";
         String createTime = "";
@@ -452,6 +456,9 @@ public class UserApi {
         if(!StringUtils.isEmpty(request.getParameter("createTime"))) {
             createTime=request.getParameter("createTime");
             tradeRequest.setCreateTime(createTime);
+        }
+        if(!StringUtils.isEmpty(request.getParameter("createTime2"))) {
+            tradeRequest.setCreateTime2(request.getParameter("createTime2"));
         }
         if(!StringUtils.isEmpty(request.getParameter("groupNo"))) {
             groupNo = request.getParameter("groupNo");
@@ -480,7 +487,7 @@ public class UserApi {
                 tsrd.setChannelProviderName(" ");
             }
         }
-
+        pagenation.getData().forEach(tradeStatisticsRequestDto -> tradeStatisticsRequestDto.setAmoun(tradeStatisticsRequestDto.getAmoun().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin_order_statistics");
         modelAndView.addObject("pageInfo",pagenation);

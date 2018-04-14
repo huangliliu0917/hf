@@ -1,0 +1,135 @@
+<html><head><link id="layuicss-laydate" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/laydate/default/laydate.css?v=5.0.2')" media="all"><link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all"><link id="layuicss-skincodecss" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/code.css')" media="all"></head><body class="gray-bg"><div class="bread"><span class="bread-title">您的当前位置 : </span>交易管理 &gt;&gt; 交易统计</div>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---管理</title>
+    <link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+
+
+<div class="wrapper wrapper-content animated">
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="ibox float-e-margins">
+      <!--条件查询-->
+      <div class="ibox-title">
+        <h5>订单统计管理</h5>
+        <div class="ibox-tools">
+          <i class="layui-icon" onclick="location.replace(location.href);" title="刷新" style="cursor:pointer;">ဂ</i>
+        </div>
+      </div>
+      <!--条件查询-->
+      <div class="ibox-content">
+        <form class="layui-form" action="#springUrl('/user/getTrdOrderStatisticsList')" method="post" autocomplete="off" id="orderform">
+          <input type="hidden" name="m" value="Admin">
+          <input type="hidden" name="c" value="Order">
+          <input type="hidden" name="a" value="index" id="action">
+          <div class="layui-form-item">
+              <div class="layui-inline">
+                  <div class="layui-input-inline">
+                      <input type="text" name="groupNo" id="groupNo" autocomplete="off" placeholder="请输入商户号" class="layui-input" #if(${requestInfo.groupNo}) value="${requestInfo.groupNo}" #else value="" #end>
+                  </div>
+                  <div class="layui-input-inline">
+                      <input type="text" name="createTime" id="createTime" autocomplete="off" placeholder="请输入开始时间" class="layui-input" #if(${requestInfo.createTime}) value="${requestInfo.createTime}" #else value="" #end>
+                  </div>
+                  <div class="layui-input-inline">
+                      <input type="text" name="createTime2" id="createTime2" autocomplete="off" placeholder="请输入结束时间" class="layui-input" #if(${requestInfo.createTime2}) value="${requestInfo.createTime2}" #else value="" #end>
+                  </div>
+              </div>
+
+            <div class="layui-inline">
+              <button type="submit" class="layui-btn"><span class="glyphicon glyphicon-search"></span>搜索</button>
+            </div>
+          </div>
+        </form>
+      </div>
+        <!--交易列表-->
+        <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
+          <thead>
+          <tr>
+            <th lay-data="{field:'groupNo', width:100}">商户编号</th>
+            <th lay-data="{field:'name', width:240}">商户名称</th>
+            <th lay-data="{field:'amount', width:140,style:'color:#060;'}">总金额</th>
+            <th lay-data="{field:'service', width:80,style:'color:#060;'}">通道</th>
+            <th lay-data="{field:'serviceName', width:150,style:'color:#060;'}">通道名称</th>
+            <th lay-data="{field:'channelAmount', width:140,style:'color:#060;'}">通道金额</th>
+          </tr>
+          </thead>
+          <tbody>
+          #foreach($order in ${pageInfo})
+              #set( $index = 0)
+              #set($rows=$order.list.size())
+              #foreach($detail in ${order.list})
+                <tr>
+                    <td aria-rowspan="$rows" style="text-align:center;">${order.groupNo}</td>
+                    <td aria-rowspan="$rows" style="text-align:center;">${order.groupName}</td>
+                    <td aria-rowspan="$rows" style="text-align:center; color:#060;">${order.amount}</td>
+                    <td aria-rowspan="1" style="text-align:center;">${detail.channelCode}</td>
+                    <td aria-rowspan="1" style="text-align:center;">${detail.channelName}</td>
+                    <td aria-rowspan="1" style="text-align:center; color:#090">${detail.amount}</td>
+                </tr>
+                  #set( $index = $index+1)
+            #end
+          #end
+          </tbody>
+        </table>
+        <div class="pagex">
+            <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">
+                #if(${pageInfo.showPage.showHead})
+                    <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=1&${urlParams}")'>首页</a>
+                #end
+                #foreach($page in ${pageInfo.showPage.pages})
+                    #if($page.selected)
+                        <span class="layui-laypage-curr current"><em class="layui-laypage-em"></em><em>$page.label</em></span>
+                    #else
+                        <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=${page.pageIndex}&${urlParams}")'>$page.label</a>
+                    #end
+                #end
+                #if($pageInfo.hasNext)
+                    <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=${pageInfo.nextPage}&${urlParams}")'>下一页</a>
+                #end
+                #if($pageInfo.showPage.showTail)
+                    <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=${pageInfo.tailPage.pageIndex}&${urlParams}")'>${pageInfo.tailPage.label}</a>
+                #end
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.all.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'form'], function() {
+        var laydate = layui.laydate;
+        //日期时间范围
+        laydate.render({
+            elem: '#createTime',
+            type: 'datetime'
+        });
+        laydate.render({
+            elem: '#createTime2',
+            type: 'datetime'
+        });
+    });
+</script>
+
+</body></html>

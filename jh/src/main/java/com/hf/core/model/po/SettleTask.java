@@ -15,6 +15,14 @@ public class SettleTask {
     private Long settleBankCard;
     @Field(required = true)
     private BigDecimal settleAmount;
+    @Field(required = true)
+    private String bank;
+    @Field(required = true)
+    private String deposit;
+    @Field(required = true)
+    private String bankNo;
+    @Field(required = true)
+    private String owner;
 
     private BigDecimal feeRate;
 
@@ -154,5 +162,37 @@ public class SettleTask {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank;
+    }
+
+    public String getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(String deposit) {
+        this.deposit = deposit;
+    }
+
+    public String getBankNo() {
+        return bankNo;
+    }
+
+    public void setBankNo(String bankNo) {
+        this.bankNo = bankNo;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

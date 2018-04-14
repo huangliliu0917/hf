@@ -13,6 +13,7 @@ import com.hf.core.dao.remote.YsClient;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.utils.CipherUtils;
+import com.hfb.merchant.code.util.http.Httpz;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -52,12 +53,12 @@ public class RemoteTest extends BaseCommitTestCase {
         UserGroup userGroup = userGroupDao.selectByGroupNo("13588");
 
         Map<String,Object> payParams = new HashMap<>();
-        payParams.put("create_ip","127.0.0.1");
+        payParams.put("create_ip","47.52.111.205");
         payParams.put("merchant_no",userGroup.getGroupNo());
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service","04");
+        payParams.put("service","09");
         payParams.put("sign_type","MD5");
         payParams.put("total","11000");//10000.00
         payParams.put("version","1.0");
@@ -75,9 +76,9 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testRemotePay() {
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","1.0");
-        payParams.put("service", "12");
+        payParams.put("service", "09");
         payParams.put("merchant_no","5132");
-        payParams.put("total","52");//10000.00
+        payParams.put("total","10000");//10000.00
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
         payParams.put("create_ip","47.52.111.205");
         payParams.put("nonce_str", "1681452188");
@@ -90,7 +91,6 @@ public class RemoteTest extends BaseCommitTestCase {
         RestTemplate restTemplate = new RestTemplate();
 //        ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8080/jh/pay/unifiedorder",payParams,String.class, new Object[0]);
         ResponseEntity<String> entity = restTemplate.postForEntity("http://huifufu.cn/openapi/unifiedorder",payParams,String.class, new Object[0]);
-        System.out.println(payParams.get("out_trade_no"));
         System.out.println(entity.getBody());
     }
 

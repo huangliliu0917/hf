@@ -7,10 +7,12 @@ import com.hf.base.model.RemoteParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,4 +77,10 @@ public class FxtClient extends BaseClient implements PayClient {
 //        ResponseEntity<ReverseResponse> response = restTemplate.postForEntity(URL+UNIFIEDORDER,reverseRequest, ReverseResponse.class, Collections.EMPTY_MAP);
 //        return response.getBody();
 //    }
+
+
+    @Override
+    public Map<String, Object> unifiedorder(HttpHeaders headers, Map<String, Object> params) {
+        return null;
+    }
 }

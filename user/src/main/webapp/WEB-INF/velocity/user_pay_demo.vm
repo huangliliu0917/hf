@@ -30,8 +30,8 @@
                 <div class="ibox-content">
                     <blockquote class="layui-elem-quote">
                         <p class="text-danger">统一收单接口：http://huifufu.cn/openapi/unifiedorder</p>
-                        <p class="text-danger"><a href="http://localhost:8085/user/doc/PhpPayDemo.php">php demo下载</a></p>
-                        <p class="text-danger"><a href="http://localhost:8085/user/doc/java demo.zip">java demo下载</a></p>
+                        <p class="text-danger"><a href="http://huifufu.cn/doc/PhpPayDemo.php">php demo下载</a></p>
+                        <p class="text-danger"><a href="http://huifufu.cn/doc/java demo.zip">java demo下载</a></p>
                     </blockquote>
                     <table class="layui-table" lay-skin="row">
                         <thead>

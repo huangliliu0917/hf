@@ -1,13 +1,7 @@
 package com.hf.core.biz.impl;
 
-import com.hf.base.enums.ChannelProvider;
-import com.hf.base.enums.OprType;
-import com.hf.base.enums.PayRequestStatus;
-import com.hf.base.enums.TradeType;
-import com.hf.base.model.TradeRequest;
-import com.hf.base.model.TradeRequestDto;
-import com.hf.base.model.TradeStatisticsRequest;
-import com.hf.base.model.TradeStatisticsRequestDto;
+import com.hf.base.enums.*;
+import com.hf.base.model.*;
 import com.hf.base.utils.EpaySignUtil;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
@@ -99,12 +93,17 @@ public class TrdBizImpl implements TrdBiz {
      */
     @Override
     public Pagenation<TradeStatisticsRequestDto> getTradeStatisticsList(TradeStatisticsRequest request) {
-
         //分页信息
         Map<String,Object> params = MapUtils.beanToMap(request);
         Integer startIndex = (request.getCurrentPage()-1)*request.getPageSize();
         params.put("startIndex",startIndex);
         params.put("pageSize",request.getPageSize());
+
+        if(request.getAdmin() != 0) {
+            List<UserGroup> groups = userService.getChildMchIds(request.getGroupId());
+            List<Long> groupIds = groups.parallelStream().map(UserGroup::getId).collect(Collectors.toList());
+            params.put("groupIds",groupIds);
+        }
 
         //查询数据
         Integer totalSize = payRequestDao.selectStatisticsCount(params);                //查询条数
@@ -165,5 +164,70 @@ public class TrdBizImpl implements TrdBiz {
         result.put("hfInfo",payRequest);
 
         return MapUtils.buildMap("msg",result);
+    }
+
+    @Override
+    public List<UserStatistic> getUserStatistics(TradeStatisticsRequest request) {
+        Map<String,Object> params = MapUtils.beanToMap(request);
+        Long id = Long.parseLong(String.valueOf(params.get("groupId")));
+        UserGroup userGroup = cacheService.getGroup(id);
+        if(userGroup.getType() == UserGroup.GroupType.CUSTOMER.getValue()) {
+            params.put("groupId",id);
+        } else {
+            List<UserGroup> userGroups = userService.getChildMchIds(id);
+            List<Long> groupIds = userGroups.parallelStream().map(UserGroup::getId).collect(Collectors.toList());
+            groupIds.remove(id);
+            params.put("groupIds",groupIds);
+            params.remove("groupId");
+        }
+
+        List<Map<String,Object>> results = payRequestDao.selectUserStatistics(params);
+
+        Map<Long,UserStatistic> statisticMap = new TreeMap<>();
+
+        results.forEach(map -> {
+            BigDecimal amount = new BigDecimal(String.valueOf(map.get("amount"))).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            Long groupId = Long.parseLong(String.valueOf(map.get("groupId")));
+            String groupNo = String.valueOf(map.get("groupNo"));
+            String name = String.valueOf(map.get("name"));
+            String channelCode = String.valueOf(map.get("service"));
+            String channelName = ChannelCode.parseFromCode(channelCode).getDesc();
+
+            if(Objects.isNull(statisticMap.get(groupId))) {
+                UserStatistic userStatistic = new UserStatistic();
+                userStatistic.setGroupId(groupId);
+                userStatistic.setGroupNo( groupNo);
+                userStatistic.setGroupName(name);
+                userStatistic.setAmount(amount);
+
+                UserStatisticDetail detail = new UserStatisticDetail();
+                detail.setChannelCode(channelCode);
+                detail.setChannelName(channelName);
+                detail.setAmount(amount);
+
+                if(null == userStatistic.getList()) {
+                    userStatistic.setList(new ArrayList<>());
+                }
+                userStatistic.getList().add(detail);
+                statisticMap.put(groupId,userStatistic);
+            } else {
+                UserStatistic userStatistic = statisticMap.get(groupId);
+                userStatistic.setAmount(userStatistic.getAmount().add(amount));
+
+                UserStatisticDetail detail = new UserStatisticDetail();
+                detail.setChannelCode(channelCode);
+                detail.setChannelName(channelName);
+                detail.setAmount(amount);
+
+                userStatistic.getList().add(detail);
+            }
+        });
+
+        List<UserStatistic> list = new ArrayList<>();
+        statisticMap.keySet().forEach(groupId -> {
+            list.add(statisticMap.get(groupId));
+        });
+
+        return list;
     }
 }

@@ -265,18 +265,20 @@ public class UserController {
         Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
         Long userId = Long.parseLong(request.getSession().getAttribute("userId").toString());
         BigDecimal settleAmount = new BigDecimal(request.getParameter("settleAmount")).multiply(new BigDecimal("100"));
-        Long cardId = Long.parseLong(request.getParameter("cardId"));
+        //Long cardId = Long.parseLong(request.getParameter("cardId"));
+        String bank = request.getParameter("bank");
+        String deposit = request.getParameter("deposit");
+        String owner = request.getParameter("owner");
+        String bankNo = request.getParameter("bankNo");
+
+        if(StringUtils.isEmpty(bank) || StringUtils.isEmpty(deposit) || StringUtils.isEmpty(owner) || StringUtils.isEmpty(bankNo)) {
+            return MapUtils.buildMap("status",false,"msg","银行信息不能为空");
+        }
 
         String password = request.getParameter("password");
         UserInfo userInfo = client.getUserInfoById(userId);
         if(!StringUtils.equals(Utils.convertPassword(password),userInfo.getPassword())) {
             return MapUtils.buildMap("status",false,"msg","支付密码错误");
-        }
-
-        List<UserBankCard> cardList = client.getUserBankCard(groupId);
-        List<Long> cardIds = cardList.parallelStream().map(UserBankCard::getId).collect(Collectors.toList());
-        if(!cardIds.contains(cardId)) {
-            return MapUtils.buildMap("status",false,"msg","结算卡错误");
         }
 
         Account account = client.getAccountByGroupId(groupId);
@@ -286,7 +288,7 @@ public class UserController {
         }
 
         try {
-            Boolean result = client.newSettleRequest(groupId,cardId,settleAmount);
+            Boolean result = client.newSettleRequest(groupId,settleAmount,bank,deposit,owner,bankNo);
             return MapUtils.buildMap("status",result);
         } catch (BizFailException e) {
             return MapUtils.buildMap("status",false,"msg",e.getMessage());
@@ -337,5 +339,39 @@ public class UserController {
         String callBackUrl = request.getParameter("callBackUrl");
         ResponseResult<Boolean> responseResult = userClient.saveCallBackUrl(groupId,callBackUrl);
         return MapUtils.buildMap("status",responseResult.getData(),"msg",responseResult.getMsg());
+    }
+
+    @RequestMapping(value = "/getTrdOrderStatisticsList",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public ModelAndView getTrdOrderStatisticsList(HttpServletRequest request) {
+        String currentPage = StringUtils.isEmpty(request.getParameter("currentPage"))?"1":request.getParameter("currentPage");
+        int pageSize = 15;
+        String groupNo = request.getParameter("groupNo");
+        String createTime = request.getParameter("createTime");
+        String createTime2 = request.getParameter("createTime2");
+        String groupId = String.valueOf(request.getSession().getAttribute("groupId"));
+
+        TradeStatisticsRequest tradeStatisticsRequest = new TradeStatisticsRequest();
+        tradeStatisticsRequest.setCurrentPage(Integer.parseInt(currentPage));
+        tradeStatisticsRequest.setCreateTime(createTime);
+        tradeStatisticsRequest.setCreateTime2(createTime2);
+        tradeStatisticsRequest.setPageSize(pageSize);
+        tradeStatisticsRequest.setGroupNo(groupNo);
+        tradeStatisticsRequest.setGroupId(Long.parseLong(groupId));
+
+        List<UserStatistic> list = client.getUserStatistic(tradeStatisticsRequest);
+
+        //处理代码中文
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user_order_statistics");
+        modelAndView.addObject("pageInfo",list);
+        modelAndView.addObject("requestInfo",tradeStatisticsRequest);
+
+        //分页url
+        modelAndView.addObject("urlParams",
+                String.format("groupNo=%s&createTime=%s",
+                        StringUtils.isEmpty(groupNo)?"":groupNo,
+                        StringUtils.isEmpty(createTime)?"":createTime)
+        );
+        return modelAndView;
     }
 }

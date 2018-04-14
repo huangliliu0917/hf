@@ -66,20 +66,38 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">选择结算银行卡</label>
+                            <label class="layui-form-label">开户行：</label>
                             <div class="layui-input-block">
-                                <select name="cardId" lay-filter="">
-                                    #foreach($card in $cards)
-                                        <option value="${card.id}">${card.bank}-${card.bankNo}</option>
-                                    #end
-                                </select>
+                                <input type="text" name="bank" lay-verify="" autocomplete="off" placeholder=""
+                                       class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">支行名称：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="deposit" lay-verify="" autocomplete="off" placeholder=""
+                                       class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">开户名：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="owner" lay-verify="" autocomplete="off" placeholder=""
+                                       class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">银行卡号：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="bankNo" lay-verify="" autocomplete="off" placeholder=""
+                                       class="layui-input" value="">
                             </div>
                         </div>
 
                         <div class="layui-form-item">
                             <label class="layui-form-label">支付密码：</label>
                             <div class="layui-input-inline">
-                                <input type="password" name="password" lay-verify="pass" placeholder="请输入支付密码" autocomplete="off" class="layui-input">
+                                <input type="password" name="password" lay-verify="" placeholder="请输入支付密码" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 

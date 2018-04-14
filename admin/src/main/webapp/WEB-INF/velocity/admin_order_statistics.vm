@@ -38,14 +38,17 @@
           <input type="hidden" name="c" value="Order">
           <input type="hidden" name="a" value="index" id="action">
           <div class="layui-form-item">
-            <div class="layui-inline">
-              <div class="layui-input-inline">
-                <input type="text" name="groupNo" id="groupNo" autocomplete="off" placeholder="请输入商户号" class="layui-input" #if(${requestInfo.groupNo}) value="${requestInfo.groupNo}" #else value="" #end>
+              <div class="layui-inline">
+                  <div class="layui-input-inline">
+                      <input type="text" name="groupNo" id="groupNo" autocomplete="off" placeholder="请输入商户号" class="layui-input" #if(${requestInfo.groupNo}) value="${requestInfo.groupNo}" #else value="" #end>
+                  </div>
+                  <div class="layui-input-inline">
+                      <input type="text" name="createTime" id="createTime" autocomplete="off" placeholder="请输入开始时间" class="layui-input" #if(${requestInfo.createTime}) value="${requestInfo.createTime}" #else value="" #end>
+                  </div>
+                  <div class="layui-input-inline">
+                      <input type="text" name="createTime2" id="createTime2" autocomplete="off" placeholder="请输入结束时间" class="layui-input" #if(${requestInfo.createTime2}) value="${requestInfo.createTime2}" #else value="" #end>
+                  </div>
               </div>
-              <div class="layui-input-inline">
-                <input type="text" name="createTime" id="createTime" autocomplete="off" placeholder="请输入日期" class="layui-input" #if(${requestInfo.createTime}) value="${requestInfo.createTime}" #else value="" #end>
-              </div>
-            </div>
 
             <div class="layui-inline">
               <button type="submit" class="layui-btn"><span class="glyphicon glyphicon-search"></span> 搜索
@@ -87,20 +90,20 @@
         <div class="pagex">
             <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">
                 #if(${pageInfo.showPage.showHead})
-                    <a class="num" href='#springUrl("/common/admin_order_index?currentPage=1&${urlParams}")'>首页</a>
+                    <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=1&${urlParams}")'>首页</a>
                 #end
                 #foreach($page in ${pageInfo.showPage.pages})
                     #if($page.selected)
                         <span class="layui-laypage-curr current"><em class="layui-laypage-em"></em><em>$page.label</em></span>
                     #else
-                        <a class="num" href='#springUrl("/common/admin_order_index?currentPage=${page.pageIndex}&${urlParams}")'>$page.label</a>
+                        <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=${page.pageIndex}&${urlParams}")'>$page.label</a>
                     #end
                 #end
                 #if($pageInfo.hasNext)
-                    <a class="num" href='#springUrl("/common/admin_order_index?currentPage=${pageInfo.nextPage}&${urlParams}")'>下一页</a>
+                    <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=${pageInfo.nextPage}&${urlParams}")'>下一页</a>
                 #end
                 #if($pageInfo.showPage.showTail)
-                    <a class="num" href='#springUrl("/common/admin_order_index?currentPage=${pageInfo.tailPage.pageIndex}&${urlParams}")'>${pageInfo.tailPage.label}</a>
+                    <a class="num" href='#springUrl("/user/getTrdOrderStatisticsList?currentPage=${pageInfo.tailPage.pageIndex}&${urlParams}")'>${pageInfo.tailPage.label}</a>
                 #end
             </div>
         </div>
@@ -120,7 +123,12 @@
         var laydate = layui.laydate;
         //日期时间范围
         laydate.render({
-            elem: '#createTime'
+            elem: '#createTime',
+            type: 'datetime'
+        });
+        laydate.render({
+            elem: '#createTime2',
+            type: 'datetime'
         });
     });
 </script>

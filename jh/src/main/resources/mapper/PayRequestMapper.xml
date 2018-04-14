@@ -354,8 +354,11 @@
           SUM(log.amount)  as "amoun",
           t2.group_no as "groupNo",
           t2.name as "name",
-          t1.service  as "service",
+          t1.service  as "service"
+         <if test="admin == 0">
+          ,
           t1.channel_provider_code as "channelProviderCode"
+         </if>
       FROM
           account_opr_log log
       LEFT JOIN
@@ -368,19 +371,33 @@
           log.group_id = t2.id
       WHERE
           log.status = 10
+          and log.type = 0
+          and t2.id != 1
           <if test="groupNo != null">
             and t2.group_no = #{groupNo,jdbcType=VARCHAR}
           </if>
           <if test="createTime != null">
-            and t2.group_no = #{groupNo,jdbcType=TIMESTAMP}
-            and date_format(log.create_time,'%Y-%m-%d') = date_format(#{createTime,jdbcType=TIMESTAMP},'%Y-%m-%d')
+            and log.create_time >= #{createTime,jdbcType=VARCHAR}
+          </if>
+          <if test="createTime2 != null">
+            and <![CDATA[ log.create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+          </if>
+          <if test="groupIds != null and groupIds.size()>0">
+            and log.group_id not in
+            <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+              #{groupId}
+            </foreach>
           </if>
       GROUP BY
           date_format(log.create_time,'%Y-%m-%d'),
           t2.group_no,
           t2.name,
-          t1.service,
+          t1.service
+          <if test="admin == 0">
+          ,
           t1.channel_provider_code
+          </if>
+          order by createTime desc
       limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
@@ -401,21 +418,65 @@
         log.group_id = t2.id
       WHERE
         log.status = 10
+        and log.type = 0
+        and t2.id != 1
         <if test="groupNo != null">
           and t2.group_no = #{groupNo,jdbcType=VARCHAR}
         </if>
         <if test="createTime != null">
-          and t2.group_no = #{groupNo,jdbcType=TIMESTAMP}
-          and date_format(log.create_time,'%Y-%m-%d') = date_format(#{createTime,jdbcType=TIMESTAMP},'%Y-%m-%d')
+          and log.create_time >= #{createTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime2 != null">
+          and <![CDATA[ log.create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+        </if>
+        <if test="groupIds != null and groupIds.size()>0">
+          and log.group_id not in
+          <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+            #{groupId}
+          </foreach>
         </if>
       GROUP BY
         date_format(log.create_time,'%Y-%m-%d'),
         t2.group_no,
         t2.name,
-        t1.service,
+        t1.service
+        <if test="admin == 0">
+        ,
         t1.channel_provider_code
+        </if>
     )a
 
+  </select>
+
+  <select id="selectUserStatistics" resultType="java.util.HashMap">
+    select sum(t1.amount) as 'amount',
+           t1.group_id as 'groupId',
+           t3.group_no as 'groupNo',
+           t3.name as 'name',
+           t2.service as 'service'
+    from account_opr_log t1
+    left join pay_request t2 on t1.out_trade_no = t2.out_trade_no
+    left join user_group t3 on t1.group_id = t3.id
+    where t1.type = 0 and t1.status = 10
+    <if test="groupNo != null">
+      and t3.group_no = #{groupNo,jdbcType=VARCHAR}
+    </if>
+    <if test="groupId != null">
+      and t3.id = #{groupId,jdbcType=BIGINT}
+    </if>
+    <if test="createTime != null">
+      and t1.create_time >= #{createTime,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime2 != null">
+      and <![CDATA[ t1.create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+    </if>
+    <if test="groupIds != null and groupIds.size()>0">
+      and t1.group_id in
+      <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    group by t1.group_id,t3.group_no,t3.name,t2.service
   </select>
 
   <select id="selectCount" resultType="java.lang.Integer">
@@ -472,4 +533,16 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <select id="selectByTradeNos" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from pay_request
+    where 1=1
+    <if test="outTradeNos != null and outTradeNos.size()>0">
+      and out_trade_no in
+      <foreach item="item" index="index" collection="outTradeNo" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </select>
 </mapper>

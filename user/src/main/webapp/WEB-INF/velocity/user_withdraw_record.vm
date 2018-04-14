@@ -81,8 +81,6 @@
                             <th lay-data="{field:'bankname', width:120,style:'color:#C00;'}">银行名称</th>
                             <th lay-data="{field:'bankzhiname', width:160}">支行名称</th>
                             <th lay-data="{field:'banknumber', width:198}">银行卡号/开户名</th>
-                            <th lay-data="{field:'sheng', width:100}">所属省</th>
-                            <th lay-data="{field:'shi', width:120}">所属市</th>
                             <th lay-data="{field:'sqdatetime', width:170}">申请时间</th>
                             <th lay-data="{field:'cldatetime', width:170}">处理时间</th>
                             <th lay-data="{field:'status', width:100}">状态</th>
@@ -100,8 +98,6 @@
                                 <td>${opr.withdrawBank.bank}</td>
                                 <td>${opr.withdrawBank.deposit}</td>
                                 <td>${opr.withdrawBank.bankNo}</td>
-                                <td>${opr.withdrawBank.province}</td>
-                                <td>${opr.withdrawBank.city}</td>
                                 <td>$!date.format('yyyy-MM-dd HH:mm:ss ',${opr.createTime})</td>
                                 #if(${opr.status}==0)
                                     <td></td>

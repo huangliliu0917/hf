@@ -25,6 +25,18 @@ public class BaseClient {
         return restTemplate.postForObject(getUrl(params),null == params.getParams()?params.getParamObj():params.getParams(),String.class);
     }
 
+    protected String post(RemoteParams params, MediaType mediaType,HttpHeaders headers) {
+        LinkedMultiValueMap map=new LinkedMultiValueMap();
+        for(String key:params.getParams().keySet()) {
+            map.add(key,params.getParams().get(key));
+        }
+
+        headers.setContentType(mediaType);
+        HttpEntity<LinkedMultiValueMap> httpEntity = new HttpEntity<>(map,headers);
+        ResponseEntity<String> res = restTemplate.postForEntity(getUrl(params),httpEntity,String.class);
+        return res.getBody();
+    }
+
     protected String post(RemoteParams params, MediaType mediaType) {
         LinkedMultiValueMap map=new LinkedMultiValueMap();
         for(String key:params.getParams().keySet()) {
