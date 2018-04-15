@@ -10,7 +10,6 @@ import com.hf.base.utils.TypeConverter;
 import com.hf.core.biz.TrdBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
-import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;

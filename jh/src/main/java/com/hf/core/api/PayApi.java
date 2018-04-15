@@ -7,9 +7,7 @@ import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.Utils;
-import com.hf.core.biz.PayBiz;
 import com.hf.core.biz.service.TradeBizFactory;
-import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserChannelDao;
@@ -25,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,21 +42,6 @@ import java.util.*;
 public class PayApi {
     @Autowired
     private PayRequestDao payRequestDao;
-    @Autowired
-    @Qualifier("ysPayBiz")
-    private PayBiz payBiz;
-    @Autowired
-    @Qualifier("fxtPayBiz")
-    private PayBiz fxtPayBiz;
-    @Autowired
-    @Qualifier("wwTradeBiz")
-    private TradeBiz wwTradeBiz;
-    @Autowired
-    @Qualifier("ysTradeBiz")
-    private TradeBiz ysTradeBiz;
-    @Autowired
-    @Qualifier("fxtTradeBiz")
-    private TradeBiz fxtTradeBiz;
     @Autowired
     private UserGroupDao userGroupDao;
     @Autowired
@@ -188,79 +169,6 @@ public class PayApi {
             e.printStackTrace();
             return "jsonerror";
         }
-    }
-
-    /**
-     * 友收宝支付回调
-     * @param params
-     * @return
-     */
-    @RequestMapping(value = "/ys/payCallBack",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
-    public @ResponseBody
-    String payCallBack(@RequestBody Map<String,Object> params) {
-        try {
-            payBiz.checkCallBack(params);
-        } catch (BizFailException e) {
-            logger.warn(e.getMessage());
-            return CodeManager.FAILED;
-        }
-
-        try {
-            payBiz.finishPay(params);
-        } catch (BizFailException e) {
-            logger.warn(e.getMessage());
-        }
-
-        String mchId = String.valueOf(params.get("merchant_no"));
-        String out_trade_no = String.valueOf(params.get("out_trade_no"));
-        String outTradeNo = String.format("%s_%s",mchId,out_trade_no);
-        PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
-        try {
-            ysTradeBiz.notice(payRequest);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-
-        return CodeManager.SUCCESS;
-    }
-
-    @RequestMapping(value = "/fxt/payCallBack",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
-    public @ResponseBody
-    String fxtCallBack(@RequestBody Map<String,Object> params) {
-        try {
-            fxtPayBiz.checkCallBack(params);
-        } catch (BizFailException e) {
-            logger.warn(e.getMessage());
-            return CodeManager.FAILED;
-        }
-
-        try {
-            fxtPayBiz.finishPay(params);
-        } catch (BizFailException e) {
-            logger.warn(e.getMessage());
-            return CodeManager.FAILED;
-        }
-
-        String out_trade_no = String.valueOf(params.get("out_trade_no"));
-        PayRequest payRequest = payRequestDao.selectByTradeNo(out_trade_no);
-        try {
-            fxtTradeBiz.notice(payRequest);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-
-        return CodeManager.SUCCESS;
-    }
-
-    @RequestMapping(value = "/ww/payCallBack",method = RequestMethod.POST)
-    public @ResponseBody
-    String wwCallBack(@RequestBody Map<String,String> params) {
-        logger.info(String.format("start ww callback, params:%s,",new Gson().toJson(params)));
-        String result = wwTradeBiz.handleCallBack(params);
-        String tradeNo = params.get("orderNum");
-        PayRequest payRequest = payRequestDao.selectByTradeNo(tradeNo);
-        wwTradeBiz.notice(payRequest);
-        return result;
     }
 
     @RequestMapping(value = "/queryOrder",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.hf.base.utils.EpaySignUtil;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
-import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.remote.CallBackClient;
@@ -40,9 +39,6 @@ public class RemoteTest extends BaseCommitTestCase {
     private UserGroupDao userGroupDao;
     @Autowired
     private FxtClient fxtClient;
-    @Autowired
-    @Qualifier("wwTradeBiz")
-    private TradeBiz wwTradeBiz;
     @Autowired
     private PayRequestDao payRequestDao;
     @Autowired
@@ -117,7 +113,6 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testQueryOrder() {
         String outTradeNo = "13588_20180209173021";
         PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
-        wwTradeBiz.handleProcessingRequest(payRequest);
     }
 
     @Test

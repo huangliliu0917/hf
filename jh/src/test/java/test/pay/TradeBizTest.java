@@ -10,7 +10,6 @@ import com.hf.core.api.PayApi;
 import com.hf.core.biz.ChannelBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
-import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.biz.trade.WwTradingBiz;
 import com.hf.core.dao.local.*;
@@ -292,7 +291,6 @@ public class TradeBizTest extends BaseTestCase {
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),ChannelProvider.FXT.getCode());
         sign = Utils.encrypt(callBackSuccessMap,userGroupExt.getCipherCode());
         callBackSuccessMap.put("sign",sign);
-        payApi.fxtCallBack(callBackSuccessMap);
 //        AdminAccount adminAccount = adminAccountDao.selectByGroupId(adminAccountOprLog.getGroupId());
 //        Assert.assertTrue((adminAccount.getAmount().subtract(adminAmount)).compareTo(new BigDecimal(payRequest.getTotalFee()))==0);
 //        System.out.println("opr logs:"+new Gson().toJson(accountOprLogs));
@@ -369,7 +367,6 @@ public class TradeBizTest extends BaseTestCase {
         userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),ChannelProvider.FXT.getCode());
         sign = Utils.encrypt(callBackSuccessMap,userGroupExt.getCipherCode());
         callBackSuccessMap.put("sign",sign);
-        payApi.fxtCallBack(callBackSuccessMap);
 //        AdminAccount adminAccount = adminAccountDao.selectByGroupId(adminAccountOprLog.getGroupId());
 //        Assert.assertTrue((adminAccount.getAmount().subtract(adminAmount)).compareTo(new BigDecimal(payRequest.getTotalFee()))==0);
 //        System.out.println("opr logs:"+new Gson().toJson(accountOprLogs));
