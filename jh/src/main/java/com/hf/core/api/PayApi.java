@@ -19,6 +19,7 @@ import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserChannel;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.model.po.UserGroupExt;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/pay")
@@ -73,35 +72,74 @@ public class PayApi {
 
     protected Logger logger = LoggerFactory.getLogger(PayApi.class);
 
+//    @RequestMapping(value = "/unifiedorder",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+//    public @ResponseBody
+//    String unifiedorder(HttpServletRequest request, HttpServletResponse response) {
+//        BufferedReader br;
+//        StringBuilder sb = null;
+//        String reqBody = null;
+//
+//        HttpHeaders headers = new HttpHeaders();
+//
+//        Enumeration<String> enumeration = request.getHeaderNames();
+//        while (enumeration.hasMoreElements()) {
+//            String key = enumeration.nextElement();
+//            String value = request.getHeader(key);
+//            logger.info("request headers,key:"+key+",value:"+value);
+//            headers.add(key,value);
+//        }
+//
+//        try {
+//            br = new BufferedReader(new InputStreamReader(
+//                    request.getInputStream()));
+//            String line = null;
+//            sb = new StringBuilder();
+//            while ((line = br.readLine()) != null) {
+//                sb.append(line);
+//            }
+//            reqBody = URLDecoder.decode(sb.toString(), "UTF-8");
+//            reqBody = reqBody.substring(reqBody.indexOf("{"));
+//            System.out.println("JsonReq reqBody>>>>>" + reqBody);
+//
+//            Map<String,Object> params = new Gson().fromJson(reqBody,new TypeToken<Map<String,Object>>(){}.getType());
+//            String mchId = String.valueOf(params.get("merchant_no"));
+//            String service = String.valueOf(params.get("service"));
+//
+//            TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(mchId,service);
+//            logger.info("tradingBiz:"+tradingBiz.getClass().getName());
+//            BigDecimal total = new BigDecimal(params.get("total").toString());
+//            params.put("total",String.valueOf(total.intValue()));
+//
+//            Map<String,Object> resultMap = tradingBiz.pay(params,headers);
+//            return new Gson().toJson(resultMap);
+//
+//        } catch (BizFailException e) {
+//            logger.error(e.getMessage());
+//            Map<String,Object> result = com.hf.base.utils.MapUtils.buildMap("errcode",e.getCode(),"message",e.getMessage());
+//            return new Gson().toJson(result);
+//        } catch (Exception e) {
+//            logger.error(e.getMessage());
+//            Map<String,Object> result = com.hf.base.utils.MapUtils.buildMap("errcode", CodeManager.FAILED);
+//            return new Gson().toJson(result);
+//        }
+//    }
+
     @RequestMapping(value = "/unifiedorder",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody
-    String unifiedorder(HttpServletRequest request, HttpServletResponse response) {
-        BufferedReader br;
-        StringBuilder sb = null;
-        String reqBody = null;
-
-        HttpHeaders headers = new HttpHeaders();
-
-        Enumeration<String> enumeration = request.getHeaderNames();
-        while (enumeration.hasMoreElements()) {
-            String key = enumeration.nextElement();
-            String value = request.getHeader(key);
-            headers.add(key,value);
-        }
-
+    String unifiedorder(@RequestBody Map<String,Object> params,HttpServletRequest request) {
         try {
-            br = new BufferedReader(new InputStreamReader(
-                    request.getInputStream()));
-            String line = null;
-            sb = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            reqBody = URLDecoder.decode(sb.toString(), "UTF-8");
-            reqBody = reqBody.substring(reqBody.indexOf("{"));
-            System.out.println("JsonReq reqBody>>>>>" + reqBody);
+            List<Header> headers = new ArrayList<>();
 
-            Map<String,Object> params = new Gson().fromJson(reqBody,new TypeToken<Map<String,Object>>(){}.getType());
+            Enumeration<String> enumeration = request.getHeaderNames();
+            while (enumeration.hasMoreElements()) {
+                String name = enumeration.nextElement();
+                String value = request.getHeader(name);
+                logger.info("request header, name+"+name+",value:"+value);
+                Header header = new Header(name,value);
+                headers.add(header);
+            }
+
+            logger.info("new pay request :" +new Gson().toJson(params));
             String mchId = String.valueOf(params.get("merchant_no"));
             String service = String.valueOf(params.get("service"));
 

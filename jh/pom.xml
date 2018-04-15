@@ -363,6 +363,12 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.hf</groupId>
             <artifactId>bdpush</artifactId>
             <version>3.0.1</version>
@@ -376,12 +382,6 @@
             <version>3.0.1</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/hfb-merchant-quick.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-            <version>1.14</version>
         </dependency>
 
         <dependency>

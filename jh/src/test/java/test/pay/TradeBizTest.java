@@ -257,10 +257,10 @@ public class TradeBizTest extends BaseTestCase {
         String cipherCode = userGroup.getCipherCode();
         String sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
-        String result = payApi.unifiedorder(null,null);
+        String result = payApi.unifiedorder(payParams,null);
         System.out.println(result);
 
-        result = payApi.unifiedorder(null,null);
+        result = payApi.unifiedorder(payParams,null);
         System.out.println(result);
 
         String tradeNo = String.format("%s_%s",payParams.get("merchant_no"),payParams.get("out_trade_no"));
@@ -336,10 +336,10 @@ public class TradeBizTest extends BaseTestCase {
         successMap.put("sign",Utils.getRandomString(8));
         Mockito.when(wwPayClient.unifiedorder(Mockito.anyMap())).thenReturn(successMap);
 
-        result = payApi.unifiedorder(null,null);
+        result = payApi.unifiedorder(payParams,null);
         System.out.println(result);
 
-        result = payApi.unifiedorder(null,null);
+        result = payApi.unifiedorder(payParams,null);
         System.out.println(result);
 
         tradeNo = String.format("%s_%s",payParams.get("merchant_no"),payParams.get("out_trade_no"));
@@ -408,7 +408,7 @@ public class TradeBizTest extends BaseTestCase {
         sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
-        result = payApi.unifiedorder(null,null);
+        result = payApi.unifiedorder(payParams,null);
         System.out.println(result);
         tradeNo = String.format("%s_%s",payParams.get("merchant_no"),payParams.get("out_trade_no"));
         adminAccountOprLog = adminAccountOprLogDao.selectByNo(tradeNo);
@@ -455,7 +455,7 @@ public class TradeBizTest extends BaseTestCase {
         sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
-        result = payApi.unifiedorder(null,null);
+        result = payApi.unifiedorder(payParams,null);
         System.out.println(result);
         tradeNo = String.format("%s_%s",payParams.get("merchant_no"),payParams.get("out_trade_no"));
 

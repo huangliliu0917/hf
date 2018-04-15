@@ -110,7 +110,7 @@ public class WwTradeBizTest extends BaseTestCase {
         payMap.put("sign_type","MD5");
         String sign = Utils.encrypt(payMap,cipherCode);
         payMap.put("sign",sign);
-        payApi.unifiedorder(null,null);
+        payApi.unifiedorder(payMap,null);
 
         PayRequest payRequest = payRequestDao.selectByTradeNo(tradeNo);
         Assert.assertNotNull(payRequest);

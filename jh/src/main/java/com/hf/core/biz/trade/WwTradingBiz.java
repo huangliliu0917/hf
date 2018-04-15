@@ -19,14 +19,13 @@ import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.dto.trade.unifiedorder.WwPayRequest;
 import com.hf.core.model.po.*;
 import com.hf.core.utils.CipherUtils;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -57,7 +56,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
     }
 
     @Override
-    public void doPay(PayRequest payRequest, HttpHeaders headers) {
+    public void doPay(PayRequest payRequest, List<Header> headers) {
         UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
         ChannelProvider channelProvider = ChannelProvider.parse(payRequest.getChannelProviderCode());
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),channelProvider.getCode());

@@ -2,10 +2,7 @@ package com.hf.base.client;
 
 import com.hf.base.model.RemoteParams;
 import com.hf.base.utils.Utils;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,7 +30,7 @@ public class BaseClient {
 
         headers.setContentType(mediaType);
         HttpEntity<LinkedMultiValueMap> httpEntity = new HttpEntity<>(map,headers);
-        ResponseEntity<String> res = restTemplate.postForEntity(getUrl(params),httpEntity,String.class);
+        ResponseEntity<String> res = restTemplate.exchange(getUrl(params), HttpMethod.POST,httpEntity,String.class);
         return res.getBody();
     }
 

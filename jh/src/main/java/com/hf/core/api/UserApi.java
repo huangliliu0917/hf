@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -851,5 +852,46 @@ public class UserApi {
         Long groupId = new BigDecimal(data.get("groupId").toString()).longValue();
         BigDecimal finishAmount = accountOprLogDao.sumFinishAmount(Arrays.asList(groupId),Arrays.asList(OprType.PAY.getValue()));
         return ResponseResult.success(finishAmount);
+    }
+
+    @RequestMapping(value = "/testApp",method = RequestMethod.POST ,produces = "application/x-www-form-urlencoded")
+    public void testApp(HttpServletRequest request, HttpServletResponse response) {
+        String memberCode = request.getParameter("memberCode");
+        String payMoney = request.getParameter("payMoney");
+        String orderNum = request.getParameter("orderNum");
+        String callbackUrl = request.getParameter("callbackUrl");
+        String goodsName = request.getParameter("goodsName");
+        String signStr = request.getParameter("signStr");
+
+        Enumeration<String> headers = request.getHeaderNames();
+        while (headers.hasMoreElements()) {
+            String name = headers.nextElement();
+            String value = request.getHeader(name);
+        }
+        System.out.println("-------");
+    }
+
+    @RequestMapping(value = "/testGet",method = RequestMethod.GET ,produces = "application/x-www-form-urlencoded;charset=UTF-8")
+    public void testGet(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        String memberCode = request.getParameter("memberCode");
+        String payMoney = request.getParameter("payMoney");
+        String orderNum = request.getParameter("orderNum");
+        String callbackUrl = request.getParameter("callbackUrl");
+        String goodsName = request.getParameter("goodsName");
+        String signStr = request.getParameter("signStr");
+
+        Enumeration<String> headers = request.getHeaderNames();
+        while (headers.hasMoreElements()) {
+            String name = headers.nextElement();
+            String value = request.getHeader(name);
+        }
+        System.out.println("-------");
     }
 }

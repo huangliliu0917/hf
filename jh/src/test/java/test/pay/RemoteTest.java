@@ -2,6 +2,7 @@ package test.pay;
 
 import com.google.gson.Gson;
 import com.hf.base.utils.EpaySignUtil;
+import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.dao.local.PayRequestDao;
@@ -13,8 +14,10 @@ import com.hf.core.dao.remote.YsClient;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.utils.CipherUtils;
+import com.hf.core.utils.Https;
 import com.hfb.merchant.code.util.http.Httpz;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
@@ -58,7 +61,8 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service","09");
+        payParams.put("service","04");
+        payParams.put("remark","会员服务客服QQ183508495");
         payParams.put("sign_type","MD5");
         payParams.put("total","11000");//10000.00
         payParams.put("version","1.0");
@@ -76,15 +80,16 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testRemotePay() {
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","1.0");
-        payParams.put("service", "09");
-        payParams.put("merchant_no","5132");
-        payParams.put("total","10000");//10000.00
-        payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
+        payParams.put("service", "04");
+        payParams.put("merchant_no","5166");
+        payParams.put("total","2800");//10000.00
+        payParams.put("out_trade_no","app213110100002124800387");
         payParams.put("create_ip","47.52.111.205");
-        payParams.put("nonce_str", "1681452188");
+        payParams.put("remark","会员服务客服QQ183508495");
+        payParams.put("nonce_str", "20180415124815");
         payParams.put("sign_type","MD5");
-        payParams.put("out_notify_url","http://huifufu.cn/openapi/test/pay_notice");
-        String cipherCode = "sdadafag1234";
+        payParams.put("out_notify_url","http://baidu.com/pay/notifyUrlhuifu/");
+        String cipherCode = "2k7aoqhp";
         String sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
@@ -194,5 +199,43 @@ public class RemoteTest extends BaseCommitTestCase {
         boolean result = callBackClient.post("http://un.iranhong.com/pay/notifyUrlhuifu/",resutMap);
 
         System.out.println(result);
+    }
+
+    @Test
+    public void testSendForm() {
+        Https https = new Https();
+//        String url = "http://pay1.hlqlb.cn:8692/pay/payment/toPayment";
+        String url = "http://127.0.0.1:8080/jh/user/testApp";
+
+        String memberCode = "9010000025";
+        String payMoney = "110.00";
+        String orderNum = String.valueOf(RandomUtils.nextLong());
+        String callbackUrl = "http://huifufu.cn/openapi/ww/pay_notice";
+        String goodsName = "会员服务客服QQ183508495";
+        Map<String,Object> params = MapUtils.buildMap("memberCode",memberCode,"payMoney",payMoney,"orderNum",orderNum,"callbackUrl",callbackUrl,"goodsName",goodsName);
+        String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
+
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        NameValuePair memberCodePair = new NameValuePair("memberCode",memberCode);
+        nameValuePairs.add(memberCodePair);
+
+        NameValuePair payMoneyPair = new NameValuePair("payMoney","110.00");
+        nameValuePairs.add(payMoneyPair);
+
+        NameValuePair orderNumPair = new NameValuePair("orderNum",orderNum);
+        nameValuePairs.add(orderNumPair);
+
+        NameValuePair callbackUrlPair = new NameValuePair("callbackUrl",callbackUrl);
+        nameValuePairs.add(callbackUrlPair);
+
+        NameValuePair goodsNamePair = new NameValuePair("goodsName",goodsName);
+        nameValuePairs.add(goodsNamePair);
+
+        NameValuePair signStrPair = new NameValuePair("signStr",sign);
+        nameValuePairs.add(signStrPair);
+
+        NameValuePair[] nameValuePairArray = new NameValuePair[nameValuePairs.size()];
+        String response = https.sendAsPost(url,nameValuePairs.toArray(nameValuePairArray));
+        System.out.println(response);
     }
 }

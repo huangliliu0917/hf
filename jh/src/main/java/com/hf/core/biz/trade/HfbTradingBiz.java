@@ -16,6 +16,7 @@ import com.hfb.merchant.quick.common.Status;
 import com.hfb.merchant.quick.entity.Pay;
 import com.hfb.merchant.quick.handler.QuickEntityPay;
 import com.hfb.merchant.quick.util.DateUtil;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.http.HttpHeaders;
@@ -102,7 +103,7 @@ public class HfbTradingBiz extends AbstractTradingBiz {
     }
 
     @Override
-    public void doPay(PayRequest payRequest, HttpHeaders headers) {
+    public void doPay(PayRequest payRequest, List<Header> headers) {
         UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
         String merchantNo = "S20180409031247";
         // 私钥文件路径

@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hf.base.client.BaseClient;
 import com.hf.base.model.RemoteParams;
+import org.apache.commons.httpclient.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -63,7 +65,7 @@ public class YsClient extends BaseClient implements PayClient {
 
 
     @Override
-    public Map<String, Object> unifiedorder(HttpHeaders headers, Map<String, Object> params) {
+    public Map<String, Object> unifiedorder(List<Header> headers, Map<String, Object> params) {
         return null;
     }
 }

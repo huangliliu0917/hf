@@ -13,13 +13,17 @@ import com.hf.core.dao.local.*;
 import com.hf.core.dao.remote.CallBackClient;
 import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.po.*;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -50,9 +54,9 @@ public abstract class AbstractTradingBiz implements TradingBiz {
     protected Logger logger = LoggerFactory.getLogger(AbstractTradingBiz.class);
 
     public abstract ChannelProvider getChannelProvider();
-    public abstract void doPay(PayRequest payRequest, HttpHeaders headers);
+    public abstract void doPay(PayRequest payRequest, java.util.List<Header> headers);
 
-    public Map<String,Object> pay(Map<String,Object> requestMap,HttpHeaders headers) {
+    public Map<String,Object> pay(Map<String,Object> requestMap,List<Header> headers) {
         for(String needField:needFields) {
             if(Objects.isNull(requestMap.get(needField)) || Utils.isEmpty(String.valueOf(requestMap.get(needField)))) {
                 throw new BizFailException(String.format("%s不能为空",needField));
@@ -102,7 +106,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         return finishRemotePay(payRequest);
     }
 
-    private PayRequest remotePay(Map<String,Object> requestMap,HttpHeaders headers) {
+    private PayRequest remotePay(Map<String,Object> requestMap,List<Header> headers) {
 
         String version = Utils.nvl(requestMap.get("version"));
         String service = Utils.nvl(requestMap.get("service"));

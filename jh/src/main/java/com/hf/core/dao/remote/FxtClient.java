@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hf.base.client.BaseClient;
 import com.hf.base.model.RemoteParams;
+import org.apache.commons.httpclient.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,7 +82,7 @@ public class FxtClient extends BaseClient implements PayClient {
 
 
     @Override
-    public Map<String, Object> unifiedorder(HttpHeaders headers, Map<String, Object> params) {
+    public Map<String, Object> unifiedorder(List<Header> headers, Map<String, Object> params) {
         return null;
     }
 }
