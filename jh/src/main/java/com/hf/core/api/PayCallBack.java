@@ -2,7 +2,6 @@ package com.hf.core.api;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.hf.core.biz.trade.TradeBiz;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
