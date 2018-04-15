@@ -70,7 +70,7 @@ public class PayJob {
         }
     }
 
-//    @Scheduled(cron = "0 0 0,23 * * ?")
+    @Scheduled(cron = "0 0 0,23 * * ?")
     public void handleNoCallBackData() {
         logger.info("Start handle no callback");
         Long startId = 0L;
@@ -99,7 +99,7 @@ public class PayJob {
 
     }
 
-//    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void doPromote() {
         List<PayRequest> list = payRequestDao.selectWaitingPromote();
         list.forEach(payRequest -> {
