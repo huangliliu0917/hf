@@ -12,7 +12,8 @@ public enum ChannelCode {
     WY("09","网银","09",""),
     QQ_H5("10","QQ H5支付","10",""),
     QQ_SM("11","QQ扫码","11",""),
-    YL("12","银联支付","12","");
+    YL("12","银联支付","12",""),
+    KJ("13","网银快捷支付","13","");
 
     private String code;
     private String desc;
