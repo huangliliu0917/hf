@@ -32,6 +32,9 @@ public class TradeBizFactory {
     @Autowired
     @Qualifier("hfbTradingBiz")
     private TradingBiz hfbTradingBiz;
+    @Autowired
+    @Qualifier("zfTradingBiz")
+    private TradingBiz zfTradingBiz;
 
     public TradingBiz getTradingBiz(String providerCode) {
         ChannelProvider channelProvider = ChannelProvider.parse(providerCode);
@@ -43,6 +46,8 @@ public class TradeBizFactory {
                 return wwTradingBiz;
             case HFB:
                 return hfbTradingBiz;
+            case ZF:
+                return zfTradingBiz;
         }
         throw new BizFailException(String.format("no provider found,%s",providerCode));
     }
@@ -74,6 +79,10 @@ public class TradeBizFactory {
 
             if(ChannelProvider.HFB == provider) {
                 return hfbTradingBiz;
+            }
+
+            if(ChannelProvider.ZF == provider) {
+                return zfTradingBiz;
             }
         }
         throw new BizFailException("用户无收单权限");

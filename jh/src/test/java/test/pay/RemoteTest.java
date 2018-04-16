@@ -1,9 +1,14 @@
 package test.pay;
 
 import com.google.gson.Gson;
+import com.hf.base.enums.ChannelCode;
+import com.hf.base.enums.ChannelProvider;
+import com.hf.base.enums.TradeType;
 import com.hf.base.utils.EpaySignUtil;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
+import com.hf.core.biz.trade.AbstractTradingBiz;
+import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.remote.CallBackClient;
@@ -46,6 +51,9 @@ public class RemoteTest extends BaseCommitTestCase {
     private PayClient wwClient;
     @Autowired
     private CallBackClient callBackClient;
+    @Autowired
+    @Qualifier("zfTradingBiz")
+    private AbstractTradingBiz zfTradingBiz;
 
     @Test
     public void testPay() {
@@ -232,5 +240,27 @@ public class RemoteTest extends BaseCommitTestCase {
         NameValuePair[] nameValuePairArray = new NameValuePair[nameValuePairs.size()];
         String response = https.sendAsPost(url,nameValuePairs.toArray(nameValuePairArray));
         System.out.println(response);
+    }
+
+    @Test
+    public void testZfPay() {
+        PayRequest payRequest = new PayRequest();
+        payRequest.setAppid("");
+        payRequest.setBankCode("中国银行");
+        payRequest.setBody("转账100");
+        payRequest.setBuyerId("12345");
+        payRequest.setChannelProviderCode(ChannelProvider.ZF.getCode());
+        payRequest.setCreateIp("47.52.111.205");
+        payRequest.setMchId("13588");
+        payRequest.setOutNotifyUrl("http://huifufu.cn");
+        payRequest.setOutTradeNo(String.valueOf(RandomUtils.nextLong()));
+        payRequest.setRemark("转账100");
+        payRequest.setService(ChannelCode.KJ.getCode());
+        payRequest.setTotalFee(100*100);
+        payRequest.setSubOpenid("");
+        payRequest.setTradeType(TradeType.PAY.getValue());
+        payRequest.setSign("");
+        zfTradingBiz.doPay(payRequest,null);
+
     }
 }
