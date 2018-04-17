@@ -114,7 +114,7 @@
                             <td>${wd.statusDesc}</td>
                             <td>
                                 <div class="layui-btn-group">
-                                    #if(${wd.status}==0) {
+                                    #if(${wd.status}==1) {
                                         <button class="layui-btn layui-btn-small lineblud" onclick="task_pass(${wd.id})">完成付款</button>
                                         <button class="layui-btn layui-btn-small lineblud" onclick="task_fail(${wd.id})">拒绝付款</button>
                                     #end

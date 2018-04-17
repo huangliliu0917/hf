@@ -23,6 +23,9 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +59,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
     }
 
     @Override
-    public void doPay(PayRequest payRequest, List<Header> headers) {
+    public void doPay(PayRequest payRequest, HttpServletRequest request, HttpServletResponse response) {
         UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
         ChannelProvider channelProvider = ChannelProvider.parse(payRequest.getChannelProviderCode());
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),channelProvider.getCode());
@@ -97,7 +100,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
             throw new BizFailException("no channel defined");
         }
 
-        Map<String,Object> responseMap = wwClient.unifiedorder(headers,MapUtils.beanToMap(wwPayRequest));
+        Map<String,Object> responseMap = wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest));
         PayRequestBack payRequestBack = new PayRequestBack();
         payRequestBack.setMchId(payRequest.getMchId());
         payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());

@@ -87,7 +87,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("service", "04");
         payParams.put("merchant_no","5166");
         payParams.put("total","2800");//10000.00
-        payParams.put("out_trade_no","app213110100002124800387");
+        payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
         payParams.put("create_ip","47.52.111.205");
         payParams.put("remark","会员服务客服QQ183508495");
         payParams.put("nonce_str", "20180415124815");
@@ -246,7 +246,7 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testZfPay() {
         PayRequest payRequest = new PayRequest();
         payRequest.setAppid("");
-        payRequest.setBankCode("中国银行");
+        payRequest.setBankCode("中国工商银行");
         payRequest.setBody("转账100");
         payRequest.setBuyerId("12345");
         payRequest.setChannelProviderCode(ChannelProvider.ZF.getCode());
@@ -256,11 +256,11 @@ public class RemoteTest extends BaseCommitTestCase {
         payRequest.setOutTradeNo(String.valueOf(RandomUtils.nextLong()));
         payRequest.setRemark("转账100");
         payRequest.setService(ChannelCode.KJ.getCode());
-        payRequest.setTotalFee(100*100);
+        payRequest.setTotalFee(50);
         payRequest.setSubOpenid("");
         payRequest.setTradeType(TradeType.PAY.getValue());
         payRequest.setSign("");
         zfTradingBiz.doPay(payRequest,null);
-
+        System.out.println(payRequest.getOutTradeNo());
     }
 }

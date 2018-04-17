@@ -13,17 +13,14 @@ import com.hf.core.dao.local.*;
 import com.hf.core.dao.remote.CallBackClient;
 import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.po.*;
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-
-import java.awt.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -54,9 +51,13 @@ public abstract class AbstractTradingBiz implements TradingBiz {
     protected Logger logger = LoggerFactory.getLogger(AbstractTradingBiz.class);
 
     public abstract ChannelProvider getChannelProvider();
-    public abstract void doPay(PayRequest payRequest, java.util.List<Header> headers);
+    public abstract void doPay(PayRequest payRequest,HttpServletRequest request,HttpServletResponse response);
 
-    public Map<String,Object> pay(Map<String,Object> requestMap,List<Header> headers) {
+    public Map<String,Object> pay(Map<String,Object> requestMap) {
+        return this.pay(requestMap,null,null);
+    }
+
+    public Map<String,Object> pay(Map<String,Object> requestMap, HttpServletRequest request,HttpServletResponse response) {
         for(String needField:needFields) {
             if(Objects.isNull(requestMap.get(needField)) || Utils.isEmpty(String.valueOf(requestMap.get(needField)))) {
                 throw new BizFailException(String.format("%s不能为空",needField));
@@ -101,12 +102,12 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             throw new BizFailException("未注册，权限不足");
         }
 
-        payRequest = remotePay(requestMap,headers);
+        payRequest = remotePay(requestMap,request,response);
 
         return finishRemotePay(payRequest);
     }
 
-    private PayRequest remotePay(Map<String,Object> requestMap,List<Header> headers) {
+    private PayRequest remotePay(Map<String,Object> requestMap,HttpServletRequest request,HttpServletResponse response) {
 
         String version = Utils.nvl(requestMap.get("version"));
         String service = Utils.nvl(requestMap.get("service"));
@@ -154,7 +155,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         payService.saveOprLog(payRequest);
         payRequest = payRequestDao.selectByPrimaryKey(payRequest.getId());
 
-        doPay(payRequest,headers);
+        doPay(payRequest,request,response);
 
         return payRequest;
     }
