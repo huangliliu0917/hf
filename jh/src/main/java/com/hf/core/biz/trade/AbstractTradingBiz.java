@@ -150,6 +150,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         payRequest.setSubOpenid(sub_openid);
         payRequest.setTradeType(TradeType.PAY.getValue());
         payRequest.setSign(sign);
+        payRequest.setIversion(version);
 
         payRequestDao.insertSelective(payRequest);
         payService.saveOprLog(payRequest);

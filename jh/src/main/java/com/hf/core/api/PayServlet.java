@@ -1,15 +1,13 @@
 package com.hf.core.api;
 
+import com.google.gson.Gson;
 import com.hf.base.utils.MapUtils;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.utils.BeanContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,5 +63,6 @@ public class PayServlet extends HttpServlet {
                 "sign",sign);
 
         Map<String,Object> resultMap = tradingBiz.pay(params,request,response);
+        response.getWriter().write(new Gson().toJson(resultMap));
     }
 }

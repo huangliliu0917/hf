@@ -56,6 +56,8 @@ public class PayRequest {
 
     private String bankCode;
 
+    private String iversion;
+
     public PayRequest() {
 
     }
@@ -272,5 +274,13 @@ public class PayRequest {
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
+    }
+
+    public String getIversion() {
+        return iversion;
+    }
+
+    public void setIversion(String iversion) {
+        this.iversion = iversion;
     }
 }

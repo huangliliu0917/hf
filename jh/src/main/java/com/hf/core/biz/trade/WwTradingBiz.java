@@ -6,6 +6,7 @@ import com.hf.base.enums.*;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.EpaySignUtil;
+import com.hf.base.utils.HttpClient;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
@@ -15,6 +16,7 @@ import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.local.UserGroupExtDao;
 import com.hf.core.dao.remote.CallBackClient;
 import com.hf.core.dao.remote.PayClient;
+import com.hf.core.dao.remote.WwClient;
 import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.dto.trade.unifiedorder.WwPayRequest;
 import com.hf.core.model.po.*;
@@ -41,7 +43,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
     @Autowired
     private PropertyConfig propertyConfig;
     @Autowired
-    private PayClient wwClient;
+    private WwClient wwClient;
     @Autowired
     private PayService payService;
     @Autowired
@@ -100,52 +102,63 @@ public class WwTradingBiz extends AbstractTradingBiz {
             throw new BizFailException("no channel defined");
         }
 
-        Map<String,Object> responseMap = wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest));
         PayRequestBack payRequestBack = new PayRequestBack();
         payRequestBack.setMchId(payRequest.getMchId());
         payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
-        String payContent = String.valueOf(responseMap.get("payResult"));
 
-        switch (channelCode) {
-            case WX_H5:
-            case QQ_H5:
-                if(StringUtils.isEmpty(payContent) || !payContent.contains("var url = ")) {
-                    String payResult = responseMap.get("payResult") == null?"":String.valueOf(responseMap.get("payResult"));
-                    try {
-                        String message = payResult.substring(payResult.indexOf("<span>")+6,payResult.lastIndexOf("</span>")).replace("<b>","").replace("</b>","").replace("\n","").replace("<p>","").replace("</p>","").replace("，",",").replace("\t","").replace("<span>","").replace("</span>","").replace("\r","");
-                        payRequestBack.setMessage(message);
-                    } catch (Exception e) {
-                        payRequestBack.setMessage(payResult);
-                    }
-
-                    payRequestBack.setErrcode(CodeManager.BIZ_FAIELD);
-                    payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
-                    return;
-                }
+        if(StringUtils.equalsIgnoreCase(payRequest.getIversion(),"2.0")) {
+            try {
+                wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest),response);
                 payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
                 payRequestBack.setMessage("下单成功");
-                String codeUrl = payContent.split("'")[1];
-                payRequestBack.setCodeUrl(codeUrl);
-                break;
-            case WY:
-                if(StringUtils.isEmpty(payContent) || !payContent.contains("pGateWayReq")) {
-                    String payResult = responseMap.get("payResult") == null?"":String.valueOf(responseMap.get("payResult"));
-                    try {
-                        String message = payResult.substring(payResult.indexOf("<span>")+6,payResult.lastIndexOf("</span>")).replace("<b>","").replace("</b>","").replace("\n","").replace("<p>","").replace("</p>","").replace("，",",").replace("\t","").replace("<span>","").replace("</span>","").replace("\r","");
-                        payRequestBack.setMessage(message);
-                    } catch (Exception e) {
-                        payRequestBack.setMessage(payResult);
+            } catch (Exception e) {
+                payRequestBack.setErrcode(CodeManager.FAILED);
+                payRequestBack.setMessage(e.getMessage());
+            }
+        } else {
+            Map<String,Object> responseMap = wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest));
+            String payContent = String.valueOf(responseMap.get("payResult"));
+            switch (channelCode) {
+                case WX_H5:
+                case QQ_H5:
+                    if(StringUtils.isEmpty(payContent) || !payContent.contains("var url = ")) {
+                        String payResult = responseMap.get("payResult") == null?"":String.valueOf(responseMap.get("payResult"));
+                        try {
+                            String message = payResult.substring(payResult.indexOf("<span>")+6,payResult.lastIndexOf("</span>")).replace("<b>","").replace("</b>","").replace("\n","").replace("<p>","").replace("</p>","").replace("，",",").replace("\t","").replace("<span>","").replace("</span>","").replace("\r","");
+                            payRequestBack.setMessage(message);
+                        } catch (Exception e) {
+                            payRequestBack.setMessage(payResult);
+                        }
+
+                        payRequestBack.setErrcode(CodeManager.BIZ_FAIELD);
+                        payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
+                        return;
                     }
-                    payRequestBack.setErrcode(CodeManager.PAY_FAILED);
-                    payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
-                    return;
-                }
-                payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
-                payRequestBack.setMessage("下单成功");
-                String content = payContent.substring(payContent.indexOf("<form"),payContent.indexOf("</form>")+7);
-                payRequestBack.setPageContent(content);
-                break;
-            default:
+                    payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                    payRequestBack.setMessage("下单成功");
+                    String codeUrl = payContent.split("'")[1];
+                    payRequestBack.setCodeUrl(codeUrl);
+                    break;
+                case WY:
+                    if(StringUtils.isEmpty(payContent) || !payContent.contains("pGateWayReq")) {
+                        String payResult = responseMap.get("payResult") == null?"":String.valueOf(responseMap.get("payResult"));
+                        try {
+                            String message = payResult.substring(payResult.indexOf("<span>")+6,payResult.lastIndexOf("</span>")).replace("<b>","").replace("</b>","").replace("\n","").replace("<p>","").replace("</p>","").replace("，",",").replace("\t","").replace("<span>","").replace("</span>","").replace("\r","");
+                            payRequestBack.setMessage(message);
+                        } catch (Exception e) {
+                            payRequestBack.setMessage(payResult);
+                        }
+                        payRequestBack.setErrcode(CodeManager.PAY_FAILED);
+                        payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
+                        return;
+                    }
+                    payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                    payRequestBack.setMessage("下单成功");
+                    String content = payContent.substring(payContent.indexOf("<form"),payContent.indexOf("</form>")+7);
+                    payRequestBack.setPageContent(content);
+                    break;
+                default:
+            }
         }
 
         payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());

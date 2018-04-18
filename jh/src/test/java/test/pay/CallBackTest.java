@@ -66,7 +66,7 @@ public class CallBackTest extends BaseTestCase {
         response.put("payResult","var url = '1232112511'");
         Mockito.when(wwPayClient.unifiedorder(Mockito.anyMap())).thenReturn(response);
 
-        wwTradingBiz.pay(null,null);
+        wwTradingBiz.pay(null,null,null);
 
         PayRequest payRequest = payRequestDao.selectByTradeNo("13588_"+outTradeNo);
         Assert.assertEquals(payRequest.getStatus().intValue(),PayRequestStatus.PROCESSING.getValue());

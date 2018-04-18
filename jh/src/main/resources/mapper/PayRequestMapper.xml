@@ -27,11 +27,14 @@
     <result column="notice_retry_time" property="noticeRetryTime" jdbcType="INTEGER" />
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
     <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="iversion" property="iversion" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     id, out_trade_no, body, mch_id, sub_openid, buyer_id, service, appid, sign, `status`, 
     create_time, update_time, version,trade_type,fee,actual_amount,total_fee,remark,
-    channel_provider_code,pay_result,out_notify_url,notice_status,notice_retry_time,create_ip,bank_code
+    channel_provider_code,pay_result,out_notify_url,notice_status,notice_retry_time,create_ip,bank_code,
+    iversion
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -124,6 +127,9 @@
       <if test="bankCode != null" >
         bank_code,
       </if>
+      <if test="iversion != null" >
+        iversion,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -191,6 +197,9 @@
       </if>
       <if test="bankCode != null" >
         #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="iversion != null" >
+        #{iversion,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

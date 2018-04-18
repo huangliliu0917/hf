@@ -3,9 +3,12 @@ package com.hf.base.utils;
 import com.hf.base.exceptions.BizFailException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -202,5 +205,31 @@ public class Utils {
             sb = sb.append(str).append(split);
         }
         return sb.substring(0,sb.length()-1);
+    }
+
+    public static String getPostString(HttpServletRequest request) {
+
+        StringBuffer buffer = new StringBuffer();
+        try {
+            InputStream inputStream = request.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String str = null;
+            while ((str = bufferedReader.readLine()) != null) {
+                buffer.append(str);
+            }
+            bufferedReader.close();
+            inputStreamReader.close();
+            // 释放资源
+            inputStream.close();
+        } catch (UnsupportedEncodingException e) {
+            // SysLogger.error(HttpUtil.class, "请求字符集不支持，获取请求数据出错");
+            e.printStackTrace();
+        } catch (IOException e) {
+            // SysLogger.error(HttpUtil.class, "IO异常，获取请求出错");
+            e.printStackTrace();
+        }
+
+        return buffer.toString();
     }
 }

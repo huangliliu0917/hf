@@ -84,8 +84,8 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testRemotePay() {
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","1.0");
-        payParams.put("service", "04");
-        payParams.put("merchant_no","5166");
+        payParams.put("service", "09");
+        payParams.put("merchant_no","5132");
         payParams.put("total","2800");//10000.00
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
         payParams.put("create_ip","47.52.111.205");
@@ -93,7 +93,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", "20180415124815");
         payParams.put("sign_type","MD5");
         payParams.put("out_notify_url","http://baidu.com/pay/notifyUrlhuifu/");
-        String cipherCode = "2k7aoqhp";
+        String cipherCode = "sdadafag1234";
         String sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
@@ -260,7 +260,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payRequest.setSubOpenid("");
         payRequest.setTradeType(TradeType.PAY.getValue());
         payRequest.setSign("");
-        zfTradingBiz.doPay(payRequest,null);
+        zfTradingBiz.doPay(payRequest,null,null);
         System.out.println(payRequest.getOutTradeNo());
     }
 }

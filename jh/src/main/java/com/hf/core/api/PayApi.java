@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -107,7 +108,7 @@ public class PayApi {
 
     @RequestMapping(value = "/unifiedorder",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody
-    String unifiedorder(@RequestBody Map<String,Object> params,HttpServletRequest request) {
+    String unifiedorder(@RequestBody Map<String,Object> params, HttpServletRequest request, HttpServletResponse response) {
         try {
             List<Header> headers = new ArrayList<>();
 
@@ -129,7 +130,7 @@ public class PayApi {
             BigDecimal total = new BigDecimal(params.get("total").toString());
             params.put("total",String.valueOf(total.intValue()));
 
-            Map<String,Object> resultMap = tradingBiz.pay(params,headers);
+            Map<String,Object> resultMap = tradingBiz.pay(params,request,response);
             return new Gson().toJson(resultMap);
 
         } catch (BizFailException e) {

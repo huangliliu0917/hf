@@ -38,6 +38,6 @@ public class HfPayTest extends BaseCommitTestCase {
         String sign = Utils.encrypt(payParams,userGroup.getCipherCode());
         payParams.put("sign",sign);
 
-        hfTradingBiz.pay(null,null);
+        hfTradingBiz.pay(null,null,null);
     }
 }

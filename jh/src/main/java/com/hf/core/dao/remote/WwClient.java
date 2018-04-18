@@ -6,6 +6,7 @@ import com.hf.base.client.BaseClient;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.RemoteParams;
 import com.hf.base.utils.EpaySignUtil;
+import com.hf.base.utils.HttpClient;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
@@ -18,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +37,27 @@ public class WwClient extends BaseClient implements PayClient {
 
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
-        return null;
+        return this.unifiedorder(new ArrayList<>(),params);
+    }
+
+    public void unifiedorder(Map<String,Object> params, HttpServletResponse response) throws Exception {
+        String url = null;
+        if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"04") || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"10")) {
+            url = H5_PAY_URL;
+        }
+        if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"09")) {
+            url = WY_PAY_URL;
+        }
+        if(url == null) {
+            throw new BizFailException("channelCode not exist");
+        }
+        params.remove("channelCode");
+        String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
+        params.put("signStr",sign);
+
+        HttpClient httpClient = new HttpClient(response);
+        httpClient.setParameter(params);
+        httpClient.sendByPost(url);
     }
 
     @Override

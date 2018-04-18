@@ -157,4 +157,24 @@
     <servlet-name>NotCardpayNotify</servlet-name>
     <url-pattern>/payNotCardNotify.do</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>newPay</servlet-name>
+    <servlet-class>com.hf.core.api.PayServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>newPay</servlet-name>
+    <url-pattern>/pay</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>payDemo</servlet-name>
+    <servlet-class>com.hf.core.demo.PayDemmoServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>payDemo</servlet-name>
+    <url-pattern>/payDemo</url-pattern>
+  </servlet-mapping>
 </web-app>
