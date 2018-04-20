@@ -84,6 +84,10 @@
 					<input type="text" class="form-control" name="create_ip" id="create_ip" value="<%=hostAddress%>" required>
 				</div>
 				<div class="form-group">
+					<label for="buyer_id">付款人id</label>
+					<input type="text" class="form-control" name="buyer_id" id="buyer_id" value="" required>
+				</div>
+				<div class="form-group">
 					<label for="bank_code">银行</label>
 					<select name="bank_code" id="bank_code">
 						<option value="">选择支付银行</option>

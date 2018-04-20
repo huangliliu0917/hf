@@ -51,25 +51,24 @@ public class ZfTradingBiz extends AbstractTradingBiz {
             UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
 
             String inTradeOrderNo = payRequest.getOutTradeNo();
-            String merchantNo = "990290077770049";
-            String terminalNo = "77700624";
-            String attach = "990290073720001";
-            String key = "12345678";
+            String merchantNo = "990581077770019";
+            String terminalNo = "77700474";
+            String attach = "991361077780001";
+            String key = "SU62HD9438";
             String productPrice = String.valueOf(payRequest.getTotalFee());
             String payMoney = String.valueOf(payRequest.getTotalFee());
             String productName = payRequest.getBody();
             String payType = "70";
             String merchantURL = payRequest.getOutNotifyUrl();
             String frontURL = payRequest.getOutNotifyUrl();
-            List<UserInfo> userInfos = userInfoDao.selectByGroupId(userGroup.getId());
-            String operatorId = String.valueOf(userInfos.get(0).getId());
+            String operatorId = payRequest.getBuyerId();
             String productDescription = payRequest.getBody();
             String terminal = "PC";
             String defaultBank = BankCode.parse(payRequest.getBankCode()).getBank();
 
             String signature = DigestUtils.md5Hex(merchantNo+terminalNo+ inTradeOrderNo +defaultBank+ payMoney + productPrice  + productName +payType+key).toUpperCase();
             String reqSource = "2";
-            String url = "http://test1.guangyinwangluo.com:9999/swPayInterface/CHPay";
+            String url = "http://paygw.guangyinwangluo.com/swPayInterface/CHPay";
             Map<String,Object> map = new HashMap<>();
             map.put("inTradeOrderNo",inTradeOrderNo);
             map.put("merchantNo",merchantNo);
