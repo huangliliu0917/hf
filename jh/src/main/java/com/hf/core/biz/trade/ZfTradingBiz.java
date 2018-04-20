@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -59,8 +58,8 @@ public class ZfTradingBiz extends AbstractTradingBiz {
             String payMoney = String.valueOf(payRequest.getTotalFee());
             String productName = payRequest.getBody();
             String payType = "70";
-            String merchantURL = payRequest.getOutNotifyUrl();
-            String frontURL = payRequest.getOutNotifyUrl();
+            String merchantURL = "http://huifufu.cn/openapi/zf/pay_notice";
+            String frontURL = payRequest.getFrontUrl();
             String operatorId = payRequest.getBuyerId();
             String productDescription = payRequest.getBody();
             String terminal = "PC";

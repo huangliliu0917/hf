@@ -76,8 +76,12 @@
 					<input type="text" class="form-control" name="out_trade_no" id="out_trade_no" value="<%=outTradeNo%>" required>
 				</div>
 				<div class="form-group">
-					<label for="out_notify_url">通知地址</label>
+					<label for="out_notify_url">后台通知地址</label>
 					<input type="text" class="form-control" name="out_notify_url" id="out_notify_url" value="" required>
+				</div>
+				<div class="form-group">
+					<label for="front_url">前台跳转地址</label>
+					<input type="text" class="form-control" name="front_url" id="front_url" value="" required>
 				</div>
 				<div class="form-group">
 					<label for="create_ip">ip</label>

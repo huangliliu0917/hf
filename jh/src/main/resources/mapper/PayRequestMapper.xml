@@ -28,13 +28,14 @@
     <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
     <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
     <result column="iversion" property="iversion" jdbcType="VARCHAR" />
+    <result column="front_url" property="frontUrl" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
     id, out_trade_no, body, mch_id, sub_openid, buyer_id, service, appid, sign, `status`, 
     create_time, update_time, version,trade_type,fee,actual_amount,total_fee,remark,
     channel_provider_code,pay_result,out_notify_url,notice_status,notice_retry_time,create_ip,bank_code,
-    iversion
+    iversion,front_url
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -130,6 +131,9 @@
       <if test="iversion != null" >
         iversion,
       </if>
+      <if test="frontUrl != null" >
+        front_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -200,6 +204,9 @@
       </if>
       <if test="iversion != null" >
         #{iversion,jdbcType=VARCHAR},
+      </if>
+      <if test="frontUrl != null" >
+        #{frontUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

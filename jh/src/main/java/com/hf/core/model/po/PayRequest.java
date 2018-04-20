@@ -58,6 +58,8 @@ public class PayRequest {
 
     private String iversion;
 
+    private String frontUrl;
+
     public PayRequest() {
 
     }
@@ -282,5 +284,13 @@ public class PayRequest {
 
     public void setIversion(String iversion) {
         this.iversion = iversion;
+    }
+
+    public String getFrontUrl() {
+        return frontUrl;
+    }
+
+    public void setFrontUrl(String frontUrl) {
+        this.frontUrl = frontUrl;
     }
 }

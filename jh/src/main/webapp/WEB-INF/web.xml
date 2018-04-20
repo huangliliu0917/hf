@@ -177,4 +177,13 @@
     <servlet-name>payDemo</servlet-name>
     <url-pattern>/payDemo</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>zfPayNotify</servlet-name>
+    <servlet-class>com.hf.core.api.ZfPayCallBack</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>zfPayNotify</servlet-name>
+    <url-pattern>/payCallBack/zf</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class PayDemmoServlet extends HttpServlet {
     String[] fields = {"version","service","merchant_no","total","name","remark","out_trade_no","out_notify_url","create_ip",
-    "sub_openid","buyer_id","authcode","bank_code","nonce_str","sign_type"};
+    "sub_openid","buyer_id","authcode","bank_code","nonce_str","sign_type","front_url"};
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -125,6 +125,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         String sign_type = Utils.nvl(requestMap.get("sign_type"));
         String sign = Utils.nvl(requestMap.get("sign"));
         String out_notify_url = Utils.nvl(requestMap.get("out_notify_url"));
+        String front_url = Utils.nvl(requestMap.get("front_url"));
 
         UserGroup userGroup = cacheService.getGroup(merchant_no);
 
@@ -151,6 +152,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         payRequest.setTradeType(TradeType.PAY.getValue());
         payRequest.setSign(sign);
         payRequest.setIversion(version);
+        payRequest.setFrontUrl(front_url);
 
         payRequestDao.insertSelective(payRequest);
         payService.saveOprLog(payRequest);
