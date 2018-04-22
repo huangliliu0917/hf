@@ -41,6 +41,7 @@ public class PayServlet extends HttpServlet {
         String nonce_str = request.getParameter("nonce_str");
         String sign_type = request.getParameter("sign_type");
         String sign = request.getParameter("sign");
+        String front_url = request.getParameter("front_url");
 
         TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(merchant_no,service);
         logger.info("tradingBiz:"+tradingBiz.getClass().getName());
@@ -60,7 +61,8 @@ public class PayServlet extends HttpServlet {
                 "bank_code",bank_code,
                 "nonce_str",nonce_str,
                 "sign_type",sign_type,
-                "sign",sign);
+                "sign",sign,
+                "front_url",front_url);
 
         Map<String,Object> resultMap = tradingBiz.pay(params,request,response);
         response.getWriter().write(new Gson().toJson(resultMap));
