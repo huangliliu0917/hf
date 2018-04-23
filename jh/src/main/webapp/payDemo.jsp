@@ -33,15 +33,15 @@
 		<div class="col-md-6 col-md-offset-3">
 			<form role="form" action="payDemo" method="post"  name="payForm" >
 				<div class="form-group">
-					<label for="version">版本号</label>
+					<label for="version">版本号<span><font color="red">*</font><font size="1">默认值</font></span></label>
 					<input type="text" class="form-control" name="version" id="version" value="2.0" required>
 				</div>
 				<div class="form-group">
-					<label for="merchant_no">商户号</label>
+					<label for="merchant_no">商户号<span><font color="red">*</font></span></label>
 					<input type="text" class="form-control" name="merchant_no" id="merchant_no" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="service">支付类型</label>
+					<label for="service">支付类型<span><font color="red">*</font></span></label>
 					<select name="service" id="service">
 						<option value="">选择支付类型</option>
 						<option value="01">微信公众号</option>
@@ -60,35 +60,35 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="total">支付金额</label>
+					<label for="total">支付金额<span><font color="red">*</font><font size="1">单位:分</font></span></label>
 					<input type="text" class="form-control" name="total" id="total" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="name">订单名称</label>
+					<label for="name">订单名称<span><font color="red">*</font></span></label>
 					<input type="text" class="form-control" name="name" id="name" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="remark">订单备注</label>
+					<label for="remark">订单备注<span><font color="red">*</font></span></label>
 					<input type="text" class="form-control" name="remark" id="remark" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="out_trade_no">订单号</label>
+					<label for="out_trade_no">订单号<span><font color="red">*</font><font size="1">需保证唯一</font></span></label>
 					<input type="text" class="form-control" name="out_trade_no" id="out_trade_no" value="<%=outTradeNo%>" required>
 				</div>
 				<div class="form-group">
-					<label for="out_notify_url">后台通知地址</label>
+					<label for="out_notify_url">后台通知地址<span><font color="red">*</font><font size="1">交易结果异步通知地址</font></span></label>
 					<input type="text" class="form-control" name="out_notify_url" id="out_notify_url" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="front_url">前台跳转地址</label>
+					<label for="front_url">前台跳转地址<span><font size="1"> service=13快捷支付时为必填，交易成功后前台跳转地址</font></span></label>
 					<input type="text" class="form-control" name="front_url" id="front_url" value="" required>
 				</div>
 				<div class="form-group">
-					<label for="create_ip">ip</label>
+					<label for="create_ip">ip<span><font color="red">*</font><font size="1">客户端地址</font></span></label>
 					<input type="text" class="form-control" name="create_ip" id="create_ip" value="<%=hostAddress%>" required>
 				</div>
 				<div class="form-group">
-					<label for="buyer_id">付款人id</label>
+					<label for="buyer_id">付款人id<span><font size="1"> service=13快捷支付时必填，付款人id</font></span></label>
 					<input type="text" class="form-control" name="buyer_id" id="buyer_id" value="" required>
 				</div>
 				<div class="form-group">
@@ -121,17 +121,18 @@
 						<option value="BEA">东亚银行</option>
 						<option value="HZB">杭州银行</option>
 					</select>
+					<span><font size="1"> service=13快捷支付时必填，银行编码，可用银行见文档</font></span>
 				</div>
 				<div class="form-group">
-					<label for="nonce_str">随机字符串</label>
+					<label for="nonce_str">随机字符串<span><font color="red">*</font></span></label>
 					<input type="text" class="form-control" name="nonce_str" id="nonce_str" value="<%=nonce_str%>" required>
 				</div>
 				<div class="form-group">
-					<label for="sign_type">加密方式</label>
+					<label for="sign_type">加密方式<span><font color="red">*</font></span></label>
 					<input type="text" class="form-control" name="sign_type" id="sign_type" value="MD5" required>
 				</div>
 				<div class="form-group">
-					<label for="cipherCode">密钥</label>
+					<label for="cipherCode">密钥<span><font color="red">*</font></span></label>
 					<input type="text" class="form-control" name="cipherCode" id="cipherCode" value="" required>
 				</div>
 				<button type="submit" class="btn btn-primary">提交</button>
