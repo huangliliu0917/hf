@@ -25,7 +25,7 @@ public class UserChannelDispatcher implements Dispatcher {
         dispatchResult.setPage(page);
         dispatchResult.addObject("channels",channels);
 
-        dispatchResult.addObject("payUrl","http://huifufu.cn/openapi/unifiedorder");
+        dispatchResult.addObject("payUrl","http://huifufu.cn/openapi/unifiedorder_2");
         dispatchResult.addObject("refundUrl","http://huifufu.cn/openapi/refundorder");
         dispatchResult.addObject("queryUrl","http://huifufu.cn/openapi/queryOrder");
 

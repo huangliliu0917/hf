@@ -296,7 +296,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             resutMap.put("sign_type","MD5");
             String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
             resutMap.put("sign",sign);
-
+            logger.info("Start call back:"+payRequest.getOutTradeNo()+",url:"+url);
             noticeResult = callBackClient.post(url,resutMap);
         } else {
             resutMap.put("errcode","99");
@@ -308,7 +308,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             resutMap.put("sign_type","MD5");
             String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
             resutMap.put("sign",sign);
-
+            logger.info("Start call back:"+payRequest.getOutTradeNo()+",url:"+url);
             noticeResult = callBackClient.post(url,resutMap);
         }
 

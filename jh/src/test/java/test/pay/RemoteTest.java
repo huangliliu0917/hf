@@ -81,26 +81,27 @@ public class RemoteTest extends BaseCommitTestCase {
     }
 
     @Test
-    public void testRemotePay() {
+    public void testRemotePay() throws Exception {
         Map<String,Object> payParams = new HashMap<>();
-        payParams.put("version","1.0");
-        payParams.put("service", "09");
-        payParams.put("merchant_no","5132");
-        payParams.put("total","2800");//10000.00
+        payParams.put("version","2.0");
+        payParams.put("service", "11");
+        payParams.put("merchant_no","13588");
+        payParams.put("total","1000");//10000.00
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
         payParams.put("create_ip","47.52.111.205");
         payParams.put("remark","会员服务客服QQ183508495");
         payParams.put("nonce_str", "20180415124815");
         payParams.put("sign_type","MD5");
         payParams.put("out_notify_url","http://baidu.com/pay/notifyUrlhuifu/");
-        String cipherCode = "sdadafag1234";
+        String cipherCode = "XyEe2dK7QmRFDFsJeRAZmwfHXBzziNmk";
         String sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
         RestTemplate restTemplate = new RestTemplate();
-//        ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8080/jh/pay/unifiedorder",payParams,String.class, new Object[0]);
-        ResponseEntity<String> entity = restTemplate.postForEntity("http://huifufu.cn/openapi/unifiedorder",payParams,String.class, new Object[0]);
-        System.out.println(entity.getBody());
+//        ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8080/jh/pay",payParams,String.class, new Object[0]);
+//        ResponseEntity<String> entity = restTemplate.postForEntity("http://huifufu.cn/openapi/unifiedorder",payParams,String.class, new Object[0]);
+        String asynMsg = (new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000)).post("http://127.0.0.1:8080/jh/pay", payParams);
+        System.out.println(asynMsg);
     }
 
     @Test
@@ -183,23 +184,25 @@ public class RemoteTest extends BaseCommitTestCase {
         //msg
         resutMap.put("message","支付成功");
 
-        resutMap.put("no","280");
+        resutMap.put("no","83968");
         //out_trade_no
-        resutMap.put("out_trade_no","appu13110100002215447015");
+        resutMap.put("out_trade_no","20180426170615388");
         //mch_id
         resutMap.put("merchant_no","5166");
         //total
         resutMap.put("total","2800");
         //fee
-        resutMap.put("fee","280");
+        resutMap.put("fee","9");
         //trade_type 1:收单 2:撤销 3:退款
         resutMap.put("trade_type","1");
         //sign_type
         resutMap.put("sign_type","MD5");
-        String sign = Utils.encrypt(resutMap,"2k7aoqhp");
+
+        String key = "Q5t8SiCF2m3FkAPGiKZyh6C3Wyh4fmYG";
+        String sign = Utils.encrypt(resutMap,key);
         resutMap.put("sign",sign);
 
-        boolean result = callBackClient.post("http://un.iranhong.com/pay/notifyUrlhuifu/",resutMap);
+        boolean result = callBackClient.post("http://huanqiusp.nmguoji.com/indexs.php/Home/Recharge/callback",resutMap);
 
         System.out.println(result);
     }

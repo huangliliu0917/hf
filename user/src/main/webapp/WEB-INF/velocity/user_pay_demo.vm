@@ -29,8 +29,8 @@
                 <!--条件查询-->
                 <div class="ibox-content">
                     <blockquote class="layui-elem-quote">
-                        <p class="text-danger">统一收单接口：http://huifufu.cn/openapi/unifiedorder</p>
-                        <p class="text-danger"><a href="http://huifufu.cn/doc/PhpPayDemo.php">php demo下载</a></p>
+                        <p class="text-danger">统一收单接口：http://huifufu.cn/openapi/unifiedorder_2</p>
+                        <p class="text-danger"><a href="http://huifufu.cn/doc/php demo.zip">php demo下载</a></p>
                         <p class="text-danger"><a href="http://huifufu.cn/doc/java demo.zip">java demo下载</a></p>
                     </blockquote>
                     <table class="layui-table" lay-skin="row">
@@ -51,12 +51,12 @@
                                 <td>10</td>
                                 <td>int</td>
                                 <td>是</td>
-                                <td>01微信公众号，02微信主 扫，03微信反扫，04微信H5  付，05微信APP 付，06支 付宝服务窗体，07支付宝主 扫，08支付宝反扫,09 网银,10 H5</td>
+                                <td>01微信公众号，02微信主 扫，03微信反扫，04微信H5  付，05微信APP 付，06支 付宝服务窗体，07支付宝主 扫，08支付宝反扫,09 网银,10 H5,11 QQ扫码,12 银联扫码,13 快捷支付</td>
                             </tr>
                             <tr>
                                 <td>接口版本</td>
                                 <td>version</td>
-                                <td>1.0</td>
+                                <td>2.0</td>
                                 <td>String</td>
                                 <td>是</td>
                                 <td></td>
