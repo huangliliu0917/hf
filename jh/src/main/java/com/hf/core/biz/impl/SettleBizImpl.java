@@ -142,6 +142,7 @@ public class SettleBizImpl implements SettleBiz {
         }
     }
 
+    @Transactional
     @Override
     public void settleFailed(Long id) {
         SettleTask settleTask = settleTaskDao.selectByPrimaryKey(id);

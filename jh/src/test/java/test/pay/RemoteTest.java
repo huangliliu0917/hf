@@ -184,13 +184,13 @@ public class RemoteTest extends BaseCommitTestCase {
         //msg
         resutMap.put("message","支付成功");
 
-        resutMap.put("no","83968");
+        resutMap.put("no","84037");
         //out_trade_no
-        resutMap.put("out_trade_no","20180426170615388");
+        resutMap.put("out_trade_no","20180427100431677");
         //mch_id
-        resutMap.put("merchant_no","5166");
+        resutMap.put("merchant_no","5174");
         //total
-        resutMap.put("total","2800");
+        resutMap.put("total","500");
         //fee
         resutMap.put("fee","9");
         //trade_type 1:收单 2:撤销 3:退款
