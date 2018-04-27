@@ -281,15 +281,15 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             //msg
             resutMap.put("message","支付成功");
 
-            resutMap.put("no",payRequest.getId());
+            resutMap.put("no",String.valueOf(payRequest.getId()));
             //out_trade_no
             resutMap.put("out_trade_no",payRequest.getOutTradeNo().split("_")[1]);
             //mch_id
             resutMap.put("merchant_no",payRequest.getMchId());
             //total
-            resutMap.put("total",payRequest.getTotalFee());
+            resutMap.put("total",String.valueOf(payRequest.getTotalFee()));
             //fee
-            resutMap.put("fee",payRequest.getFee());
+            resutMap.put("fee",String.valueOf(payRequest.getFee().intValue()));
             //trade_type 1:收单 2:撤销 3:退款
             resutMap.put("trade_type","1");
             //sign_type
