@@ -1,7 +1,6 @@
 package com.hf.core.demo;
 
 import com.hf.base.utils.HttpClient;
-import com.hf.base.utils.ParameterRequestWrapper;
 import com.hf.base.utils.Utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
