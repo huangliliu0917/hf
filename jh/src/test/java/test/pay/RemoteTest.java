@@ -88,7 +88,7 @@ public class RemoteTest extends BaseCommitTestCase {
     public void testRemotePay() throws Exception {
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","2.0");
-        payParams.put("service", "14");
+        payParams.put("service", "07");
         payParams.put("merchant_no","13588");
         payParams.put("total","1000");//10000.00
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));

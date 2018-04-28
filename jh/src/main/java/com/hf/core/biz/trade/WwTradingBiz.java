@@ -66,10 +66,11 @@ public class WwTradingBiz extends AbstractTradingBiz {
         ChannelProvider channelProvider = ChannelProvider.parse(payRequest.getChannelProviderCode());
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),channelProvider.getCode());
 
+        String memberCode = "9010000025";
         WwPayRequest wwPayRequest = new WwPayRequest();
         ChannelCode channelCode = ChannelCode.parseFromCode(payRequest.getService());
         if(channelCode == ChannelCode.WX_H5) {
-            wwPayRequest.setMemberCode(userGroupExt.getMerchantNo());
+            wwPayRequest.setMemberCode(memberCode);
             wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
             wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
             wwPayRequest.setPayType("1");
@@ -78,7 +79,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
             wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
             wwPayRequest.setChannelCode(payRequest.getService());
         } else if(channelCode == ChannelCode.QQ_H5) {
-            wwPayRequest.setMemberCode(userGroupExt.getMerchantNo());
+            wwPayRequest.setMemberCode(memberCode);
             wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
             wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
             wwPayRequest.setPayType("3");
@@ -87,7 +88,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
             wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
             wwPayRequest.setChannelCode(payRequest.getService());
         } else if(channelCode == ChannelCode.ALI_H5) {
-            wwPayRequest.setMemberCode(userGroupExt.getMerchantNo());
+            wwPayRequest.setMemberCode(memberCode);
             wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
             wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
             wwPayRequest.setPayType("2");
@@ -97,7 +98,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
             wwPayRequest.setChannelCode(payRequest.getService());
         } else if(channelCode == ChannelCode.WY) {
             wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
-            wwPayRequest.setMemberCode(userGroupExt.getMerchantNo());
+            wwPayRequest.setMemberCode(memberCode);
             wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
             wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
             wwPayRequest.setChannelCode(payRequest.getService());
@@ -107,6 +108,22 @@ public class WwTradingBiz extends AbstractTradingBiz {
             if(!Utils.isEmpty(payRequest.getRemark())) {
                 wwPayRequest.setGoodsName(payRequest.getRemark());
             }
+        } else if(channelCode == ChannelCode.WX_SM) {
+            wwPayRequest.setMemberCode(memberCode);
+            wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
+            wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
+            wwPayRequest.setPayType("1");
+            wwPayRequest.setIp(payRequest.getCreateIp());
+            wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
+            wwPayRequest.setChannelCode(payRequest.getService());
+        } else if(channelCode == ChannelCode.ALI_ZS) {
+            wwPayRequest.setMemberCode(memberCode);
+            wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
+            wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
+            wwPayRequest.setPayType("2");
+            wwPayRequest.setIp(payRequest.getCreateIp());
+            wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
+            wwPayRequest.setChannelCode(payRequest.getService());
         } else {
             throw new BizFailException("no channel defined");
         }

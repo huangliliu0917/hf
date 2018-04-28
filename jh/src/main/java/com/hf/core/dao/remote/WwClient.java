@@ -3,6 +3,7 @@ package com.hf.core.dao.remote;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hf.base.client.BaseClient;
+import com.hf.base.enums.ChannelCode;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.RemoteParams;
 import com.hf.base.utils.EpaySignUtil;
@@ -34,6 +35,7 @@ public class WwClient extends BaseClient implements PayClient {
     private static final String H5_PAY_URL = "http://47.97.175.195:8692/pay/payment/toH5";
     private static final String WY_PAY_URL = "http://pay1.hlqlb.cn:8692/pay/payment/toPayment";
     private static final String QUERY_URL = "http://47.97.175.195:8682/posp/cashierDesk/orderQuery";
+    private static final String QR_PAY_URL = "http://47.97.175.195:8682/posp/cashierDesk/toQrCodePay";
 
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
@@ -47,6 +49,9 @@ public class WwClient extends BaseClient implements PayClient {
         }
         if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"09")) {
             url = WY_PAY_URL;
+        }
+        if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(), ChannelCode.WX_SM.getCode()) || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),ChannelCode.ALI_ZS.getCode())) {
+            url = QR_PAY_URL;
         }
         if(url == null) {
             throw new BizFailException("channelCode not exist");
