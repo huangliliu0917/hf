@@ -57,6 +57,7 @@
 						<option value="11">QQ扫码</option>
 						<option value="12">银联扫码</option>
 						<option value="13">快捷支付</option>
+						<option value="14">支付宝H5</option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -81,7 +82,7 @@
 				</div>
 				<div class="form-group">
 					<label for="front_url">前台跳转地址</label>
-					<input type="text" class="form-control" name="front_url" id="front_url" value="" required>
+					<input type="text" class="form-control" name="front_url" id="front_url" value="">
 				</div>
 				<div class="form-group">
 					<label for="create_ip">ip</label>
@@ -89,7 +90,7 @@
 				</div>
 				<div class="form-group">
 					<label for="buyer_id">付款人id</label>
-					<input type="text" class="form-control" name="buyer_id" id="buyer_id" value="" required>
+					<input type="text" class="form-control" name="buyer_id" id="buyer_id" value="">
 				</div>
 				<div class="form-group">
 					<label for="bank_code">银行</label>

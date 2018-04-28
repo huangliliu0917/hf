@@ -65,26 +65,30 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service","04");
-        payParams.put("remark","会员服务客服QQ183508495");
+        payParams.put("service","14");
+        payParams.put("remark","测试支付宝H5支付");
         payParams.put("sign_type","MD5");
         payParams.put("total","11000");//10000.00
-        payParams.put("version","1.0");
-//        payParams.put("out_notify_url","http://gate.8zhongyi.com/scan/callback/trade/pay_notify_huifu");
+        payParams.put("version","2.0");
+        payParams.put("out_notify_url","http://huifufu.cn");
 
         String sign = Utils.encrypt(payParams,userGroup.getCipherCode());
         payParams.put("sign",sign);
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8080/jh/pay/unifiedorder",payParams,String.class, new Object[0]);
-        System.out.println(entity.getBody());
+        try {
+            String asynMsg = (new Httpz("utf-8", 30000, 30000)).post("http://127.0.0.1:8080/jh/pay", payParams);
+            System.out.println(asynMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("----------finished-------------");
     }
 
     @Test
     public void testRemotePay() throws Exception {
         Map<String,Object> payParams = new HashMap<>();
         payParams.put("version","2.0");
-        payParams.put("service", "11");
+        payParams.put("service", "14");
         payParams.put("merchant_no","13588");
         payParams.put("total","1000");//10000.00
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
@@ -97,7 +101,7 @@ public class RemoteTest extends BaseCommitTestCase {
         String sign = Utils.encrypt(payParams,cipherCode);
         payParams.put("sign",sign);
 
-        RestTemplate restTemplate = new RestTemplate();
+//        RestTemplate restTemplate = new RestTemplate();
 //        ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8080/jh/pay",payParams,String.class, new Object[0]);
 //        ResponseEntity<String> entity = restTemplate.postForEntity("http://huifufu.cn/openapi/unifiedorder",payParams,String.class, new Object[0]);
         String asynMsg = (new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000)).post("http://127.0.0.1:8080/jh/pay", payParams);

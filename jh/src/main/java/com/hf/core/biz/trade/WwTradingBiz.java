@@ -86,6 +86,15 @@ public class WwTradingBiz extends AbstractTradingBiz {
             wwPayRequest.setIp(payRequest.getCreateIp());
             wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
             wwPayRequest.setChannelCode(payRequest.getService());
+        } else if(channelCode == ChannelCode.ALI_H5) {
+            wwPayRequest.setMemberCode(userGroupExt.getMerchantNo());
+            wwPayRequest.setOrderNum(payRequest.getOutTradeNo());
+            wwPayRequest.setPayMoney(String.valueOf(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
+            wwPayRequest.setPayType("2");
+            wwPayRequest.setSceneInfo("慧富支付宝H5支付");
+            wwPayRequest.setIp(payRequest.getCreateIp());
+            wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
+            wwPayRequest.setChannelCode(payRequest.getService());
         } else if(channelCode == ChannelCode.WY) {
             wwPayRequest.setCallbackUrl(propertyConfig.getWwCallbackUrl());
             wwPayRequest.setMemberCode(userGroupExt.getMerchantNo());

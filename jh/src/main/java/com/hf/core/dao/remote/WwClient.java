@@ -42,7 +42,7 @@ public class WwClient extends BaseClient implements PayClient {
 
     public void unifiedorder(Map<String,Object> params, HttpServletResponse response) throws Exception {
         String url = null;
-        if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"04") || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"10")) {
+        if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"04") || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"10") || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"14")) {
             url = H5_PAY_URL;
         }
         if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"09")) {

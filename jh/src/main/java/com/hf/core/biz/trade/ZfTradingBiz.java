@@ -61,7 +61,7 @@ public class ZfTradingBiz extends AbstractTradingBiz {
             String merchantURL = "http://huifufu.cn/openapi/zf/pay_notice";
             String frontURL = payRequest.getFrontUrl();
             String operatorId = payRequest.getBuyerId();
-            String productDescription = payRequest.getBody();
+            String productDescription = "991361077780001|00006751";
             String terminal = "PC";
             String defaultBank = BankCode.parse(payRequest.getBankCode()).getBank();
 
