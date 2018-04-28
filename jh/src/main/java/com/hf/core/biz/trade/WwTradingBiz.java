@@ -1,12 +1,12 @@
 package com.hf.core.biz.trade;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.*;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.EpaySignUtil;
-import com.hf.base.utils.HttpClient;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
@@ -25,6 +25,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +53,8 @@ public class WwTradingBiz extends AbstractTradingBiz {
     private UserGroupDao userGroupDao;
     @Autowired
     private CallBackClient callBackClient;
+
+    private static final BASE64Decoder decoder = new BASE64Decoder();
 
     private static final String[] callbackFields = {"memberCode","orderNum","payNum","payType","payMoney","payTime","platformType","interfaceType","respType","resultCode","resultMsg","signStr"};
 
@@ -134,9 +137,21 @@ public class WwTradingBiz extends AbstractTradingBiz {
 
         if(StringUtils.equalsIgnoreCase(payRequest.getIversion(),"2.0")) {
             try {
-                wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest),response);
-                payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
-                payRequestBack.setMessage("下单成功");
+                String result = wwClient.unifiedorder(MapUtils.beanToMap(wwPayRequest),response);
+                if(StringUtils.isNotEmpty(result)) {
+                    Map<String,String> map = new Gson().fromJson(result,new TypeToken<Map<String,String>>(){}.getType());
+                    if(StringUtils.equalsIgnoreCase(map.get("returnCode"),"0000")) {
+                        payRequestBack.setCodeUrl(new String(decoder.decodeBuffer(map.get("qrCode")), "UTF-8"));
+                        payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                        payRequestBack.setMessage("下单成功");
+                    } else {
+                        payRequestBack.setErrcode(map.get("returnCode"));
+                        payRequestBack.setMessage(map.get("returnMsg"));
+                    }
+                } else {
+                    payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                    payRequestBack.setMessage("下单成功");
+                }
             } catch (Exception e) {
                 payRequestBack.setErrcode(CodeManager.FAILED);
                 payRequestBack.setMessage(e.getMessage());

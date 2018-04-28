@@ -35,20 +35,30 @@ public class WwClient extends BaseClient implements PayClient {
     private static final String H5_PAY_URL = "http://47.97.175.195:8692/pay/payment/toH5";
     private static final String WY_PAY_URL = "http://pay1.hlqlb.cn:8692/pay/payment/toPayment";
     private static final String QUERY_URL = "http://47.97.175.195:8682/posp/cashierDesk/orderQuery";
-    private static final String QR_PAY_URL = "http://47.97.175.195:8682/posp/cashierDesk/toQrCodePay";
+    private static final String QR_PAY_URL = "http://47.97.175.195:8682/posp/cashierDesk/qrcodePay";
 
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
         return this.unifiedorder(new ArrayList<>(),params);
     }
 
-    public void unifiedorder(Map<String,Object> params, HttpServletResponse response) throws Exception {
+    public String unifiedorder(Map<String,Object> params, HttpServletResponse response) throws Exception {
         String url = null;
         if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"04") || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"10") || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"14")) {
             url = H5_PAY_URL;
         }
         if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),"09")) {
             url = WY_PAY_URL;
+        }
+        if(url != null) {
+            params.remove("channelCode");
+            String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
+            params.put("signStr",sign);
+
+            HttpClient httpClient = new HttpClient(response);
+            httpClient.setParameter(params);
+            httpClient.sendByPost(url);
+            return "";
         }
         if(StringUtils.equalsIgnoreCase(params.get("channelCode").toString(), ChannelCode.WX_SM.getCode()) || StringUtils.equalsIgnoreCase(params.get("channelCode").toString(),ChannelCode.ALI_ZS.getCode())) {
             url = QR_PAY_URL;
@@ -59,10 +69,7 @@ public class WwClient extends BaseClient implements PayClient {
         params.remove("channelCode");
         String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
         params.put("signStr",sign);
-
-        HttpClient httpClient = new HttpClient(response);
-        httpClient.setParameter(params);
-        httpClient.sendByPost(url);
+q        return (new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000)).post(url, params);
     }
 
     @Override
