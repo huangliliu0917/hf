@@ -69,7 +69,7 @@ public class WwClient extends BaseClient implements PayClient {
         params.remove("channelCode");
         String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
         params.put("signStr",sign);
-q        return (new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000)).post(url, params);
+        return (new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000)).post(url, params);
     }
 
     @Override
