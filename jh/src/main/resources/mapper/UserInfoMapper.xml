@@ -133,6 +133,13 @@
     where login_id = #{loginId,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByLoginIdOnly" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_info
+    where login_id = #{loginId,jdbcType=VARCHAR}
+  </select>
+
   <select id="select" resultMap="BaseResultMap" parameterType="com.hf.core.model.dto.UserInfoRequest" >
     select
     <include refid="Base_Column_List" />

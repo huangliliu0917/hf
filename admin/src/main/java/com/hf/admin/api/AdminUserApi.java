@@ -40,7 +40,7 @@ import static com.hf.base.contants.Constants.*;
 
 @Controller
 @RequestMapping("/user")
-public class UserApi {
+public class AdminUserApi {
     @Autowired
     private CacheService cacheService;
     @Autowired
@@ -375,7 +375,7 @@ public class UserApi {
                 "cipherCode",cipherCode,
                 "callbackUrl",callbackUrl);
         try {
-            adminClient.saveUserGroup(map);
+            client.saveUserGroup(map);
             return MapUtils.buildMap("status",true);
         } catch (Exception e) {
             return MapUtils.buildMap("status",false);

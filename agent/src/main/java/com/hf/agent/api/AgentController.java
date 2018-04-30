@@ -1,5 +1,6 @@
 package com.hf.agent.api;
 
+import com.google.gson.Gson;
 import com.hf.base.biz.CacheService;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.contants.Constants;
@@ -17,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,7 +34,7 @@ import static com.hf.base.contants.UserConstants.*;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class AgentController {
     @Autowired
     private CacheService cacheService;
     @Autowired
@@ -76,36 +79,70 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public ModelAndView register(HttpServletRequest request) {
+    public @ResponseBody String register(HttpServletRequest request) {
         Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
         String loginId = request.getParameter("loginId");
         String password = request.getParameter("password");
         String confirmpassword = request.getParameter("confirmpassword");
+        String name = request.getParameter("name");
         String email = request.getParameter("email");
         String tel = request.getParameter("tel");
+        String type = request.getParameter("type");
 
-        ModelAndView modelAndView = new ModelAndView();
+        Map<String,String> result = new HashMap<>();
 
-        if(StringUtils.isEmpty(loginId) || StringUtils.isEmpty(password) || StringUtils.isEmpty(confirmpassword)
-                || StringUtils.isEmpty(email) || StringUtils.isEmpty(tel)) {
-            modelAndView.setViewName("agent_add_user");
-            return modelAndView;
+        if(StringUtils.isEmpty(loginId)) {
+            result.put("errorno","99");
+            result.put("msg","登录名不能为空");
+            return new Gson().toJson(result);
+        }
+
+        if(StringUtils.isEmpty(password)) {
+            result.put("errorno","99");
+            result.put("msg","密码不能为空");
+            return new Gson().toJson(result);
+        }
+
+        if(StringUtils.isEmpty(tel)) {
+            result.put("errorno","99");
+            result.put("msg","手机不能为空");
+            return new Gson().toJson(result);
+        }
+
+        if(StringUtils.isEmpty(name)) {
+            result.put("errorno","99");
+            result.put("msg","商户名不能为空");
+            return new Gson().toJson(result);
+        }
+
+        if(StringUtils.isEmpty(confirmpassword)) {
+            result.put("errorno","99");
+            result.put("msg","密码不能为空");
+            return new Gson().toJson(result);
         }
 
         if(!StringUtils.equals(password,confirmpassword)) {
-            modelAndView.setViewName("agent_add_user");
-            return modelAndView;
+            result.put("errorno","99");
+            result.put("msg","两次输入密码不一致");
+            return new Gson().toJson(result);
         }
 
-        String result = client.register(MapUtils.buildMap("loginId",loginId,
-                "password",password,"email",email,"tel",tel,"subGroupId",groupId));
+        Boolean registerResult = client.agentAddUser(
+                MapUtils.buildMap("loginId",loginId,
+                                        "password",password,
+                                        "email",email,
+                                        "tel",tel,
+                                        "name",name,
+                                        "type",type,
+                                        "subGroupId",groupId
+                )
+        );
 
-        if(StringUtils.equals(result,"0000000")) {
-            modelAndView.setViewName("agent_add_user");
-            return modelAndView;
+        if(registerResult) {
+            return new Gson().toJson(result);
         } else {
-            modelAndView.setViewName("agent_add_user");
-            return modelAndView;
+            result.put("errorno","99");
+            return new Gson().toJson(result);
         }
     }
 
@@ -267,5 +304,12 @@ public class UserController {
                         StringUtils.isEmpty(createTime)?"":createTime)
         );
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/checkUserValid", produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public @ResponseBody String checkUserValid(@RequestParam String loginId) {
+        boolean valid = client.checkLoginValid(loginId);
+        Map<String,Boolean> result = MapUtils.buildMap("valid",valid);
+        return new Gson().toJson(result);
     }
 }

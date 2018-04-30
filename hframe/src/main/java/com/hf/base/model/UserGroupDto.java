@@ -1,4 +1,4 @@
-package com.hf.admin.model;
+package com.hf.base.model;
 
 import java.math.BigDecimal;
 import java.util.Date;

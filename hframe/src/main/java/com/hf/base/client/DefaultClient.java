@@ -46,6 +46,10 @@ public class DefaultClient extends BaseClient {
     private static final String GET_USER_EXT_BY_ID = "/user/get_user_group_ext_by_id";
     private static final String SAVE_USER_GROUP_EXT = "/user/save_user_group_ext";
     private static final String GET_SUM_FINISH_AMOUNT = "/user/get_sum_finish_amount";
+    private static final String CHECK_LOGIN_VALID = "/user/check_login_valid";
+    private static final String SAVE_USER_GROUP = "/user/save_user_group";
+    private static final String AGENT_ADD_USER = "/user/agent_add_user";
+    private static final String GET_USER_GROUP_OF_AGENT = "/user/get_user_group_of_agent";
 
     private static final String GET_USER_CHANNEL_INFO = "/user/get_user_channel_info";
 
@@ -323,6 +327,31 @@ public class DefaultClient extends BaseClient {
         String result = super.post(remoteParams);
         ResponseResult<BigDecimal> response = new Gson().fromJson(result,new TypeToken<ResponseResult<BigDecimal>>(){}.getType());
         return response.getData();
+    }
+
+    public boolean checkLoginValid(String loginId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(CHECK_LOGIN_VALID).withParam("loginId",loginId);
+        String result = super.post(remoteParams);
+        return parseResult(result);
+    }
+
+    public Boolean saveUserGroup(Map<String,Object> params) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(SAVE_USER_GROUP).withParams(params);
+        String result = super.post(remoteParams);
+        return parseResult(result);
+    }
+
+    public Boolean agentAddUser(Map<String,Object> params) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(AGENT_ADD_USER).withParams(params);
+        String result = super.post(remoteParams);
+        return parseResult(result);
+    }
+
+    public Pagenation<UserGroupDto> getUserGroupOfAgent(String groupId,String status,String merchant,String createTime) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_USER_GROUP_OF_AGENT).withParam("groupId",groupId).withParam("status",status).withParam("merchant",merchant).withParam("createTime",createTime);
+        String result = super.post(remoteParams);
+        Pagenation<UserGroupDto> pagenation = new Gson().fromJson(result,new TypeToken<Pagenation<UserGroupDto>>(){}.getType());
+        return pagenation;
     }
 
     private boolean parseResult(String result) {

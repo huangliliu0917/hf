@@ -12,6 +12,8 @@ import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.utils.CipherUtils;
+import com.hf.core.utils.Https;
+import com.hfb.merchant.code.util.http.Httpz;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +39,8 @@ public class WwClient extends BaseClient implements PayClient {
     private static final String WY_PAY_URL = "http://pay1.hlqlb.cn:8692/pay/payment/toPayment";
     private static final String QUERY_URL = "http://47.97.175.195:8682/posp/cashierDesk/orderQuery";
     private static final String QR_PAY_URL = "http://47.97.175.195:8682/posp/cashierDesk/qrcodePay";
+    private static final String AGENT_PAY_APPLY = "http://47.97.175.195:8682/posp/agentPay/toApply";
+    private static final String QUERY_AGENT_AMOUNT = "http://47.97.175.195:8682/posp/agentPay/balance";
 
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
@@ -154,5 +159,27 @@ public class WwClient extends BaseClient implements PayClient {
     @Override
     public Map<String, Object> refundorderinfo(Map<String, Object> params) {
         return null;
+    }
+
+    public Map<String,Object> agentPayApply(Map<String,Object> params) {
+        try {
+            String msg = new Httpz("utf-8", 30000, 30000).post(AGENT_PAY_APPLY, params);
+            logger.info("agent pay apply result:"+msg);
+            return new Gson().fromJson(msg,new TypeToken<Map<String,Object>>(){}.getType());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new HashMap<>();
+        }
+    }
+
+    public Map<String,Object> getAgentAmount(Map<String,Object> params) {
+        try {
+            String msg = new Httpz("utf-8", 30000, 30000).post(QUERY_AGENT_AMOUNT, params);
+            logger.info("agent pay apply result:"+msg);
+            return new Gson().fromJson(msg,new TypeToken<Map<String,Object>>(){}.getType());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new HashMap<>();
+        }
     }
 }

@@ -14,5 +14,4 @@ public interface PayClient {
     Map<String,Object> reverseorder(Map<String, Object> params);
     Map<String,Object> orderinfo(Map<String, Object> params);
     Map<String,Object> refundorderinfo(Map<String, Object> params);
-
 }

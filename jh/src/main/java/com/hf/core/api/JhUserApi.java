@@ -36,10 +36,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +45,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/user")
-public class UserApi {
+public class JhUserApi {
     @Autowired
     private UserBiz userBiz;
     @Autowired
@@ -526,6 +523,12 @@ public class UserApi {
         return ResponseResult.success(Boolean.TRUE);
     }
 
+    @RequestMapping(value = "/agent_add_user",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseResult<Boolean> agentAddUser(@RequestBody Map<String,String> params) {
+        userBiz.register(params);
+        return ResponseResult.success(Boolean.TRUE);
+    }
+
     @RequestMapping(value = "/get_channel_by_id",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody
     ResponseResult<Channel> getChannelById(@RequestBody Map<String,String> params) {
@@ -893,5 +896,15 @@ public class UserApi {
             String value = request.getHeader(name);
         }
         System.out.println("-------");
+    }
+
+    @RequestMapping(value = "/check_login_valid",method = RequestMethod.POST)
+    public @ResponseBody ResponseResult<Boolean> checkLoginCanUse(@RequestBody Map<String,String> params) {
+        String loginId = params.get("loginId");
+        UserInfo userInfo = userInfoDao.selectByLoginIdOnly(loginId);
+        if(Objects.isNull(userInfo)) {
+            return ResponseResult.success(true);
+        }
+        return ResponseResult.success(false);
     }
 }

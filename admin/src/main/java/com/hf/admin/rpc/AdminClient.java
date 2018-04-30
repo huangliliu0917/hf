@@ -39,7 +39,6 @@ public class AdminClient extends BaseClient {
     private static final String USER_TURN_BACK = "/user/user_turn_back";
     private static final String USER_PASS = "/user/user_pass";
     private static final String SAVE_USER_INFO = "/user/save_user_info";
-    private static final String SAVE_USER_GROUP = "/user/save_user_group";
     private static final String FINISH_WITH_DRAW = "/settle/finish_with_draw";
     private static final String WITH_DRAW_FAILED = "/settle/with_draw_failed";
     private static final String MEMBER_DELETE = "/user/del_group";
@@ -192,12 +191,6 @@ public class AdminClient extends BaseClient {
 
     public Boolean saveUserInfo(Map<String,Object> params) {
         RemoteParams remoteParams = new RemoteParams(url).withPath(SAVE_USER_INFO).withParams(params);
-        String result = super.post(remoteParams);
-        return parseResult(result);
-    }
-
-    public Boolean saveUserGroup(Map<String,Object> params) {
-        RemoteParams remoteParams = new RemoteParams(url).withPath(SAVE_USER_GROUP).withParams(params);
         String result = super.post(remoteParams);
         return parseResult(result);
     }

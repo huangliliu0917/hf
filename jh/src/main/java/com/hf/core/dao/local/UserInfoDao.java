@@ -24,6 +24,8 @@ public interface UserInfoDao {
 
     UserInfo selectByLoginId(@Param("loginId") String loginId, @Param("password") String password);
 
+    UserInfo selectByLoginIdOnly(@Param("loginId") String loginId);
+
     UserInfo checkLogin(@Param("loginId") String loginId, @Param("password") String password);
 
     UserInfo checkUser(@Param("id") Long id, @Param("password") String password);

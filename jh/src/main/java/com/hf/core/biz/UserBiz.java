@@ -11,12 +11,15 @@ import com.hf.core.model.po.UserGroup;
 import com.hf.core.model.po.UserInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tengfei on 2017/10/29.
  */
 public interface UserBiz {
     void register(String loginId, String password, String inviteCode, String subGroupId);
+
+    void register(Map<String,String> map);
 
     boolean login(String loginId, String password);
 

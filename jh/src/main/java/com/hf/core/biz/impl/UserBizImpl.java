@@ -18,6 +18,7 @@ import com.hf.core.model.dto.UserInfoRequest;
 import com.hf.core.model.po.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -93,6 +95,46 @@ public class UserBizImpl implements UserBiz {
         userGroup.setGroupNo(groupNo);
         userGroup.setStatus(GroupStatus.NEW.getValue());
         userService.register(userGroup,userInfo);
+    }
+
+    @Transactional
+    @Override
+    public void register(Map<String, String> params) {
+        String loginId = params.get("loginId");
+        String password = params.get("password");
+        String email = params.get("email");
+        String tel = params.get("tel");
+        String name = params.get("name");
+        int type = new BigDecimal(params.get("type")).intValue();
+        Long subGroupId = new BigDecimal(params.get("subGroupId")).longValue();
+
+        UserGroup subUserGroup = userGroupDao.selectByPrimaryKey(subGroupId);
+        if(subUserGroup == null) {
+            throw new BizFailException("上级商户为空,"+subGroupId);
+        }
+
+        UserGroup userGroup = new UserGroup();
+        userGroup.setSubGroupId(subGroupId);
+        userGroup.setSubGroupName(subUserGroup.getName());
+        userGroup.setSubGroupNo(subUserGroup.getGroupNo());
+        userGroup.setCompanyId(subUserGroup.getCompanyId());
+        userGroup.setName(name);
+        userGroup.setTel(tel);
+        userGroup.setType(type);
+        userGroup.setGroupNo(archService.getId());
+        userGroup.setStatus(GroupStatus.NEW.getValue());
+
+        userGroupDao.insertSelective(userGroup);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setGroupId(userGroup.getId());
+        userInfo.setInviteCode(RandomStringUtils.random(16, 20, 110, true, true));
+        userInfo.setLoginId(loginId);
+        userInfo.setPassword(Utils.convertPassword(password));
+        userInfo.setType(UserType.ADMIN.getValue());
+        userInfo.setStatus(UserStatus.AVAILABLE.getValue());
+
+        userInfoDao.insertSelective(userInfo);
     }
 
     @Override

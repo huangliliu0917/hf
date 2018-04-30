@@ -59,17 +59,15 @@
                         </li>
                     </ul>
                 </li>
-                #if(${userInfo.status}==10)
-                    <li><a href="#"> <i class="fa fa fa-gears"></i> <span class="nav-label">商户管理</span> </a>
-                        <ul class="nav nav-second-level">
-                            <li><a href="#springUrl('/common/agent_add_user')" class="J_menuItem"><strong>添加商户</strong></a> </li>
-                        </ul>
+                <li><a href="#"> <i class="fa fa fa-gears"></i> <span class="nav-label">商户管理</span> </a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/agent_add_user')" class="J_menuItem"><strong>添加商户</strong></a> </li>
+                    </ul>
 
-                        <ul class="nav nav-second-level">
-                            <li><a href="#springUrl('/common/agent_member')" class="J_menuItem"><strong>下级商户管理</strong></a> </li>
-                        </ul>
-                    </li>
-                #end
+                    <ul class="nav nav-second-level">
+                        <li><a href="#springUrl('/common/agent_member')" class="J_menuItem"><strong>下级商户管理</strong></a> </li>
+                    </ul>
+                </li>
                 <li><a href="#"> <i class="fa fa fa-money"></i> <span class="nav-label">交易管理</span> </a>
                     <ul class="nav nav-second-level">
                         <li><a href="#springUrl('/common/agent_order_record')" class="J_menuItem"><strong>交易记录</strong></a></li>
