@@ -102,6 +102,14 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             throw new BizFailException("未注册，权限不足");
         }
 
+        String total = Utils.nvl(requestMap.get("total"));
+        if(getChannelProvider() == ChannelProvider.WW) {
+            BigDecimal totalAmount = new BigDecimal(total);
+            if(totalAmount.compareTo(new BigDecimal("1000"))<0 && totalAmount.compareTo(new BigDecimal("150000"))>0) {
+                throw new BizFailException("交易金额需在10-1500之间");
+            }
+        }
+
         payRequest = remotePay(requestMap,request,response);
 
         return finishRemotePay(payRequest);
@@ -139,7 +147,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         } else {
             payRequest.setBody(Utils.merge(",",name,remark));
         }
-        payRequest.setBuyerId(userGroup.getGroupNo()+"_"+buyer_id);
+        payRequest.setBuyerId(buyer_id);
         payRequest.setChannelProviderCode(getChannelProvider().getCode());
         payRequest.setCreateIp(create_ip);
         payRequest.setMchId(merchant_no);
