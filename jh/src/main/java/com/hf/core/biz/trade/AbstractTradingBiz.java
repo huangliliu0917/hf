@@ -147,7 +147,15 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         } else {
             payRequest.setBody(Utils.merge(",",name,remark));
         }
-        payRequest.setBuyerId(buyer_id);
+        if(!StringUtils.isEmpty(buyer_id)) {
+            String buyerId = merchant_no+"_"+buyer_id;
+            if(buyerId.length()<=10) {
+                payRequest.setBuyerId(buyerId);
+            } else {
+                payRequest.setBuyerId(buyerId.substring(buyerId.length()-10,buyerId.length()));
+            }
+        }
+
         payRequest.setChannelProviderCode(getChannelProvider().getCode());
         payRequest.setCreateIp(create_ip);
         payRequest.setMchId(merchant_no);
