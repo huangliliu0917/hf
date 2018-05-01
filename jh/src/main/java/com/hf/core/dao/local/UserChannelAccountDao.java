@@ -21,4 +21,8 @@ public interface UserChannelAccountDao {
     UserChannelAccount selectByUnq(@Param("groupId")Long groupId,@Param("channelProvider")String channelProvider);
 
     int addAmount(@Param("id")Long id, @Param("amount")BigDecimal amount,@Param("version") int version);
+
+    int lockAmount(@Param("id")Long id, @Param("amount")BigDecimal amount,@Param("version") int version);
+
+    int unlock(@Param("id")Long id, @Param("amount")BigDecimal amount,@Param("version") int version);
 }

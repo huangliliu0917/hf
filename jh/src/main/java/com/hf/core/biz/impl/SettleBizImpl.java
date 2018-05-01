@@ -7,15 +7,22 @@ import com.hf.base.model.WithDrawInfo;
 import com.hf.base.model.WithDrawRequest;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
+import com.hf.base.utils.Utils;
 import com.hf.core.biz.SettleBiz;
 import com.hf.core.biz.service.AccountService;
 import com.hf.core.biz.service.CacheService;
+import com.hf.core.biz.service.SettleService;
 import com.hf.core.biz.service.UserService;
+import com.hf.core.biz.trade.TradingBiz;
+import com.hf.core.biz.trade.WwTradingBiz;
 import com.hf.core.dao.local.*;
+import com.hf.core.dao.remote.WwClient;
 import com.hf.core.model.po.*;
+import com.hf.core.model.po.ChannelProvider;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +55,18 @@ public class SettleBizImpl implements SettleBiz {
     private UserBankCardDao userBankCardDao;
     @Autowired
     private AdminBankCardDao adminBankCardDao;
+    @Autowired
+    private ChannelProviderDao channelProviderDao;
+    @Autowired
+    private UserChannelAccountDao userChannelAccountDao;
+    @Autowired
+    private SettleService settleService;
+    @Autowired
+    private AgentPayLogDao agentPayLogDao;
+    @Autowired
+    private WwClient wwClient;
+    @Autowired
+    private WwTradingBiz wwTradingBiz;
 
     @Override
     public void saveSettle(SettleTask settleTask) {
@@ -289,6 +308,65 @@ public class SettleBizImpl implements SettleBiz {
 
         withDrawInfo.setGroupType(withDrawGroupMap.get(task.getGroupId()).getType());
         withDrawInfo.setGroupTypeDesc(GroupType.parse(withDrawGroupMap.get(task.getGroupId()).getType()).getDesc());
+        withDrawInfo.setLockAmount( (task.getLockAmount().add(task.getPaidAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        if((task.getPayAmount().subtract(task.getLockAmount()).subtract(task.getPaidAmount())).compareTo(new BigDecimal("0"))<=0) {
+            withDrawInfo.setStatus(SettleStatus.AGENT_PAY.getValue());
+        }
         return withDrawInfo;
+    }
+
+    @Override
+    public List<AgentPayLog> newAgentPay(String withDrawId) {
+        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(Long.parseLong(withDrawId));
+        BigDecimal amount = settleTask.getPayAmount().subtract(settleTask.getPaidAmount()).subtract(settleTask.getLockAmount());
+
+        List<AgentPayLog> logs = new ArrayList<>();
+
+        List<ChannelProvider> channelProviders = channelProviderDao.selectAgentPay();
+
+        for(ChannelProvider channelProvider : channelProviders) {
+            if(amount.compareTo(BigDecimal.ZERO) == 0) {
+                break;
+            }
+
+            String channelProviderCode = channelProvider.getProviderCode();
+            UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(settleTask.getGroupId(),channelProviderCode);
+
+            BigDecimal accountAmount = userChannelAccount.getAmount().subtract(userChannelAccount.getLockAmount());
+            BigDecimal accountPayAmount = Utils.min(amount,accountAmount);
+
+            if(accountPayAmount.compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+
+            amount = amount.subtract(accountPayAmount);
+
+            AgentPayLog agentPayLog = new AgentPayLog();
+            agentPayLog.setTradeNo(String.valueOf(new Date().getTime())+Utils.getRandomString(4));
+            agentPayLog.setGroupId(settleTask.getGroupId());
+            agentPayLog.setWithDrawTaskId(settleTask.getId());
+            agentPayLog.setAmount(accountPayAmount);
+            agentPayLog.setProviderCode(channelProviderCode);
+            agentPayLog.setUserChannelAccountId(userChannelAccount.getId());
+            agentPayLog.setType(1);
+
+            logs.add(agentPayLog);
+        }
+
+        if(CollectionUtils.isNotEmpty(logs)) {
+            settleService.agentPay(settleTask,logs);
+        }
+
+        List<AgentPayLog> results = agentPayLogDao.select(MapUtils.buildMap("withDrawTaskId",settleTask.getId(),"status",0));
+        return results;
+    }
+
+    @Override
+    public void submitAgentPay(Long taskId) {
+        List<AgentPayLog> results = agentPayLogDao.select(MapUtils.buildMap("withDrawTaskId",taskId,"status",0));
+        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(taskId);
+        for(AgentPayLog agentPayLog:results) {
+            wwTradingBiz.agentPay(settleTask,agentPayLog);
+        }
     }
 }

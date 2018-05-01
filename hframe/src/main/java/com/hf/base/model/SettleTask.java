@@ -1,4 +1,4 @@
-package com.hf.core.model.po;
+package com.hf.base.model;
 
 import com.hf.base.annotations.Field;
 
@@ -7,51 +7,29 @@ import java.util.Date;
 
 public class SettleTask {
     private Long id;
-    @Field(required = true)
     private Long groupId;
     private Long accountId;
-    @Field(required = true)
     private Long settleBankCard;
-    @Field(required = true)
     private BigDecimal settleAmount;
-    @Field(required = true)
     private String bank;
-    @Field(required = true)
     private String deposit;
-    @Field(required = true)
     private String bankNo;
-    @Field(required = true)
     private String owner;
-    @Field(required = true)
-    private String bankCode;
-    @Field(required = true)
-    private String idNo;
-    @Field(required = true)
-    private String tel;
-
     private BigDecimal feeRate;
-
     private Long payAccountId;
-
     private Long payGroupId;
-
     private Long payBankCard;
-
     private BigDecimal fee;
-
     private BigDecimal payAmount;
-
     private BigDecimal paidAmount;
-
     private BigDecimal lockAmount;
-
     private Integer status;
-
     private Integer version;
-
     private Date createTime;
-
     private Date updateTime;
+    private String bankCode;
+    private String idNo;
+    private String tel;
 
     public Long getId() {
         return id;

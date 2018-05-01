@@ -192,4 +192,21 @@
     where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
   </update>
 
+  <update id="lockAmount">
+    update user_channel_account
+    set
+    lock_amount = lock_amount+#{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER} and amount >= lock_amount+#{amount,jdbcType=DECIMAL}
+  </update>
+
+  <update id="unlock">
+    update user_channel_account
+    set
+    lock_amount = lock_amount-#{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER} and amount >= lock_amount-#{amount,jdbcType=DECIMAL}
+    and lock_amount-#{amount,jdbcType=DECIMAL}>=0
+  </update>
+
 </mapper>

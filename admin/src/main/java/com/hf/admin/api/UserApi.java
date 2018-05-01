@@ -701,4 +701,11 @@ public class UserApi {
         ResponseResult<Boolean> responseResult = adminClient.editSubGroup(MapUtils.buildMap("groupId",groupId,"subGroupId",subGroupId));
         return MapUtils.buildMap("status",responseResult.getData(),"msg",responseResult.getMsg());
     }
+
+    @RequestMapping(value = "/submit_agent_pay",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody Map<String,Object> submitAgentPay(HttpServletRequest request, HttpServletResponse response) {
+        String taskId = request.getParameter("taskId");
+        ResponseResult<Boolean> responseResult = adminClient.submitAgentPay(taskId);
+        return MapUtils.buildMap("status",responseResult.getData(),"msg",responseResult.getMsg());
+    }
 }

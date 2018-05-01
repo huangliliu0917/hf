@@ -47,6 +47,7 @@ public class AdminClient extends BaseClient {
     private static final String SAVE_SALE_INFO = "/user/save_sale_info";
     private static final String EDIT_SUB_GROUP = "/user/edit_sub_group";
     private static final String NEW_AGENT_PAY = "/settle/new_agent_pay";
+    private static final String SUBMIT_AGENT_PAY = "/settle/submit_agent_pay";
 
     public AdminClient(String url) {
         this.url = url;
@@ -272,9 +273,16 @@ public class AdminClient extends BaseClient {
         return new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
     }
 
-    public ResponseResult<Map<String,String>> newAgentPay(String withDrawId) {
+    public List<AgentPayLog> newAgentPay(String withDrawId) {
         RemoteParams remoteParams = new RemoteParams(url).withPath(NEW_AGENT_PAY).withParam("withDrawId",withDrawId);
         String result = super.post(remoteParams);
-        return new Gson().fromJson(result,new TypeToken<ResponseResult<Map<String,String>>>(){}.getType());
+        ResponseResult<List<AgentPayLog>> responseResult = new Gson().fromJson(result,new TypeToken<ResponseResult<List<AgentPayLog>>>(){}.getType());
+        return responseResult.getData();
+    }
+
+    public ResponseResult<Boolean> submitAgentPay(String taskId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(SUBMIT_AGENT_PAY).withParam("taskId",taskId);
+        String result = super.post(remoteParams);
+        return new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
     }
 }

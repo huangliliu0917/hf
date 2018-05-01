@@ -36,6 +36,7 @@ public class WwClient extends BaseClient implements PayClient {
     private static final String WY_PAY_URL = "http://pay1.hlqlb.cn:8692/pay/payment/toPayment";
     private static final String QUERY_URL = "http://47.97.175.195:8682/posp/cashierDesk/orderQuery";
     private static final String QR_PAY_URL = "http://47.97.175.195:8682/posp/cashierDesk/qrcodePay";
+    private static final String AGENT_PAY_URL = "http://47.97.175.195:8682/posp/agentPay/toApply";
 
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
@@ -154,5 +155,17 @@ public class WwClient extends BaseClient implements PayClient {
     @Override
     public Map<String, Object> refundorderinfo(Map<String, Object> params) {
         return null;
+    }
+
+    public Map<String,Object> agentPay(Map<String, Object> params) {
+        String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
+        params.put("signStr",sign);
+        try {
+            String result = new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000).post(AGENT_PAY_URL, params);
+            return new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new BizFailException(e);
+        }
     }
 }

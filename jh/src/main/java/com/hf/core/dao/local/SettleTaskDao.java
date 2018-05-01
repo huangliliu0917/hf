@@ -3,6 +3,7 @@ package com.hf.core.dao.local;
 import com.hf.core.model.po.SettleTask;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,4 +25,10 @@ public interface SettleTaskDao {
     List<SettleTask> select(Map<String, Object> params);
 
     int count(Map<String, Object> params);
+
+    int lockAmount(@Param("id")Long id, @Param("amount")BigDecimal amount,@Param("version") int version);
+
+    int unlock(@Param("id")long id,@Param("amount")BigDecimal amount,@Param("version")int version);
+
+    List<Map<String,Object>> selectFinished();
 }

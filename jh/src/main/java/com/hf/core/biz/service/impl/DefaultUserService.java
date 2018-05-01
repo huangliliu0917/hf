@@ -125,9 +125,13 @@ public class DefaultUserService implements UserService {
         UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(userGroupExt.getGroupId(),userGroupExt.getProviderCode());
         if(Objects.isNull(userChannelAccount)) {
             Account account = accountDao.selectByGroupId(userGroupExt.getGroupId());
+            if(account == null) {
+                return;
+            }
             userChannelAccount = new UserChannelAccount();
             userChannelAccount.setAccountId(account.getId());
             userChannelAccount.setChannelProvider(userGroupExt.getProviderCode());
+            userChannelAccount.setGroupId(userGroupExt.getGroupId());
             userChannelAccountDao.insertSelective(userChannelAccount);
         }
     }

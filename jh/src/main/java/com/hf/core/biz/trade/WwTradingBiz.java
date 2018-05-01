@@ -11,11 +11,10 @@ import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.PayService;
+import com.hf.core.biz.service.SettleService;
+import com.hf.core.dao.local.AgentPayLogDao;
 import com.hf.core.dao.local.PayRequestDao;
-import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.local.UserGroupExtDao;
-import com.hf.core.dao.remote.CallBackClient;
-import com.hf.core.dao.remote.PayClient;
 import com.hf.core.dao.remote.WwClient;
 import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.dto.trade.unifiedorder.WwPayRequest;
@@ -46,6 +45,10 @@ public class WwTradingBiz extends AbstractTradingBiz {
     private PayService payService;
     @Autowired
     private PayRequestDao payRequestDao;
+    @Autowired
+    private AgentPayLogDao agentPayLogDao;
+    @Autowired
+    private SettleService settleService;
 
     private static final BASE64Decoder decoder = new BASE64Decoder();
 
@@ -289,5 +292,35 @@ public class WwTradingBiz extends AbstractTradingBiz {
 //            resultMap.put("status",5);
 //        }
         return resultMap;
+    }
+
+    public void agentPay(SettleTask settleTask,AgentPayLog agentPayLog) {
+        String orderNum = agentPayLog.getTradeNo();
+        String bankCode = settleTask.getBankCode();
+        String bankAccount = settleTask.getBankNo();
+        String accountName = settleTask.getOwner();
+        String certNo = settleTask.getIdNo();
+        String tel = settleTask.getTel();
+
+        Map<String,Object> map = MapUtils.buildMap("orderNum",orderNum,
+                "bankCode",bankCode,
+                "bankAccount",bankAccount,
+                "accountName",accountName,
+                "certNo",certNo,
+                "tel",tel,
+                "memberCode","9010000025",
+                "payFlag","1030",
+                "payMoney",agentPayLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_DOWN));
+
+        Map<String,Object> res = wwClient.agentPay(map);
+
+        String returnCode = String.valueOf(res.get("returnCode"));
+        String returnMsg = String.valueOf(res.get("returnMsg"));
+
+        if(StringUtils.equals("0000",returnCode)) {
+            agentPayLogDao.updateStatus(agentPayLog.getId(),SettleStatus.NEW.getValue(),SettleStatus.PROCESSING.getValue());
+        } else {
+            settleService.agentPayFailed(agentPayLog.getId());
+        }
     }
 }

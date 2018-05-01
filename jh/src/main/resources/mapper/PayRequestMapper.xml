@@ -561,4 +561,12 @@
       </foreach>
     </if>
   </select>
+
+  <select id="sumByProvider" resultType="java.util.Map">
+    select
+    sum(total_fee) as "total",
+    channel_provider_code as "providerCode",
+    mch_id as "mchId"
+    from pay_request where status = 100 group by channel_provider_code,mch_id
+  </select>
 </mapper>

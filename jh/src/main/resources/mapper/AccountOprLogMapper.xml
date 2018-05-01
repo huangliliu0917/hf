@@ -79,8 +79,8 @@
       <if test="service != null" >
         service,
       </if>
-      <if test="channelProvider != null" >
-        channel_provider,
+      <if test="providerCode != null" >
+        provider_code,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -120,8 +120,8 @@
       <if test="service != null" >
         #{service,jdbcType=VARCHAR},
       </if>
-      <if test="channelProvider != null" >
-        #{channelProvider,jdbcType=VARCHAR},
+      <if test="providerCode != null" >
+        #{providerCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -185,7 +185,7 @@
     `type`,
     remark,
     service,
-    channel_provider)
+    provider_code)
     values
     <foreach collection ="list" item="log" index= "index" separator =",">
       (
@@ -196,7 +196,7 @@
       #{log.type},
       #{log.remark},
       #{log.service},
-      #{log.channelProvider}
+      #{log.providerCode}
       )
     </foreach >
   </insert>

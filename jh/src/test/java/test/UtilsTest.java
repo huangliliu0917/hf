@@ -7,6 +7,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,5 +104,10 @@ public class UtilsTest {
     @Test
     public void testMd5() {
         System.out.println(DigestUtils.md5Hex("bank_code=ICBC&buyer_id=100&create_ip=172.22.76.86&front_url=http://huifufu.cn/admin&merchant_no=13588&name=测试支付&nonce_str=revf39uxgv&out_notify_url=http://huifufu.cn/openapi/zf/pay_notice&out_trade_no=2137937845223545856&remark=测试支付&service=13&sign_type=MD5&total=100&version=2.0&key=XyEe2dK7QmRFDFsJeRAZmwfHXBzziNmk").toUpperCase());
+    }
+
+    @Test
+    public void testTimeStamp() {
+        System.out.println(new Date().getTime());
     }
 }

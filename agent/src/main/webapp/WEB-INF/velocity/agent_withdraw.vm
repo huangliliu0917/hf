@@ -65,12 +65,37 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="layui-form-item">
                             <label class="layui-form-label">开户行：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="bank" lay-verify="" autocomplete="off" placeholder=""
-                                       class="layui-input" value="">
+                                <select name="bankCode" id="bankCode">
+                                    <option value="">选择支付银行</option>
+                                    <option value="ICBC">中国工商银行</option>
+                                    <option value="ABC">中国农业银行</option>
+                                    <option value="BOC">中国银行</option>
+                                    <option value="CCB">中国建设银行</option>
+                                    <option value="BOCOM">交通银行</option>
+                                    <option value="CMB">招商银行</option>
+                                    <option value="CEB">光大银行</option>
+                                    <option value="CMBC">民生银行</option>
+                                    <option value="PSBC">中国邮政储蓄银行</option>
+                                    <option value="SPDB">浦发银行</option>
+                                    <option value="CNCB">中信银行</option>
+                                    <option value="PAB">平安银行</option>
+                                    <option value="HXB">华夏银行</option>
+                                    <option value="CIB">兴业银行</option>
+                                    <option value="BOHC">渤海银行</option>
+                                    <option value="BCCB">北京银行</option>
+                                    <option value="GDB">广发银行</option>
+                                    <option value="BOS">上海银行</option>
+                                    <option value="ZSBC">浙商银行</option>
+                                    <option value="NBBC">宁波银行</option>
+                                    <option value="NJBC">南京银行</option>
+                                    <option value="BRCB">北京农村商业银行</option>
+                                    <option value="ZHTLCB">浙江泰隆商业银行</option>
+                                    <option value="BEA">东亚银行</option>
+                                    <option value="HZB">杭州银行</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -84,6 +109,20 @@
                             <label class="layui-form-label">开户名：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="owner" lay-verify="" autocomplete="off" placeholder=""
+                                       class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">身份证号：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="idNo" lay-verify="" autocomplete="off" placeholder=""
+                                       class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">手机号：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tel" lay-verify="" autocomplete="off" placeholder=""
                                        class="layui-input" value="">
                             </div>
                         </div>

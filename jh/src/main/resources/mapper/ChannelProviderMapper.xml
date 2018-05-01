@@ -76,4 +76,17 @@
     from channel_provider
     where provider_code = #{code,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectAgentPay" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from channel_provider
+    where agent_pay = 1
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from channel_provider order by agent_pay desc
+  </select>
 </mapper>

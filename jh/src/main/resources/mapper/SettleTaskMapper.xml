@@ -13,6 +13,8 @@
     <result column="pay_bank_card" property="payBankCard" jdbcType="BIGINT" />
     <result column="fee" property="fee" jdbcType="DECIMAL" />
     <result column="pay_amount" property="payAmount" jdbcType="DECIMAL" />
+    <result column="paid_amount" property="paidAmount" jdbcType="DECIMAL" />
+    <result column="lock_amount" property="lockAmount" jdbcType="DECIMAL" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -21,11 +23,14 @@
     <result column="deposit" property="deposit" jdbcType="VARCHAR" />
     <result column="owner" property="owner" jdbcType="VARCHAR" />
     <result column="bank_no" property="bankNo" jdbcType="VARCHAR" />
+    <result column="id_no" property="idNo" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, group_id, account_id, settle_bank_card, settle_amount, fee_rate, pay_account_id, 
     pay_group_id, pay_bank_card, fee, pay_amount, `status`, version, create_time, update_time,
-    bank,deposit,owner,bank_no
+    bank,deposit,owner,bank_no,paid_amount,lock_amount,id_no,bank_code,tel
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -111,6 +116,15 @@
       <if test="bankNo != null" >
         bank_no,
       </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="idNo != null" >
+        id_no,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -169,6 +183,15 @@
       </if>
       <if test="bankNo != null" >
         #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -266,7 +289,9 @@
     t1.bank,
     t1.bank_no,
     t1.deposit,
-    t1.owner
+    t1.owner,
+    t1.lock_amount,
+    t1.paid_amount
     from settle_task t1 left join user_group t2 on t1.group_id = t2.id
     where 1=1
     <if test="status != null and status != ''" >
@@ -318,5 +343,33 @@
     <if test="payGroupId != null" >
       and t1.pay_group_id = #{payGroupId,jdbcType=BIGINT}
     </if>
+  </select>
+
+  <update id="lockAmount">
+    update settle_task
+    set
+      lock_amount = lock_amount+#{amount,jdbcType=DECIMAL},
+      version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT}
+    and version = #{version,jdbcType=INTEGER}
+    and pay_amount >= lock_amount+#{amount,jdbcType=DECIMAL}
+  </update>
+
+  <update id="unlock">
+    update settle_task
+    set
+    lock_amount = lock_amount-#{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT}
+    and version = #{version,jdbcType=INTEGER}
+    and lock_amount-#{amount,jdbcType=DECIMAL}>=0
+  </update>
+
+  <select id="selectFinished" resultType="java.util.Map">
+    select
+    t2.group_no as "groupNo",
+    t1.settle_amount as "amount"
+    from settle_task t1,user_group t2
+    where t1.group_id = t2.id and t1.status = 10
   </select>
 </mapper>

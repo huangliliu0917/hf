@@ -7,12 +7,14 @@ import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.ResponseResult;
 import com.hf.base.utils.TypeConverter;
+import com.hf.base.utils.Utils;
 import com.hf.core.biz.TrdBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.service.UserService;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
+import com.hf.core.dao.local.SettleTaskDao;
 import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.local.UserGroupExtDao;
 import com.hf.core.job.pay.PayJob;
@@ -27,9 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Controller
 @RequestMapping("/jhAdmin")
@@ -50,6 +51,8 @@ public class AdminApi {
     private UserGroupExtDao userGroupExtDao;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SettleTaskDao settleTaskDao;
 
     @RequestMapping(value = "/get_authorized_list",method = RequestMethod.POST)
     public @ResponseBody
@@ -111,6 +114,52 @@ public class AdminApi {
     public @ResponseBody String initUserChannelAccount() {
         List<UserGroupExt> userGroupExts = userGroupExtDao.selectAll();
         userGroupExts.forEach(userGroupExt -> userService.saveUserGroupExt(userGroupExt));
-        return "success";
+
+        List<Map<String,Object>> list = payRequestDao.sumByProvider();
+        List<Map<String,Object>> settledList = settleTaskDao.selectFinished();
+
+        Map<String,List<String>> userChannelMap = new HashMap<>();
+
+        Map<String,BigDecimal> userChannelAmount = new HashMap<>();
+        for(Map<String,Object> map:list) {
+            String mchId = map.get("mchId").toString();
+            String providerCode = map.get("providerCode").toString();
+            BigDecimal amount = new BigDecimal(map.get("total").toString());
+
+            userChannelAmount.put(mchId+"_"+providerCode,amount);
+
+            if(null == userChannelMap.get(mchId)) {
+                userChannelMap.put(mchId,new ArrayList<>());
+            }
+
+            userChannelMap.get(mchId).add(providerCode);
+        }
+
+        Map<String,BigDecimal> userSettleMap = new HashMap<>();
+
+        for(Map<String,Object> map:settledList) {
+            String groupNo = map.get("groupNo").toString();
+            BigDecimal amount = new BigDecimal(map.get("amount").toString());
+            userSettleMap.put(groupNo,amount);
+        }
+
+        Map<String,BigDecimal> resultMap = new HashMap<>();
+
+        for(String mchId:userChannelMap.keySet()) {
+            List<String> providers = userChannelMap.get(mchId);
+            BigDecimal settleAmount = null == userSettleMap.get(mchId)?new BigDecimal("0"):userSettleMap.get(mchId);
+            for(String provider:providers) {
+                if(settleAmount.compareTo(BigDecimal.ZERO)<=0) {
+                    continue;
+                }
+                BigDecimal providerAmount = userChannelAmount.get(mchId+"_"+provider);
+                BigDecimal currentAmount = Utils.min(settleAmount,providerAmount);
+                BigDecimal leftAmount = providerAmount.subtract(currentAmount);
+                resultMap.put(mchId+"_"+provider,leftAmount);
+                settleAmount = settleAmount.subtract(currentAmount);
+            }
+        }
+
+        return new Gson().toJson(resultMap);
     }
  }

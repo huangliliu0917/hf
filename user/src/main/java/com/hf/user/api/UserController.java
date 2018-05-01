@@ -266,10 +266,13 @@ public class UserController {
         Long userId = Long.parseLong(request.getSession().getAttribute("userId").toString());
         BigDecimal settleAmount = new BigDecimal(request.getParameter("settleAmount")).multiply(new BigDecimal("100"));
         //Long cardId = Long.parseLong(request.getParameter("cardId"));
-        String bank = request.getParameter("bank");
         String deposit = request.getParameter("deposit");
         String owner = request.getParameter("owner");
         String bankNo = request.getParameter("bankNo");
+        String bankCode = request.getParameter("bankCode");
+        String bank = Constants.bankMap.get(bankCode);
+        String tel = request.getParameter("tel");
+        String idNo = request.getParameter("idNo");
 
         if(StringUtils.isEmpty(bank) || StringUtils.isEmpty(deposit) || StringUtils.isEmpty(owner) || StringUtils.isEmpty(bankNo)) {
             return MapUtils.buildMap("status",false,"msg","银行信息不能为空");
@@ -288,7 +291,7 @@ public class UserController {
         }
 
         try {
-            Boolean result = client.newSettleRequest(groupId,settleAmount,bank,deposit,owner,bankNo);
+            Boolean result = client.newSettleRequest(groupId,settleAmount,bank,deposit,owner,bankNo,bankCode,tel,idNo);
             return MapUtils.buildMap("status",result);
         } catch (BizFailException e) {
             return MapUtils.buildMap("status",false,"msg",e.getMessage());
