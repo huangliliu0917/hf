@@ -21,17 +21,14 @@ import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.dto.trade.unifiedorder.WwPayRequest;
 import com.hf.core.model.po.*;
 import com.hf.core.utils.CipherUtils;
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -49,10 +46,6 @@ public class WwTradingBiz extends AbstractTradingBiz {
     private PayService payService;
     @Autowired
     private PayRequestDao payRequestDao;
-    @Autowired
-    private UserGroupDao userGroupDao;
-    @Autowired
-    private CallBackClient callBackClient;
 
     private static final BASE64Decoder decoder = new BASE64Decoder();
 

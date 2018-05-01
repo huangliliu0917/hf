@@ -46,6 +46,7 @@ public class AdminClient extends BaseClient {
     private static final String GET_SALES_LIST = "/user/get_sales_list";
     private static final String SAVE_SALE_INFO = "/user/save_sale_info";
     private static final String EDIT_SUB_GROUP = "/user/edit_sub_group";
+    private static final String NEW_AGENT_PAY = "/settle/new_agent_pay";
 
     public AdminClient(String url) {
         this.url = url;
@@ -269,5 +270,11 @@ public class AdminClient extends BaseClient {
         RemoteParams remoteParams = new RemoteParams(url).withPath(EDIT_SUB_GROUP).withParams(map);
         String result = super.post(remoteParams);
         return new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
+    }
+
+    public ResponseResult<Map<String,String>> newAgentPay(String withDrawId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(NEW_AGENT_PAY).withParam("withDrawId",withDrawId);
+        String result = super.post(remoteParams);
+        return new Gson().fromJson(result,new TypeToken<ResponseResult<Map<String,String>>>(){}.getType());
     }
 }
