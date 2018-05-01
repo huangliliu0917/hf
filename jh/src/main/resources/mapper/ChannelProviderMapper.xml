@@ -5,9 +5,10 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="provider_code" property="providerCode" jdbcType="VARCHAR" />
     <result column="provider_name" property="providerName" jdbcType="VARCHAR" />
+    <result column="agent_pay" property="agentPay" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, provider_code, provider_name
+    id, provider_code, provider_name,agent_pay
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

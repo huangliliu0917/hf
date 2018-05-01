@@ -15,6 +15,7 @@ import com.hf.core.biz.TrdBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.ArchService;
 import com.hf.core.biz.service.CacheService;
+import com.hf.core.biz.service.UserService;
 import com.hf.core.dao.local.*;
 import com.hf.core.model.dto.UserGroupRequest;
 import com.hf.core.model.dto.UserInfoDto;
@@ -83,6 +84,8 @@ public class UserApi {
     private ArchService archService;
     @Autowired
     private AccountOprLogDao accountOprLogDao;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/get_user_list",method = RequestMethod.POST)
     public @ResponseBody
@@ -667,13 +670,7 @@ public class UserApi {
     ResponseResult<Boolean> saveUserGroupExt(@RequestBody Map<String,Object> data) {
         try {
             UserGroupExt userGroupExt = TypeConverter.convert(data,UserGroupExt.class);
-            if(userGroupExt.getId()!= null && userGroupExt.getId()>0L) {
-                userGroupExtDao.updateByPrimaryKeySelective(userGroupExt);
-            } else {
-                ChannelProvider channelProvider = channelProviderDao.selectByCode(userGroupExt.getProviderCode());
-                userGroupExt.setProviderName(channelProvider.getProviderName());
-                userGroupExtDao.insertSelective(userGroupExt);
-            }
+            userService.saveUserGroupExt(userGroupExt);
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.failed(CodeManager.BIZ_FAIELD,e.getMessage(),false);

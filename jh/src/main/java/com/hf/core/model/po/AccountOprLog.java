@@ -26,6 +26,10 @@ public class AccountOprLog {
 
     private Integer version;
 
+    private String service;
+
+    private String providerCode;
+
     public Long getId() {
         return id;
     }
@@ -112,5 +116,21 @@ public class AccountOprLog {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getProviderCode() {
+        return providerCode;
+    }
+
+    public void setProviderCode(String providerCode) {
+        this.providerCode = providerCode;
     }
 }

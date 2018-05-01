@@ -134,6 +134,8 @@ public class PayServiceImpl implements PayService {
             accountOprLog.setOutTradeNo(payRequest.getOutTradeNo());
             Account account = groupAccountMap.get(group.getId());
             accountOprLog.setAccountId(account.getId());
+            accountOprLog.setService(payRequest.getService());
+            accountOprLog.setProviderCode(payRequest.getChannelProviderCode());
         }
 
         int count = accountOprLogDao.batchInsert(logs);

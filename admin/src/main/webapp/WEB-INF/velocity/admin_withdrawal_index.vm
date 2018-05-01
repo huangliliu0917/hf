@@ -115,7 +115,8 @@
                             <td>
                                 <div class="layui-btn-group">
                                     #if(${wd.status}==1) {
-                                        <button class="layui-btn layui-btn-small lineblud" onclick="task_pass(${wd.id})">完成付款</button>
+##                                        <button class="layui-btn layui-btn-small lineblud" onclick="task_pass(${wd.id})">完成付款</button>
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="new_agent_pay(${wd.id})">发起代付</button>
                                         <button class="layui-btn layui-btn-small lineblud" onclick="task_fail(${wd.id})">拒绝付款</button>
                                     #end
                                 </div>
@@ -178,6 +179,12 @@
             , range: '|'
         });
     });
+
+    function new_agent_pay(id) {
+        layer.confirm('确认发起代付？', function (index) {
+            x_admin_show("发起代付",'#springUrl("/common/new_agent_pay?id=")'+id,800,1200);
+        });
+    }
 
     function task_pass(id) {
         layer.confirm('确认完成付款？', function (index) {

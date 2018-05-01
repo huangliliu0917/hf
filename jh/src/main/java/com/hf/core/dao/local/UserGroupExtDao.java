@@ -21,4 +21,6 @@ public interface UserGroupExtDao {
     UserGroupExt selectByUnq(@Param("groupId") Long groupId, @Param("providerCode") String providerCode);
 
     List<UserGroupExt> selectByGroupId(@Param("groupId") Long groupId);
+
+    List<UserGroupExt> selectAll();
 }

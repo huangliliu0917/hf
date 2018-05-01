@@ -10,12 +10,15 @@ import com.hf.base.utils.TypeConverter;
 import com.hf.core.biz.TrdBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
+import com.hf.core.biz.service.UserService;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;
+import com.hf.core.dao.local.UserGroupExtDao;
 import com.hf.core.job.pay.PayJob;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.UserGroup;
+import com.hf.core.model.po.UserGroupExt;
 import com.hf.core.utils.CallBackCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +46,10 @@ public class AdminApi {
     private TradeBizFactory tradeBizFactory;
     @Autowired
     private PayRequestDao payRequestDao;
+    @Autowired
+    private UserGroupExtDao userGroupExtDao;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/get_authorized_list",method = RequestMethod.POST)
     public @ResponseBody
@@ -98,5 +105,12 @@ public class AdminApi {
         TradingBiz tradeBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
         tradeBiz.notice(payRequest);
         return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/initUserChannelAccount",method = RequestMethod.GET)
+    public @ResponseBody String initUserChannelAccount() {
+        List<UserGroupExt> userGroupExts = userGroupExtDao.selectAll();
+        userGroupExts.forEach(userGroupExt -> userService.saveUserGroupExt(userGroupExt));
+        return "success";
     }
  }

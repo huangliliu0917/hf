@@ -32,6 +32,8 @@ public class AccountServiceImpl implements AccountService {
     private UserGroupDao userGroupDao;
     @Autowired
     private AdminAccountDao adminAccountDao;
+    @Autowired
+    private UserChannelAccountDao userChannelAccountDao;
 
     @Override
     public void refund(RefundResponse refundResponse) {
@@ -54,6 +56,11 @@ public class AccountServiceImpl implements AccountService {
         count = accountDao.addAmount(account.getId(),log.getAmount(),account.getVersion());
         if(count<=0) {
             throw new BizFailException(String.format("update account amount failed.opr id:%s",log.getId()));
+        }
+        UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(log.getGroupId(),log.getProviderCode());
+        count = userChannelAccountDao.addAmount(userChannelAccount.getId(),log.getAmount(),userChannelAccount.getVersion());
+        if(count<=0) {
+            throw new BizFailException(String.format("update user channel account amount failed.opr id:%s",log.getId()));
         }
     }
 
