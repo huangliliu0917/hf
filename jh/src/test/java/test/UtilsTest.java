@@ -70,8 +70,8 @@ public class UtilsTest {
 
     @Test
     public void testSubstring() {
-        String result = content.substring(content.indexOf("<form"),content.indexOf("</form>")+7);
-        System.out.println(result);
+        String buyerId = "23456radsdfgfsdaddf1234521`23234s";
+        System.out.println(buyerId.substring(buyerId.length()-10,buyerId.length()));
     }
 
     @Test
