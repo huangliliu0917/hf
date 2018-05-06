@@ -209,4 +209,31 @@
     and lock_amount-#{amount,jdbcType=DECIMAL}>=0
   </update>
 
+  <select id="getBidding" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel_account
+    where group_id = #{groupId,jdbcType=BIGINT}
+    and amount-lock_amount>0
+    order by abs(amount-lock_amount-#{bidAmount,jdbcType=DECIMAL}) , id desc
+  </select>
+
+  <update id="finish">
+    update user_channel_account
+    set
+      amount = amount-#{amount,jdbcType=DECIMAL},
+      lock_amount = lock_amount-#{amount,jdbcType=DECIMAL},
+      paid_amount = paid_amount+#{amount,jdbcType=DECIMAL},
+      version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+          and amount-#{amount,jdbcType=DECIMAL}>=0
+          and lock_amount-#{amount,jdbcType=DECIMAL}>=0
+  </update>
+
+  <select id="selectByGroupId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel_account
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
 </mapper>

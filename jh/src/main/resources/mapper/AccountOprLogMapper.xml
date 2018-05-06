@@ -336,4 +336,15 @@
     </if>
     and create_time >= curdate()
   </select>
+
+  <select id="getGroupAmount" resultType="java.util.Map">
+    select t1.group_id as "groupId",
+           t2.channel_provider_code as "channelProviderCode",
+           sum(t1.amount) as "amount"
+    from account_opr_log t1 left join pay_request t2
+          on t1.out_trade_no = t2.out_trade_no
+    where t1.type = #{type,jdbcType=INTEGER}
+          and t1.status = 10 and t1.group_id = #{groupId,jdbcType=BIGINT}
+    group by t1.group_id,t2.channel_provider_code order by t1.group_id desc
+  </select>
 </mapper>

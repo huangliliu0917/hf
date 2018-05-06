@@ -4,12 +4,15 @@ import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.enums.TradeType;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.MapUtils;
+import com.hf.base.utils.Utils;
+import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.PayService;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,8 @@ public class PayJob {
     private TradeBizFactory tradeBizFactory;
     @Autowired
     private PayService payService;
+
+    private String password;
 
     //银行受理中的交易
 //    @Scheduled(cron = "0 0/10 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * ?")
@@ -108,5 +113,18 @@ public class PayJob {
                 logger.error(e.getMessage());
             }
         });
+    }
+
+    @Scheduled(cron = "0 0/30 * * * ?")
+    public void changePassword() {
+        this.password = Utils.getRandomString(16);
+        logger.info("current password:"+password);
+    }
+
+    public String getPassword() {
+        if(StringUtils.isEmpty(password)) {
+            this.changePassword();
+        }
+        return this.password;
     }
 }

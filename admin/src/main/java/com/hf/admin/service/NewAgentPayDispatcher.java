@@ -27,6 +27,7 @@ public class NewAgentPayDispatcher implements Dispatcher {
     @Override
     public DispatchResult dispatch(HttpServletRequest request, String page) {
         String withdrawId = request.getParameter("id");
+        String groupId = request.getSession().getAttribute("groupId").toString();
         SettleTask settleTask = defaultClient.getSettleTask(withdrawId);
 
         List<AgentPayLog> agentPayLogs = adminClient.newAgentPay(withdrawId);
@@ -36,14 +37,7 @@ public class NewAgentPayDispatcher implements Dispatcher {
         result.put("residueAmount",(settleTask.getPayAmount().subtract(settleTask.getPaidAmount()).subtract(settleTask.getLockAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
         result.put("lockAmount",totalAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
         result.put("taskId",settleTask.getId());
-        List<Map<String,String>> list = new ArrayList<>();
-        result.put("datas",list);
-        for(AgentPayLog agentPayLog : agentPayLogs) {
-            Map<String,String> map = new HashMap<>();
-            list.add(map);
-            map.put("provider", ChannelProvider.parse(agentPayLog.getProviderCode()).getName());
-            map.put("amount",String.valueOf(agentPayLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
-        }
+        result.put("datas",agentPayLogs);
 
         DispatchResult dispatchResult = new DispatchResult();
         dispatchResult.setPage(page);

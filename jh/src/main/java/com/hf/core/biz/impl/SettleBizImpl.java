@@ -3,17 +3,16 @@ package com.hf.core.biz.impl;
 import com.hf.base.contants.Constants;
 import com.hf.base.enums.*;
 import com.hf.base.exceptions.BizFailException;
+import com.hf.base.model.AgentPayLog;
 import com.hf.base.model.WithDrawInfo;
 import com.hf.base.model.WithDrawRequest;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
-import com.hf.base.utils.Utils;
 import com.hf.core.biz.SettleBiz;
 import com.hf.core.biz.service.AccountService;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.SettleService;
 import com.hf.core.biz.service.UserService;
-import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.biz.trade.WwTradingBiz;
 import com.hf.core.dao.local.*;
 import com.hf.core.dao.remote.WwClient;
@@ -62,8 +61,6 @@ public class SettleBizImpl implements SettleBiz {
     @Autowired
     private SettleService settleService;
     @Autowired
-    private AgentPayLogDao agentPayLogDao;
-    @Autowired
     private WwClient wwClient;
     @Autowired
     private WwTradingBiz wwTradingBiz;
@@ -72,93 +69,41 @@ public class SettleBizImpl implements SettleBiz {
     public void saveSettle(SettleTask settleTask) {
         UserGroup userGroup = userGroupDao.selectByPrimaryKey(settleTask.getGroupId());
         Account account = accountDao.selectByGroupId(settleTask.getGroupId());
+        if(userGroup.getType() == GroupType.COMPANY.getValue() || userGroup.getType() == GroupType.SUPER.getValue()) {
+            settleTask.setAccountId(account.getId());
+            settleTask.setFee(new BigDecimal("0"));
+            settleTask.setFeeRate(new BigDecimal("0"));
+            settleTask.setPayAmount(settleTask.getSettleAmount());
+            settleTask.setPayBankCard(0L);
+            settleTask.setPayGroupId(userGroup.getId());
+            settleTask.setPayAccountId(account.getId());
 
-        UserGroup subUserGroup = userGroupDao.selectByPrimaryKey(userGroup.getCompanyId());
-        AdminAccount payAccount = adminAccountDao.selectByGroupId(subUserGroup.getId());
+            accountService.adminSettle(settleTask);
+        } else {
+            UserGroup subUserGroup = userGroupDao.selectByPrimaryKey(userGroup.getCompanyId());
+            AdminAccount payAccount = adminAccountDao.selectByGroupId(subUserGroup.getId());
 
-        AdminBankCard payBankCard = adminBankCardDao.selectByCompanyId(userGroup.getCompanyId(),userGroup.getId());
-        settleTask.setPayAccountId(payAccount.getId());
-        BigDecimal feeRate = new BigDecimal(cacheService.getProp(Constants.SETTLE_FEE_RATE,"5"));
-        BigDecimal fee = settleTask.getSettleAmount().multiply(feeRate).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
-        BigDecimal payAmount = settleTask.getSettleAmount().subtract(fee);
+            AdminBankCard payBankCard = adminBankCardDao.selectByCompanyId(userGroup.getCompanyId(),userGroup.getId());
+            settleTask.setPayAccountId(payAccount.getId());
+            BigDecimal feeRate = new BigDecimal(cacheService.getProp(Constants.SETTLE_FEE_RATE,"5"));
+            BigDecimal fee = settleTask.getSettleAmount().multiply(feeRate).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            BigDecimal payAmount = settleTask.getSettleAmount().subtract(fee);
 
-        settleTask.setAccountId(account.getId());
-        settleTask.setFee(fee);
-        settleTask.setFeeRate(feeRate);
-        settleTask.setPayAmount(payAmount);
-        settleTask.setPayBankCard(payBankCard==null?0L:payBankCard.getId());
-        settleTask.setPayGroupId(userGroup.getCompanyId());
+            settleTask.setAccountId(account.getId());
+            settleTask.setFee(fee);
+            settleTask.setFeeRate(feeRate);
+            settleTask.setPayAmount(payAmount);
+            settleTask.setPayBankCard(payBankCard==null?0L:payBankCard.getId());
+            settleTask.setPayGroupId(userGroup.getCompanyId());
 
-        settleTaskDao.insertSelective(settleTask);
-
-        accountService.settle(settleTask.getId());
+            accountService.settle(settleTask);
+        }
     }
 
     @Transactional
     @Override
     public void finishSettle(Long id) {
-        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(id);
-        //支付金额
-        AccountOprLog withdrawAccountLog = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.WITHDRAW.getValue());
-        int count = accountOprLogDao.updateStatusById(withdrawAccountLog.getId(), OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update oprLog status failed");
-        }
 
-        Account withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
-        count = accountDao.finishWithDraw(withdrawAccount.getId(),withdrawAccountLog.getAmount(),withdrawAccount.getVersion());
-        if(count<=0) {
-            throw new BizFailException("finish withdraw failed");
-        }
-
-        //手续费
-        AccountOprLog feeLog = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.TAX.getValue());
-        count = accountOprLogDao.updateStatusById(feeLog.getId(),OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update feelog status failed");
-        }
-
-        withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
-        count = accountDao.finishTax(withdrawAccount.getId(),feeLog.getAmount(),withdrawAccount.getVersion());
-        if(count<=0) {
-            throw new BizFailException("update fee account failed");
-        }
-
-        //admin log
-        AdminAccountOprLog adminLog = adminAccountOprLogDao.selectByNo(String.valueOf(settleTask.getId()));
-        if(adminLog.getType() != OprType.WITHDRAW.getValue()) {
-            throw new BizFailException("opr log type not match");
-        }
-
-        count = adminAccountOprLogDao.updateStatusById(adminLog.getId(),OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update admin Opr log status failed");
-        }
-
-        AdminAccount adminAccount = adminAccountDao.selectByGroupId(settleTask.getPayGroupId());
-        count = adminAccountDao.finishPay(adminAccount.getId(),adminLog.getAmount(),adminAccount.getVersion());
-        if(count<=0) {
-            throw new BizFailException("update admin amount failed");
-        }
-
-        //admin true pay log
-        AccountOprLog payLog = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getPayGroupId(),OprType.FEE.getValue());
-        count = accountOprLogDao.updateStatusById(payLog.getId(),OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update opr log failed");
-        }
-
-        Account payAccount = accountDao.selectByGroupId(settleTask.getPayGroupId());
-        count = accountDao.addAmount(payAccount.getId(),payLog.getAmount(),payAccount.getVersion());
-
-        if(count<=0) {
-            throw new BizFailException("update pay Account failed");
-        }
-
-        count = settleTaskDao.updateStatusById(settleTask.getId(), SettleStatus.PROCESSING.getValue(),SettleStatus.SUCCESS.getValue());
-        if(count<=0) {
-            throw new BizFailException("update settle status failed");
-        }
     }
 
     @Transactional
@@ -166,28 +111,43 @@ public class SettleBizImpl implements SettleBiz {
     public void settleFailed(Long id) {
         SettleTask settleTask = settleTaskDao.selectByPrimaryKey(id);
         //支付金额
-        AccountOprLog withdrawAccountLog = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.WITHDRAW.getValue());
-        int count = accountOprLogDao.updateStatusById(withdrawAccountLog.getId(), OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update oprLog status failed");
-        }
-        Account withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
-        count = accountDao.unlockAmount(withdrawAccount.getId(),withdrawAccountLog.getAmount(),withdrawAccount.getVersion());
-        if(count<=0) {
-            throw new BizFailException("unlock withdraw failed");
+        List<AccountOprLog> withdrawAccountLogs = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.WITHDRAW.getValue());
+        for(AccountOprLog log:withdrawAccountLogs) {
+            int count = accountOprLogDao.updateStatusById(log.getId(), OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
+            if(count<=0) {
+                throw new BizFailException("update oprLog status failed");
+            }
+            Account withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
+            count = accountDao.unlockAmount(withdrawAccount.getId(),log.getAmount(),withdrawAccount.getVersion());
+            if(count<=0) {
+                throw new BizFailException("unlock withdraw failed");
+            }
+            UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(log.getGroupId(),log.getProviderCode());
+            count = userChannelAccountDao.unlock(userChannelAccount.getId(),log.getAmount(),userChannelAccount.getVersion());
+            if(count<=0) {
+                throw new BizFailException("unlock user channel account failed");
+            }
         }
 
         //手续费
-        AccountOprLog feeLog = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.TAX.getValue());
-        count = accountOprLogDao.updateStatusById(feeLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update feelog status failed");
-        }
+        List<AccountOprLog> feeLogs = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.TAX.getValue());
+        for(AccountOprLog feeLog:feeLogs) {
+            int count = accountOprLogDao.updateStatusById(feeLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
+            if(count<=0) {
+                throw new BizFailException("update feelog status failed");
+            }
 
-        withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
-        count = accountDao.unlockAmount(withdrawAccount.getId(),feeLog.getAmount(),withdrawAccount.getVersion());
-        if(count<=0) {
-            throw new BizFailException("update fee account failed");
+            Account withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
+            count = accountDao.unlockAmount(withdrawAccount.getId(),feeLog.getAmount(),withdrawAccount.getVersion());
+            if(count<=0) {
+                throw new BizFailException("update fee account failed");
+            }
+
+            UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(feeLog.getGroupId(),feeLog.getProviderCode());
+            count = userChannelAccountDao.unlock(userChannelAccount.getId(),feeLog.getAmount(),userChannelAccount.getVersion());
+            if(count<=0) {
+                throw new BizFailException("unlock user channel account failed");
+            }
         }
 
         //admin log
@@ -196,7 +156,7 @@ public class SettleBizImpl implements SettleBiz {
             throw new BizFailException("opr log type not match");
         }
 
-        count = adminAccountOprLogDao.updateStatusById(adminLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
+        int count = adminAccountOprLogDao.updateStatusById(adminLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
         if(count<=0) {
             throw new BizFailException("update admin Opr log status failed");
         }
@@ -208,15 +168,17 @@ public class SettleBizImpl implements SettleBiz {
         }
 
         //admin true pay log
-        AccountOprLog payLog = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getPayGroupId(),OprType.FEE.getValue());
-        count = accountOprLogDao.updateStatusById(payLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update opr log failed");
-        }
+        List<AccountOprLog> payLogs = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getPayGroupId(),OprType.FEE.getValue());
+        for(AccountOprLog payLog:payLogs) {
+            count = accountOprLogDao.updateStatusById(payLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_FAILED.getValue());
+            if(count<=0) {
+                throw new BizFailException("update opr log failed");
+            }
 
-        count = settleTaskDao.updateStatusById(settleTask.getId(), SettleStatus.PROCESSING.getValue(),SettleStatus.FAILED.getValue());
-        if(count<=0) {
-            throw new BizFailException("update settle status failed");
+            count = settleTaskDao.updateStatusById(settleTask.getId(), SettleStatus.PROCESSING.getValue(),SettleStatus.FAILED.getValue());
+            if(count<=0) {
+                throw new BizFailException("update settle status failed");
+            }
         }
     }
 
@@ -318,55 +280,66 @@ public class SettleBizImpl implements SettleBiz {
     @Override
     public List<AgentPayLog> newAgentPay(String withDrawId) {
         SettleTask settleTask = settleTaskDao.selectByPrimaryKey(Long.parseLong(withDrawId));
-        BigDecimal amount = settleTask.getPayAmount().subtract(settleTask.getPaidAmount()).subtract(settleTask.getLockAmount());
+        List<AccountOprLog> logs = accountOprLogDao.select(MapUtils.buildMap("outTradeNo",String.valueOf(withDrawId),
+                "groupIds",Arrays.asList(settleTask.getGroupId()),
+                "oprType",OprType.WITHDRAW.getValue(),
+                "startIndex",0,
+                "pageSize",Integer.MAX_VALUE));
 
-        List<AgentPayLog> logs = new ArrayList<>();
-
-        List<ChannelProvider> channelProviders = channelProviderDao.selectAgentPay();
-
-        for(ChannelProvider channelProvider : channelProviders) {
-            if(amount.compareTo(BigDecimal.ZERO) == 0) {
-                break;
-            }
-
-            String channelProviderCode = channelProvider.getProviderCode();
-            UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(settleTask.getGroupId(),channelProviderCode);
-
-            BigDecimal accountAmount = userChannelAccount.getAmount().subtract(userChannelAccount.getLockAmount());
-            BigDecimal accountPayAmount = Utils.min(amount,accountAmount);
-
-            if(accountPayAmount.compareTo(BigDecimal.ZERO) <= 0) {
-                continue;
-            }
-
-            amount = amount.subtract(accountPayAmount);
-
+        List<AgentPayLog> agentPayLogs = new ArrayList<>();
+        for(AccountOprLog log:logs) {
             AgentPayLog agentPayLog = new AgentPayLog();
-            agentPayLog.setTradeNo(String.valueOf(new Date().getTime())+Utils.getRandomString(4));
-            agentPayLog.setGroupId(settleTask.getGroupId());
-            agentPayLog.setWithDrawTaskId(settleTask.getId());
-            agentPayLog.setAmount(accountPayAmount);
-            agentPayLog.setProviderCode(channelProviderCode);
-            agentPayLog.setUserChannelAccountId(userChannelAccount.getId());
-            agentPayLog.setType(1);
-
-            logs.add(agentPayLog);
+            agentPayLog.setAmount(log.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            agentPayLog.setId(log.getId());
+            agentPayLog.setProvider(com.hf.base.enums.ChannelProvider.parse(log.getProviderCode()).getName());
+            switch (log.getStatus()) {
+                case 0:
+                    agentPayLog.setStatusDesc("未处理");
+                    break;
+                case 1:
+                    agentPayLog.setStatusDesc("已提交申请");
+                    break;
+                case 10:
+                    agentPayLog.setStatusDesc("处理成功");
+                    break;
+                case 99:
+                    agentPayLog.setStatusDesc("处理失败");
+                    break;
+            }
+            agentPayLog.setStatus(log.getStatus());
+            ChannelProvider channelProvider = channelProviderDao.selectByCode(log.getProviderCode());
+            agentPayLog.setType(channelProvider.getAgentPay()==1?"代付":"线下付款");
+            agentPayLogs.add(agentPayLog);
         }
-
-        if(CollectionUtils.isNotEmpty(logs)) {
-            settleService.agentPay(settleTask,logs);
-        }
-
-        List<AgentPayLog> results = agentPayLogDao.select(MapUtils.buildMap("withDrawTaskId",settleTask.getId(),"status",0));
-        return results;
+        return agentPayLogs;
     }
 
     @Override
-    public void submitAgentPay(Long taskId) {
-        List<AgentPayLog> results = agentPayLogDao.select(MapUtils.buildMap("withDrawTaskId",taskId,"status",0));
-        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(taskId);
-        for(AgentPayLog agentPayLog:results) {
-            wwTradingBiz.agentPay(settleTask,agentPayLog);
+    public void submitAgentPay(Long id) {
+        AccountOprLog accountOprLog = accountOprLogDao.selectByPrimaryKey(id);
+        if(Objects.isNull(accountOprLog)|| accountOprLog.getStatus() != 0 || accountOprLog.getType()!=OprType.WITHDRAW.getValue()) {
+            return;
+        }
+        String providerCode = accountOprLog.getProviderCode();
+        ChannelProvider channelProvider = channelProviderDao.selectByCode(providerCode);
+
+        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(Long.parseLong(accountOprLog.getOutTradeNo()));
+        if(Objects.isNull(settleTask)) {
+            throw new BizFailException("settle not found");
+        }
+
+        if(channelProvider.getAgentPay() == 1) {
+            if(providerCode.equals(com.hf.base.enums.ChannelProvider.WW.getCode())) {
+                wwTradingBiz.agentPay(settleTask,accountOprLog);
+            }
+        } else {
+            //成功
+            UserGroup userGroup = userGroupDao.selectByPrimaryKey(settleTask.getGroupId());
+            if(userGroup.getType() == GroupType.SUPER.getValue() || userGroup.getType() == GroupType.COMPANY.getValue()) {
+                settleService.adminPaySuccess(settleTask,accountOprLog);
+            } else {
+                settleService.paySuccess(settleTask,accountOprLog);
+            }
         }
     }
 }

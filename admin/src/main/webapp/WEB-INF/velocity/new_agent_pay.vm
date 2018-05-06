@@ -32,20 +32,17 @@
                     <i class="layui-icon" onclick="location.replace(location.href);" title="刷新" style="cursor:pointer;">ဂ</i>
                 </div>
             </div>
-            <div class="ibox-content">
-                <blockquote class="layui-elem-quote">
-                    <span class="text-danger">未代付金额：${residueAmount} 元</span><br>
-                    <span class="text-danger">本次代付金额：${lockAmount} 元</span><br>
-                </blockquote>
-            </div>
             <!--条件查询-->
             <div class="ibox-content">
                 <!--交易列表-->
                 <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
                     <thead>
                     <tr>
-                        <th lay-data="{field:'agent', width:110}">代付机构</th>
-                        <th lay-data="{field:'amount', width:100}">代付金额</th>
+                        <th lay-data="{field:'agent', width:110}">通道</th>
+                        <th lay-data="{field:'amount', width:100}">金额</th>
+                        <th lay-data="{field:'payType', width:100}">付款类型</th>
+                        <th lay-data="{field:'payStatus', width:100}">状态</th>
+                        <th lay-data="{field:'op',width:250}">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -53,6 +50,15 @@
                         <tr>
                             <td>${data.provider}</td>
                             <td>${data.amount}</td>
+                            <td>${data.type}</td>
+                            <td>${data.statusDesc}</td>
+                            <td>
+                            <div class="layui-btn-group">
+                                #if(${data.status}==0) {
+                                    <button class="layui-btn layui-btn-small lineblud" onclick="submit_agent_pay(${data.id})">发起付款</button>
+                                #end
+                            </div>
+                            </td>
                         </tr>
                         #end
                     </tbody>
@@ -77,15 +83,12 @@
             data:'taskId='+id,
             success:function(res){
                 if(res.status){
-                    layer.alert("保存成功", {icon: 6},function () {
-                        parent.location.reload();
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
+                    layer.alert("提交成功", {icon: 6},function () {
+                        location.reload();
                     });
                 }else{
                     layer.msg(res.msg?res.msg:"操作失败!", {icon: 5},function () {
-                        var index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
+                        location.reload();
                     });
                     return false;
                 }

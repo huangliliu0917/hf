@@ -1,7 +1,7 @@
 package com.hf.core.api;
 
 import com.hf.base.contants.CodeManager;
-import com.hf.base.exceptions.BizFailException;
+import com.hf.base.model.AgentPayLog;
 import com.hf.base.model.WithDrawInfo;
 import com.hf.base.model.WithDrawRequest;
 import com.hf.base.utils.Pagenation;
@@ -9,7 +9,6 @@ import com.hf.base.utils.ResponseResult;
 import com.hf.base.utils.TypeConverter;
 import com.hf.core.biz.SettleBiz;
 import com.hf.core.dao.local.SettleTaskDao;
-import com.hf.core.model.po.AgentPayLog;
 import com.hf.core.model.po.SettleTask;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,8 +101,8 @@ public class SettleApi {
 
     @RequestMapping(value = "/submit_agent_pay",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody ResponseResult<Boolean> submitAgentPay(@RequestBody Map<String,Object> params) {
-        Long taskId = new BigDecimal(params.get("taskId").toString()).longValue();
-        settleBiz.submitAgentPay(taskId);
+        Long id = new BigDecimal(params.get("taskId").toString()).longValue();
+        settleBiz.submitAgentPay(id);
         return ResponseResult.success(true);
     }
 }

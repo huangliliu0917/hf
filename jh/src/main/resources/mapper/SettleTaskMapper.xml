@@ -309,6 +309,12 @@
         #{groupId}
       </foreach>
     </if>
+    <if test="statusList != null and statusList.size()>0">
+      and t1.status in
+      <foreach item="status" index="index" collection="statusList" open="(" separator="," close=")">
+        #{status}
+      </foreach>
+    </if>
     <if test="mchId != null and mchId != ''" >
       and t2.group_no like concat(concat('%',#{mchId,jdbcType=VARCHAR}),'%')
     </if>
@@ -372,4 +378,14 @@
     from settle_task t1,user_group t2
     where t1.group_id = t2.id and t1.status = 10
   </select>
+
+  <update id="finish">
+    update settle_task
+    set
+    paid_amount = paid_amount+#{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT}
+    and version = #{version,jdbcType=INTEGER}
+    and settle_amount >= paid_amount+#{amount,jdbcType=DECIMAL}
+  </update>
 </mapper>

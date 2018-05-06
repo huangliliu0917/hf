@@ -363,6 +363,61 @@
     limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
+  <select id="selectSum" resultType="java.math.BigDecimal">
+    select
+    sum(t2.amount)
+    from pay_request t1,account_opr_log t2
+    where 1=1 and t1.out_trade_no = t2.out_trade_no and t2.type = 0
+    <if test="outTradeNo != null">
+      and t1.out_trade_no like concat(#{outTradeNo,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="mchId != null">
+      and t1.mch_id = #{mchId,jdbcType=VARCHAR}
+    </if>
+    <if test="service != null">
+      and t1.service = #{service,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+      and t1.status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="statusList != null and statusList.size()>0">
+      and t1.status in
+      <foreach item="status" index="index" collection="statusList" open="(" separator="," close=")">
+        #{status}
+      </foreach>
+    </if>
+    <if test="notInStatusList != null and notInStatusList.size()>0">
+      and t1.status not in
+      <foreach item="status" index="index" collection="notInStatusList" open="(" separator="," close=")">
+        #{status}
+      </foreach>
+    </if>
+    <if test="type != null">
+      and t1.trade_type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="mchIds != null and mchIds.size()>0">
+      and t1.mch_id in
+      <foreach item="item" index="index" collection="mchIds" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="startId != null">
+      and t1.id >= #{startId,jdbcType=BIGINT}
+    </if>
+    <if test="lastTime != null">
+      and <![CDATA[ t1.create_time < #{lastTime,jdbcType=TIMESTAMP} ]]>
+    </if>
+    <if test="oprGroupId != null">
+      and t2.group_id = #{oprGroupId,jdbcType=BIGINT}
+    </if>
+    <if test="oprGroupIds != null and oprGroupIds.size()>0">
+      and t2.group_id in
+      <foreach item="item" index="index" collection="oprGroupIds" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
 
   <select id="selectStatistics" resultType="com.hf.base.model.TradeStatisticsRequestDto">
       SELECT

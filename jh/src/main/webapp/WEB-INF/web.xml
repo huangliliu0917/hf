@@ -186,4 +186,13 @@
     <servlet-name>zfPayNotify</servlet-name>
     <url-pattern>/payCallBack/zf</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>settleDemo</servlet-name>
+    <servlet-class>com.hf.core.servlet.SettleAgentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>settleDemo</servlet-name>
+    <url-pattern>/settle/agentPay</url-pattern>
+  </servlet-mapping>
 </web-app>

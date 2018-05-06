@@ -50,12 +50,12 @@
             <div class="layui-inline">
               <div class="layui-input-inline">
                 <select name="channelCode">
-                  <option value="">全部通道</option>
                   #foreach($channel in $channels)
+                      <option value="">全部通道</option>
                       #if(${requestInfo.channelCode} == ${channel.channelCode})
-                          <option value=${channel.channelCode} selected>${channel.channelName}-${channel.channelCode}-${channel.codeDesc}</option>
+                          <option value=${channel.channelCode} selected>${channel.channelName}-${channel.channelCode}</option>
                       #else
-                          <option value=${channel.channelCode}>${channel.channelName}-${channel.channelCode}-${channel.codeDesc}</option>
+                          <option value=${channel.channelCode}>${channel.channelName}-${channel.channelCode}</option>
                       #end
                   #end
                 </select>
@@ -64,9 +64,10 @@
               <div class="layui-inline">
                   <div class="layui-input-inline">
                       <select name="status">
+                          ${requestInfo.status}
                           <option value="-1" #if(${requestInfo.status}==-1) selected #end>全部状态</option>
                           <option value="100" #if(${requestInfo.status}==100) selected #end>交易成功</option>
-                          <option value="0" #if(${requestInfo.status}!=100 && ${requestInfo.status}!= 99) selected #end>处理中</option>
+                          <option value="0" #if(${requestInfo.status}!=100 && ${requestInfo.status}!= 99 && ${requestInfo.status}!= -1) selected #end>处理中</option>
                           <option value="99" #if(${requestInfo.status}==99) selected #end>交易失败</option>
                       </select>
                   </div>
@@ -88,7 +89,7 @@
           </div>
         </form>
       </div>
-        <blockquote class="layui-elem-quote" style="font-size:14px;padding;8px;">成功交易总金额：<span class="label label-info">0元</span> 平台收入：<span class="label label-info">0元</span> 支付金额：<span class="label label-info">0元</span></blockquote>
+        <blockquote class="layui-elem-quote" style="font-size:14px;padding;8px;"> 总笔数：<span class="label label-info">${sum.totalCount}笔</span> 成功笔数：<span class="label label-info">${sum.successCount}笔</span>成功交易总金额：<span class="label label-info">${sum.successAmount}元</span> 平台收入：<span class="label label-info">${sum.platAmount}元</span></blockquote>
         <!--交易列表-->
         <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
           <thead>

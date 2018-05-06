@@ -53,4 +53,6 @@ public interface PayRequestDao {
     List<PayRequest> selectByTradeNos(@Param("outTradeNos") List<String> outTradeNos);
 
     List<Map<String,Object>> sumByProvider();
+
+    BigDecimal selectSum(Map<String,Object> map);
 }

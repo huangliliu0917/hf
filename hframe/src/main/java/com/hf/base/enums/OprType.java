@@ -13,7 +13,8 @@ public enum OprType {
     REVERSE(3,"撤销交易"),
     WITHDRAW(4,"结算"),
     BONUS(5,"提成"),
-    FEE(6,"手续费");
+    FEE(6,"手续费"),
+    ADMIN_WITHDRAW(7,"管理员提现");
 
     private int value;
     private String desc;

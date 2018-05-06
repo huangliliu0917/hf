@@ -12,7 +12,7 @@ import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.PayService;
 import com.hf.core.biz.service.SettleService;
-import com.hf.core.dao.local.AgentPayLogDao;
+import com.hf.core.dao.local.AccountOprLogDao;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupExtDao;
 import com.hf.core.dao.remote.WwClient;
@@ -46,9 +46,9 @@ public class WwTradingBiz extends AbstractTradingBiz {
     @Autowired
     private PayRequestDao payRequestDao;
     @Autowired
-    private AgentPayLogDao agentPayLogDao;
-    @Autowired
     private SettleService settleService;
+    @Autowired
+    private AccountOprLogDao accountOprLogDao;
 
     private static final BASE64Decoder decoder = new BASE64Decoder();
 
@@ -294,8 +294,8 @@ public class WwTradingBiz extends AbstractTradingBiz {
         return resultMap;
     }
 
-    public void agentPay(SettleTask settleTask,AgentPayLog agentPayLog) {
-        String orderNum = agentPayLog.getTradeNo();
+    public void agentPay(SettleTask settleTask,AccountOprLog accountOprLog) {
+        String orderNum = String.valueOf(accountOprLog.getId());
         String bankCode = settleTask.getBankCode();
         String bankAccount = settleTask.getBankNo();
         String accountName = settleTask.getOwner();
@@ -310,7 +310,7 @@ public class WwTradingBiz extends AbstractTradingBiz {
                 "tel",tel,
                 "memberCode","9010000025",
                 "payFlag","1030",
-                "payMoney",agentPayLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_DOWN));
+                "payMoney",accountOprLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_DOWN));
 
         Map<String,Object> res = wwClient.agentPay(map);
 
@@ -318,9 +318,10 @@ public class WwTradingBiz extends AbstractTradingBiz {
         String returnMsg = String.valueOf(res.get("returnMsg"));
 
         if(StringUtils.equals("0000",returnCode)) {
-            agentPayLogDao.updateStatus(agentPayLog.getId(),SettleStatus.NEW.getValue(),SettleStatus.PROCESSING.getValue());
+            accountOprLogDao.updateStatusById(accountOprLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_SUCCESS.getValue());
         } else {
-            settleService.agentPayFailed(agentPayLog.getId());
+            logger.error("代付失败,"+returnCode+","+returnMsg);
+            throw new BizFailException("code:"+returnCode+",msg:"+returnMsg);
         }
     }
 }

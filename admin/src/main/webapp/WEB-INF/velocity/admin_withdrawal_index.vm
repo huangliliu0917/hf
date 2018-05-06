@@ -75,9 +75,9 @@
                     <thead>
                     <tr>
                         <th lay-data="{field:'key', width:90}"></th>
-                        <th lay-data="{field:'t', width:100}">商户类型</th>
+                        <th lay-data="{field:'type', width:100}">商户类型</th>
                         <th lay-data="{field:'userid', width:100,style:'color:#060;'}">商户编号</th>
-                        <th lay-data="{field:'t', width:100}">商户名称</th>
+                        <th lay-data="{field:'name', width:100}">商户名称</th>
                         <th lay-data="{field:'tkmoney', width:110}">结算金额</th>
                         <th lay-data="{field:'sxfmoney', width:100,style:'color:#060;'}">手续费</th>
                         <th lay-data="{field:'feeRate', width:100,style:'color:#060;'}">手续费率</th>
@@ -91,7 +91,7 @@
                         <th lay-data="{field:'sqdatetime', width:170}">申请时间</th>
                         <th lay-data="{field:'cldatetime', width:170}">处理时间</th>
                         <th lay-data="{field:'status', width:100}">状态</th>
-                        <th lay-data="{field:'op',width:180}">操作</th>
+                        <th lay-data="{field:'op',width:250}">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -117,8 +117,7 @@
                             <td>
                                 <div class="layui-btn-group">
                                     #if(${wd.status}==1) {
-##                                        <button class="layui-btn layui-btn-small lineblud" onclick="task_pass(${wd.id})">完成付款</button>
-                                        <button class="layui-btn layui-btn-small lineblud" onclick="new_agent_pay(${wd.id})">发起代付</button>
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="new_agent_pay(${wd.id})">发起付款</button>
                                         <button class="layui-btn layui-btn-small lineblud" onclick="task_fail(${wd.id})">拒绝付款</button>
                                     #end
                                 </div>
@@ -183,8 +182,8 @@
     });
 
     function new_agent_pay(id) {
-        layer.confirm('确认发起代付？', function (index) {
-            x_admin_show("发起代付",'#springUrl("/common/new_agent_pay?id=")'+id,800,600);
+        layer.confirm('确认发起付款？', function (index) {
+            x_admin_show("发起付款",'#springUrl("/common/new_agent_pay?id=")'+id,800,600);
         });
     }
 

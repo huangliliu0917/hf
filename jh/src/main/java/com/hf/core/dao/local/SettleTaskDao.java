@@ -31,4 +31,6 @@ public interface SettleTaskDao {
     int unlock(@Param("id")long id,@Param("amount")BigDecimal amount,@Param("version")int version);
 
     List<Map<String,Object>> selectFinished();
+
+    int finish(@Param("id")long id,@Param("amount")BigDecimal amount,@Param("version")int version);
 }

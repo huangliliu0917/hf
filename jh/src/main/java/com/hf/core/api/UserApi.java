@@ -891,4 +891,16 @@ public class UserApi {
         }
         System.out.println("-------");
     }
+
+    @RequestMapping(value = "/get_order_cal",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseResult<Map<String,BigDecimal>> getOrderCal(@RequestBody Map<String,Object> params) {
+        try {
+            TradeRequest tradeRequest = TypeConverter.convert(params, TradeRequest.class);
+            Map<String,BigDecimal> map = trdBiz.getOrderCal(tradeRequest);
+            return ResponseResult.success(map);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseResult.failed("99999",e.getMessage(),new HashMap<>());
+        }
+    }
 }

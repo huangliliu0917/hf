@@ -32,9 +32,11 @@ public interface AccountOprLogDao {
 
     int count(Map<String, Object> params);
 
-    AccountOprLog selectByUnq(@Param("outTradeNo") String outTradeNo, @Param("groupId") Long groupId, @Param("type") Integer type);
+    List<AccountOprLog> selectByUnq(@Param("outTradeNo") String outTradeNo, @Param("groupId") Long groupId, @Param("type") Integer type);
 
     BigDecimal sumLockAmount(@Param("groupIds") List<Long> groupIds, @Param("types") List<Integer> types);
 
     BigDecimal sumFinishAmount(@Param("groupIds") List<Long> groupIds, @Param("types") List<Integer> types);
+
+    List<Map<String,Object>> getGroupAmount(@Param("groupId") Long groupId, @Param("type")int type);
 }

@@ -13,6 +13,7 @@ import com.hf.base.enums.ChannelCode;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.UserType;
 import com.hf.base.enums.WithDrawRole;
+import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.*;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.ResponseResult;
@@ -428,6 +429,9 @@ public class UserApi {
                 StringUtils.isEmpty(tradeRequest.getChannelCode())?"":tradeRequest.getChannelCode(),
                 tradeRequest.getStatus()==null?"":tradeRequest.getStatus(),
                 tradeRequest.getType()==null?"":tradeRequest.getType()));
+
+        Map<String,BigDecimal> sumMap = adminClient.getOrderCal(tradeRequest);
+        modelAndView.addObject("sum",sumMap);
         return modelAndView;
     }
 
@@ -707,5 +711,48 @@ public class UserApi {
         String taskId = request.getParameter("taskId");
         ResponseResult<Boolean> responseResult = adminClient.submitAgentPay(taskId);
         return MapUtils.buildMap("status",responseResult.getData(),"msg",responseResult.getMsg());
+    }
+
+    @RequestMapping(value = "/submit_withdraw",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public @ResponseBody Map<String,Object> submitWithDraw(HttpServletRequest request) {
+        Long groupId = Long.parseLong(request.getSession().getAttribute("groupId").toString());
+        BigDecimal settleAmount = new BigDecimal(request.getParameter("settleAmount")).multiply(new BigDecimal("100"));
+
+        Long userId = Long.parseLong(request.getSession().getAttribute("userId").toString());
+        String password = request.getParameter("password")== null?"":request.getParameter("password");
+
+        String deposit = request.getParameter("deposit");
+        String owner = request.getParameter("owner");
+        String bankNo = request.getParameter("bankNo");
+        String bankCode = request.getParameter("bankCode");
+        String bank = Constants.bankMap.get(bankCode);
+        String tel = request.getParameter("tel");
+        String idNo = request.getParameter("idNo");
+
+        if(StringUtils.isEmpty(bank) || StringUtils.isEmpty(deposit) || StringUtils.isEmpty(owner) || StringUtils.isEmpty(bankNo)) {
+            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg","银行信息不能为空");
+        }
+
+        UserInfo userInfo = client.getUserInfoById(userId);
+        if(!StringUtils.equals(userInfo.getPassword(), Utils.convertPassword(password))) {
+            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg","支付密码错误");
+        }
+
+        if(userInfo.getType()!= UserType.ADMIN.getValue()) {
+            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg","用户无权限");
+        }
+
+        AdminAccount account = client.getAdminAccountByGroupId(groupId);
+        BigDecimal availableAmount = account.getAmount().subtract(account.getLockAmount());
+        if(availableAmount.compareTo(settleAmount)<0) {
+            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg","最大结算结算金额:"+availableAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        }
+
+        try {
+            Boolean result = client.newSettleRequest(groupId,settleAmount,bank,deposit,owner,bankNo,bankCode,tel,idNo);
+            return com.hf.base.utils.MapUtils.buildMap("status",result);
+        } catch (BizFailException e) {
+            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg",e.getMessage());
+        }
     }
 }

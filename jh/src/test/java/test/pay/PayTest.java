@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.OprStatus;
 import com.hf.base.enums.SettleStatus;
+import com.hf.base.model.AgentPayLog;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.SettleBiz;
@@ -49,8 +50,6 @@ public class PayTest extends BaseTestCase {
     private AccountDao accountDao;
     @Autowired
     private AccountOprLogDao accountOprLogDao;
-    @Autowired
-    private AgentPayLogDao agentPayLogDao;
 
     private static final String merchant_no = "19858";
 
@@ -162,10 +161,6 @@ public class PayTest extends BaseTestCase {
         Mockito.when(mockWwClient.agentPay(Mockito.anyMap())).thenReturn(MapUtils.buildMap("returnCode","0001","returnMsg","失败"));
         settleBiz.submitAgentPay(settleTask.getId());
 
-        List<AgentPayLog> logs = agentPayLogDao.select(MapUtils.buildMap("withDrawTaskId",settleTask.getId()));
-        for(AgentPayLog log:logs)  {
-            Assert.assertEquals(log.getStatus().intValue(), OprStatus.PAY_FAILED.getValue());
-        }
         settleTask = settleTaskDao.selectByPrimaryKey(settleTask.getId());
         Assert.assertTrue(settleTask.getLockAmount().compareTo(new BigDecimal("0"))==0);
         userChannelAccount = userChannelAccountDao.selectByPrimaryKey(userChannelAccount.getId());
