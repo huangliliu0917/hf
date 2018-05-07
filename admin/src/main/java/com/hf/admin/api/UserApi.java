@@ -166,7 +166,29 @@ public class UserApi {
             return MapUtils.buildMap("status",false,"msg","费率不能为空!");
         }
 
-        adminClient.saveChannel(MapUtils.buildMap("providerCode",providerCode,"channelName",channelName,"channelCode",channelCode,"channelDesc",channelDesc,"feeRate",feeRate,"url",url,"status",status,"channelId",channelId,"code",code));
+        Map<String,Object> params = MapUtils.buildMap("providerCode",providerCode,"channelName",channelName,"channelCode",channelCode,"channelDesc",channelDesc,"feeRate",feeRate,"url",url,"status",status,"channelId",channelId,"code",code);
+
+        String minPrice = request.getParameter("minPrice");
+        if(StringUtils.isNotEmpty(minPrice) && NumberUtils.isNumber(minPrice)) {
+            params.put("minPrice",new BigDecimal(minPrice).multiply(new BigDecimal("100")));
+        }
+
+        String maxPrice = request.getParameter("maxPrice");
+        if(StringUtils.isNotEmpty(maxPrice) && NumberUtils.isNumber(maxPrice)) {
+            params.put("maxPrice",new BigDecimal(maxPrice).multiply(new BigDecimal("100")));
+        }
+
+        String startHour = request.getParameter("startHour");
+        if(StringUtils.isNotEmpty(startHour) && NumberUtils.isNumber(startHour)) {
+            params.put("startHour",startHour);
+        }
+
+        String stopHour = request.getParameter("stopHour");
+        if(StringUtils.isNotEmpty(stopHour) && NumberUtils.isNumber(stopHour)) {
+            params.put("stopHour",stopHour);
+        }
+
+        adminClient.saveChannel(params);
 
         return MapUtils.buildMap("status",true);
     }

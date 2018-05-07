@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -97,17 +98,54 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             throw new BizFailException(CodeManager.PERMISSION_DENY,"channel没有权限");
         }
 
+        String total = Utils.nvl(requestMap.get("total"));
+
+        if(channel.getMinPrice().compareTo(BigDecimal.ZERO)>0) {
+            if(new BigDecimal(total).compareTo(channel.getMinPrice())<0) {
+                if(channel.getMaxPrice().compareTo(BigDecimal.ZERO)>0) {
+                    throw new BizFailException(CodeManager.PERMISSION_DENY,String.format("交易金额区间:%s元-%s元",channel.getMinPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP),channel.getMaxPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
+                } else {
+                    throw new BizFailException(CodeManager.PERMISSION_DENY,"最小支付金额:"+channel.getMinPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)+"元");
+                }
+            }
+        }
+
+        if(channel.getMaxPrice().compareTo(BigDecimal.ZERO)>0) {
+            if(channel.getMaxPrice().compareTo(new BigDecimal(total))<0) {
+                if(channel.getMinPrice().compareTo(BigDecimal.ZERO)>0) {
+                    throw new BizFailException(CodeManager.PERMISSION_DENY,String.format("交易金额区间:%s元-%s元",channel.getMinPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP),channel.getMaxPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
+                } else {
+                    throw new BizFailException(CodeManager.PERMISSION_DENY,"最大支付金额:"+channel.getMaxPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)+"元");
+                }
+            }
+        }
+
+        if(channel.getStartHour()>0 || channel.getStopHour()>0) {
+            int currentHour = new Date().getHours();
+            if(channel.getStartHour()>0) {
+                if(currentHour<channel.getStartHour()) {
+                    if(channel.getStopHour()>0) {
+                        throw new BizFailException("交易时限:"+channel.getStartHour()+"点到"+channel.getStopHour()+"点");
+                    } else {
+                        throw new BizFailException("交易时限:"+channel.getStartHour()+"点开始");
+                    }
+
+                }
+            }
+            if(channel.getStopHour()>0) {
+                if(currentHour>=channel.getStopHour()) {
+                    if(channel.getStartHour()>0) {
+                        throw new BizFailException("交易时限:"+channel.getStartHour()+"点到"+channel.getStopHour()+"点");
+                    } else {
+                        throw new BizFailException("交易时限:"+channel.getStopHour()+"点结束");
+                    }
+                }
+            }
+        }
+
         UserGroupExt userGroupExt = userGroupExtDao.selectByUnq(userGroup.getId(),getChannelProvider().getCode());
         if(Objects.isNull(userGroupExt)) {
             throw new BizFailException("未注册，权限不足");
-        }
-
-        String total = Utils.nvl(requestMap.get("total"));
-        if(getChannelProvider() == ChannelProvider.WW) {
-            BigDecimal totalAmount = new BigDecimal(total);
-            if(totalAmount.compareTo(new BigDecimal("1000"))<0 && totalAmount.compareTo(new BigDecimal("150000"))>0) {
-                throw new BizFailException("交易金额需在10-1500之间");
-            }
         }
 
         payRequest = remotePay(requestMap,request,response);

@@ -32,8 +32,8 @@ public class PayDemmoServlet extends HttpServlet {
         map.put("sign",sign);
         HttpClient httpClient = new HttpClient(resp);
         httpClient.setParameter(map);
-//        httpClient.sendByPost("http://127.0.0.1:8080/jh/pay");
-        httpClient.sendByPost("http://huifufu.cn/openapi/unifiedorder_2");
+        httpClient.sendByPost("http://127.0.0.1:8080/jh/pay");
+//        httpClient.sendByPost("http://huifufu.cn/openapi/unifiedorder_2");
     }
 
     private String encrypt(Map<String,Object> map,String cipherCode) {

@@ -27,6 +27,14 @@ public class Channel {
     private String providerName;
 
     private String providerNo;
+    @Field
+    private BigDecimal minPrice;
+    @Field
+    private BigDecimal maxPrice;
+    @Field
+    private Integer startHour;
+    @Field
+    private Integer stopHour;
 
     public Long getId() {
         return id;
@@ -114,5 +122,37 @@ public class Channel {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public BigDecimal getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(BigDecimal minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public BigDecimal getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(BigDecimal maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+
+    public Integer getStartHour() {
+        return startHour;
+    }
+
+    public void setStartHour(Integer startHour) {
+        this.startHour = startHour;
+    }
+
+    public Integer getStopHour() {
+        return stopHour;
+    }
+
+    public void setStopHour(Integer stopHour) {
+        this.stopHour = stopHour;
     }
 }

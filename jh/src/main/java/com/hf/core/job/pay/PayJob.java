@@ -102,7 +102,7 @@ public class PayJob {
 
     }
 
-    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0/10 * * * * ?")
     public void doPromote() {
         List<PayRequest> list = payRequestDao.selectWaitingPromote();
         list.forEach(payRequest -> {
@@ -115,7 +115,7 @@ public class PayJob {
         });
     }
 
-    @Scheduled(cron = "0 0/30 * * * ?")
+//    @Scheduled(cron = "0 0/30 * * * ?")
     public void changePassword() {
         this.password = Utils.getRandomString(16);
         logger.info("current password:"+password);

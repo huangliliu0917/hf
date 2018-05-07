@@ -1,5 +1,7 @@
 package com.hf.base.model;
 
+import com.hf.base.annotations.Field;
+
 import java.math.BigDecimal;
 
 public class Channel {
@@ -24,6 +26,14 @@ public class Channel {
     private String providerName;
 
     private String providerNo;
+
+    private BigDecimal minPrice;
+
+    private BigDecimal maxPrice;
+
+    private Integer startHour;
+
+    private Integer stopHour;
 
     public Long getId() {
         return id;
@@ -111,5 +121,37 @@ public class Channel {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public BigDecimal getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(BigDecimal minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public BigDecimal getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(BigDecimal maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+
+    public Integer getStartHour() {
+        return startHour;
+    }
+
+    public void setStartHour(Integer startHour) {
+        this.startHour = startHour;
+    }
+
+    public Integer getStopHour() {
+        return stopHour;
+    }
+
+    public void setStopHour(Integer stopHour) {
+        this.stopHour = stopHour;
     }
 }
