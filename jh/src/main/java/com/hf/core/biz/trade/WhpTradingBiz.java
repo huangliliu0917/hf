@@ -73,7 +73,7 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         }
         map.put("clientip",payRequest.getCreateIp());
         map.put("version","1.0");
-        map.put("notifyurl",payRequest.getOutNotifyUrl());
+        map.put("notifyurl","http://huifufu.cn/openapi/whp/pay_notice");
 
         //paytype+mchid+amount+out_tradeid+time+商户密钥
         String sign = DigestUtils.md5Hex(map.get("paytype")+mchid+map.get("amount")+map.get("out_tradeid")+map.get("time")+cipherCode);
@@ -100,6 +100,11 @@ public class WhpTradingBiz extends AbstractTradingBiz {
             payRequestBack.setCodeUrl(String.valueOf(result.get("pay_info")));
             payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
             payService.remoteSuccess(payRequest,payRequestBack);
+            try {
+                response.sendRedirect(String.valueOf(result.get("pay_info")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return;
         }
 
