@@ -37,4 +37,6 @@ public interface AccountDao {
     int finishWithDraw(@Param("id") Long id, @Param("lockAmount") BigDecimal lockAmount, @Param("version") Integer version);
 
     int finishTax(@Param("id") Long id, @Param("lockAmount") BigDecimal lockAmount, @Param("version") Integer version);
+
+    List<Account> selectAvaAccount();
 }

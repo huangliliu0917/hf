@@ -7,6 +7,8 @@ public class ChannelProvider {
 
     private String providerName;
 
+    private int agentPay;
+
     public Long getId() {
         return id;
     }
@@ -29,5 +31,13 @@ public class ChannelProvider {
 
     public void setProviderName(String providerName) {
         this.providerName = providerName == null ? null : providerName.trim();
+    }
+
+    public int getAgentPay() {
+        return agentPay;
+    }
+
+    public void setAgentPay(int agentPay) {
+        this.agentPay = agentPay;
     }
 }

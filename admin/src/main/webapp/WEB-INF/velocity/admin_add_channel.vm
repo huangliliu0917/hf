@@ -70,9 +70,30 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">供应商域名：</label>
+                    <label class="layui-form-label">单笔最小金额(元)：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="url" autocomplete="off" #if(${channel.url}) value="${channel.url}" #else value="" #end class="layui-input">
+                        <input type="text" name="minPrice" autocomplete="off" #if(${channel.minPrice}) value="${channel.minPrice}" #else value="" #end class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单笔最大金额(元)：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="maxPrice" autocomplete="off" #if(${channel.maxPrice}) value="${channel.maxPrice}" #else value="" #end class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">交易开始时间(小时)：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="startHour" autocomplete="off" #if(${channel.startHour}) value="${channel.startHour}" #else value="" #end class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">交易结束时间(小时)：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="stopHour" autocomplete="off" #if(${channel.stopHour}) value="${channel.stopHour}" #else value="" #end class="layui-input">
                     </div>
                 </div>
 

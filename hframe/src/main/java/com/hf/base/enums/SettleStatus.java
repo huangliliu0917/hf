@@ -1,7 +1,7 @@
 package com.hf.base.enums;
 
 public enum SettleStatus {
-    NEW(0,"未处理"),PROCESSING(1,"处理中"),SUCCESS(10,"处理完成"),FAILED(99,"处理失败");
+    NEW(0,"未处理"),PROCESSING(1,"处理中"),AGENT_PAY(2,"代付中"),SUCCESS(10,"处理完成"),FAILED(99,"处理失败");
 
     private int value;
     private String desc;

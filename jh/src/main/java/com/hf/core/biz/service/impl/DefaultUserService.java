@@ -3,10 +3,8 @@ package com.hf.core.biz.service.impl;
 import com.hf.base.enums.GroupType;
 import com.hf.base.enums.UserStatus;
 import com.hf.core.biz.service.UserService;
-import com.hf.core.dao.local.UserGroupDao;
-import com.hf.core.dao.local.UserInfoDao;
-import com.hf.core.model.po.UserGroup;
-import com.hf.core.model.po.UserInfo;
+import com.hf.core.dao.local.*;
+import com.hf.core.model.po.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,14 @@ public class DefaultUserService implements UserService {
     private UserGroupDao userGroupDao;
     @Autowired
     private UserInfoDao userInfoDao;
+    @Autowired
+    private UserGroupExtDao userGroupExtDao;
+    @Autowired
+    private ChannelProviderDao channelProviderDao;
+    @Autowired
+    private UserChannelAccountDao userChannelAccountDao;
+    @Autowired
+    private AccountDao accountDao;
 
     @Transactional
     @Override
@@ -101,5 +107,32 @@ public class DefaultUserService implements UserService {
             getAdminChild(list,child);
         }
         return list;
+    }
+
+    @Transactional
+    @Override
+    public void saveUserGroupExt(UserGroupExt userGroupExt) {
+        if(userGroupExt.getId()!= null && userGroupExt.getId()>0L) {
+            userGroupExtDao.updateByPrimaryKeySelective(userGroupExt);
+        } else {
+            ChannelProvider channelProvider = channelProviderDao.selectByCode(userGroupExt.getProviderCode());
+            userGroupExt.setProviderName(channelProvider.getProviderName());
+            userGroupExtDao.insertSelective(userGroupExt);
+        }
+
+        userGroupExt = userGroupExtDao.selectByPrimaryKey(userGroupExt.getId());
+
+        UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(userGroupExt.getGroupId(),userGroupExt.getProviderCode());
+        if(Objects.isNull(userChannelAccount)) {
+            Account account = accountDao.selectByGroupId(userGroupExt.getGroupId());
+            if(account == null) {
+                return;
+            }
+            userChannelAccount = new UserChannelAccount();
+            userChannelAccount.setAccountId(account.getId());
+            userChannelAccount.setChannelProvider(userGroupExt.getProviderCode());
+            userChannelAccount.setGroupId(userGroupExt.getGroupId());
+            userChannelAccountDao.insertSelective(userChannelAccount);
+        }
     }
 }

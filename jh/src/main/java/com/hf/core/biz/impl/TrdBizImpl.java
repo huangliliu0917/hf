@@ -86,6 +86,38 @@ public class TrdBizImpl implements TrdBiz {
         return new Pagenation<>(result,totalSize,request.getCurrentPage(),request.getPageSize());
     }
 
+    @Override
+    public Map<String, BigDecimal> getOrderCal(TradeRequest request) {
+        Map<String,Object> params = MapUtils.beanToMap(request);
+        params.put("service",request.getChannelCode());
+
+        UserGroup userGroup = userGroupDao.selectByPrimaryKey(request.getGroupId());
+
+        List<UserGroup> groups = userService.getChildMchIds(request.getGroupId());
+        List<String> mchIds = groups.parallelStream().map(UserGroup::getGroupNo).collect(Collectors.toList());
+        List<Long> groupIds = groups.parallelStream().map(UserGroup::getId).collect(Collectors.toList());
+
+        params.put("mchIds",mchIds);
+        params.remove("status");
+
+        int totalCount = payRequestDao.selectCount(params);
+        BigDecimal totalAmount = payRequestDao.selectSum(params);
+
+        params.put("status","100");
+        int successCount = payRequestDao.selectCount(params);
+        params.put("oprGroupIds",groupIds);
+        BigDecimal successAmount = payRequestDao.selectSum(params);
+
+        if(userGroup.getType()== UserGroup.GroupType.COMPANY.getValue() || userGroup.getType() == UserGroup.GroupType.SUPER.getValue()) {
+            params.put("oprGroupIds",Arrays.asList(userGroup.getId()));
+        } else {
+            params.put("oprGroupIds",Arrays.asList(userGroup.getCompanyId()));
+        }
+        BigDecimal platAmount = payRequestDao.selectSum(params);
+
+        return MapUtils.buildMap("totalCount",totalCount,"successCount",successCount,"successAmount",successAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP),"platAmount",platAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+    }
+
     /**
      * 获取交易统计数据
      * @param request
@@ -129,10 +161,11 @@ public class TrdBizImpl implements TrdBiz {
         tradeRequestDto.setFee(payRequest.getFee().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
         if(payRequest.getActualAmount().compareTo(BigDecimal.ZERO)<=0) {
             if(null!=map.get(payRequest.getMchId())) {
-                AccountOprLog accountOprLog = accountOprLogDao.selectByUnq(payRequest.getOutTradeNo(),map.get(payRequest.getMchId()).getId(), OprType.PAY.getValue());
-                if(null != accountOprLog) {
-                    tradeRequestDto.setActualAmount(accountOprLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-                    tradeRequestDto.setFee((new BigDecimal(payRequest.getTotalFee()).subtract(accountOprLog.getAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP) );
+                List<AccountOprLog> accountOprLogs = accountOprLogDao.selectByUnq(payRequest.getOutTradeNo(),map.get(payRequest.getMchId()).getId(), OprType.PAY.getValue());
+                if(CollectionUtils.isNotEmpty(accountOprLogs)) {
+                    BigDecimal totalAmount = accountOprLogs.stream().map(AccountOprLog::getAmount).reduce(new BigDecimal("0"),BigDecimal::add);
+                    tradeRequestDto.setActualAmount(totalAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+                    tradeRequestDto.setFee((new BigDecimal(payRequest.getTotalFee()).subtract(totalAmount)).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP) );
                 }
             }
         }

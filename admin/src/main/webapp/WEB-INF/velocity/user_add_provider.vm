@@ -35,25 +35,6 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">商户编号：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="merchantNo" #if(${userGroupExt.merchantNo}) value="${userGroupExt.merchantNo}" #else value="" #end autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">门店编号：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="outletNo" #if(${userGroupExt.outletNo}) value="${userGroupExt.outletNo}" #else value="" #end autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密钥：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="cipherCode" #if(${userGroupExt.cipherCode}) value="${userGroupExt.cipherCode}" #else value="" #end autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit="submit" lay-filter="add">提交保存</button>
                     </div>

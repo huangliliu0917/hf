@@ -8,9 +8,11 @@ import com.hf.admin.model.UserInfoRequest;
 import com.hf.base.client.BaseClient;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.*;
+import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.ResponseResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,9 @@ public class AdminClient extends BaseClient {
     private static final String GET_SALES_LIST = "/user/get_sales_list";
     private static final String SAVE_SALE_INFO = "/user/save_sale_info";
     private static final String EDIT_SUB_GROUP = "/user/edit_sub_group";
+    private static final String NEW_AGENT_PAY = "/settle/new_agent_pay";
+    private static final String SUBMIT_AGENT_PAY = "/settle/submit_agent_pay";
+    private static final String GET_ORDER_CAL = "/user/get_order_cal";
 
     public AdminClient(String url) {
         this.url = url;
@@ -262,5 +267,25 @@ public class AdminClient extends BaseClient {
         RemoteParams remoteParams = new RemoteParams(url).withPath(EDIT_SUB_GROUP).withParams(map);
         String result = super.post(remoteParams);
         return new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
+    }
+
+    public List<AgentPayLog> newAgentPay(String withDrawId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(NEW_AGENT_PAY).withParam("withDrawId",withDrawId);
+        String result = super.post(remoteParams);
+        ResponseResult<List<AgentPayLog>> responseResult = new Gson().fromJson(result,new TypeToken<ResponseResult<List<AgentPayLog>>>(){}.getType());
+        return responseResult.getData();
+    }
+
+    public ResponseResult<Boolean> submitAgentPay(String taskId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(SUBMIT_AGENT_PAY).withParam("taskId",taskId);
+        String result = super.post(remoteParams);
+        return new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
+    }
+
+    public Map<String,BigDecimal> getOrderCal(TradeRequest tradeRequest) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_ORDER_CAL).withParams(MapUtils.beanToMap(tradeRequest));
+        String result = super.post(remoteParams);
+        ResponseResult<Map<String,BigDecimal>> responseResult = new Gson().fromJson(result,new TypeToken<ResponseResult<Map<String,BigDecimal>>>(){}.getType());
+        return responseResult.getData();
     }
 }

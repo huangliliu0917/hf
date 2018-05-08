@@ -10,6 +10,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -231,5 +232,9 @@ public class Utils {
         }
 
         return buffer.toString();
+    }
+
+    public static BigDecimal min(BigDecimal o1,BigDecimal o2) {
+        return o1.compareTo(o2)>=0?o2:o1;
     }
 }

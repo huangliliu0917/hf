@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AdminOrderDispatcher implements Dispatcher {
@@ -73,6 +75,9 @@ public class AdminOrderDispatcher implements Dispatcher {
                 StringUtils.isEmpty(tradeRequest.getChannelCode())?"":tradeRequest.getChannelCode(),
                 tradeRequest.getStatus()==null?"":tradeRequest.getStatus(),
                 tradeRequest.getType()==null?"":tradeRequest.getType()));
+
+        Map<String,BigDecimal> sumMap = adminClient.getOrderCal(tradeRequest);
+        dispatchResult.addObject("sum",sumMap);
         return dispatchResult;
     }
 }

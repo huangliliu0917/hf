@@ -3,6 +3,8 @@ package com.hf.core.dao.local;
 import com.hf.core.model.po.ChannelProvider;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface ChannelProviderDao {
     int deleteByPrimaryKey(Long id);
 
@@ -17,4 +19,8 @@ public interface ChannelProviderDao {
     int updateByPrimaryKey(ChannelProvider record);
 
     ChannelProvider selectByCode(@Param("code") String code);
+
+    List<ChannelProvider> selectAgentPay();
+
+    List<ChannelProvider> selectAll();
 }

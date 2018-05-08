@@ -20,6 +20,8 @@ public class WithDrawInfo {
     private BigDecimal feeRate;
     private BigDecimal fee;
     private BigDecimal payAmount;
+    private BigDecimal lockAmount;
+    private BigDecimal paidAmount;
     private Integer status;
     private String statusDesc;
     private Date createTime;
@@ -192,5 +194,21 @@ public class WithDrawInfo {
 
     public void setGroupTypeDesc(String groupTypeDesc) {
         this.groupTypeDesc = groupTypeDesc;
+    }
+
+    public BigDecimal getLockAmount() {
+        return lockAmount;
+    }
+
+    public void setLockAmount(BigDecimal lockAmount) {
+        this.lockAmount = lockAmount;
+    }
+
+    public BigDecimal getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(BigDecimal paidAmount) {
+        this.paidAmount = paidAmount;
     }
 }

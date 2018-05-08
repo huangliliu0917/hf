@@ -11,27 +11,23 @@ import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.PayService;
+import com.hf.core.biz.service.SettleService;
+import com.hf.core.dao.local.AccountOprLogDao;
 import com.hf.core.dao.local.PayRequestDao;
-import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.local.UserGroupExtDao;
-import com.hf.core.dao.remote.CallBackClient;
-import com.hf.core.dao.remote.PayClient;
 import com.hf.core.dao.remote.WwClient;
 import com.hf.core.model.PropertyConfig;
 import com.hf.core.model.dto.trade.unifiedorder.WwPayRequest;
 import com.hf.core.model.po.*;
 import com.hf.core.utils.CipherUtils;
-import org.apache.commons.httpclient.Header;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -50,9 +46,9 @@ public class WwTradingBiz extends AbstractTradingBiz {
     @Autowired
     private PayRequestDao payRequestDao;
     @Autowired
-    private UserGroupDao userGroupDao;
+    private SettleService settleService;
     @Autowired
-    private CallBackClient callBackClient;
+    private AccountOprLogDao accountOprLogDao;
 
     private static final BASE64Decoder decoder = new BASE64Decoder();
 
@@ -296,5 +292,36 @@ public class WwTradingBiz extends AbstractTradingBiz {
 //            resultMap.put("status",5);
 //        }
         return resultMap;
+    }
+
+    public void agentPay(SettleTask settleTask,AccountOprLog accountOprLog) {
+        String orderNum = String.valueOf(accountOprLog.getId());
+        String bankCode = settleTask.getBankCode();
+        String bankAccount = settleTask.getBankNo();
+        String accountName = settleTask.getOwner();
+        String certNo = settleTask.getIdNo();
+        String tel = settleTask.getTel();
+
+        Map<String,Object> map = MapUtils.buildMap("orderNum",orderNum,
+                "bankCode",bankCode,
+                "bankAccount",bankAccount,
+                "accountName",accountName,
+                "certNo",certNo,
+                "tel",tel,
+                "memberCode","9010000025",
+                "payFlag","1030",
+                "payMoney",accountOprLog.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_DOWN));
+
+        Map<String,Object> res = wwClient.agentPay(map);
+
+        String returnCode = String.valueOf(res.get("returnCode"));
+        String returnMsg = String.valueOf(res.get("returnMsg"));
+
+        if(StringUtils.equals("0000",returnCode)) {
+            accountOprLogDao.updateStatusById(accountOprLog.getId(),OprStatus.NEW.getValue(),OprStatus.PAY_SUCCESS.getValue());
+        } else {
+            logger.error("代付失败,"+returnCode+","+returnMsg);
+            throw new BizFailException("code:"+returnCode+",msg:"+returnMsg);
+        }
     }
 }

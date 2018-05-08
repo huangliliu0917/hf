@@ -13,9 +13,14 @@
     <result column="provider_code" property="providerCode" jdbcType="VARCHAR" />
     <result column="provider_name" property="providerName" jdbcType="VARCHAR" />
     <result column="provider_no" property="providerNo" jdbcType="VARCHAR" />
+    <result column="min_price" property="minPrice" jdbcType="DECIMAL" />
+    <result column="max_price" property="maxPrice" jdbcType="DECIMAL" />
+    <result column="start_hour" property="startHour" jdbcType="INTEGER" />
+    <result column="stop_hour" property="stopHour" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id,code, channel_code,channel_name,channel_desc,fee_rate,url,status,provider_code,provider_name,provider_no
+    ,min_price,max_price,start_hour,stop_hour
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -64,6 +69,18 @@
       <if test="providerNo != null" >
         provider_no,
       </if>
+      <if test="minPrice != null" >
+        min_price,
+      </if>
+      <if test="maxPrice != null" >
+        max_price,
+      </if>
+      <if test="startHour != null" >
+        start_hour,
+      </if>
+      <if test="stopHour != null" >
+        stop_hour,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -99,6 +116,18 @@
       <if test="providerNo != null" >
         #{providerNo,jdbcType=VARCHAR},
       </if>
+      <if test="minPrice != null" >
+        #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="maxPrice != null" >
+        #{maxPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startHour != null" >
+        #{startHour,jdbcType=INTEGER},
+      </if>
+      <if test="stopHour != null" >
+        #{stopHour,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.Channel" >
@@ -124,6 +153,18 @@
       </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="minPrice != null" >
+        min_price = #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="maxPrice != null" >
+        max_price = #{maxPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startHour != null" >
+        start_hour = #{startHour,jdbcType=INTEGER},
+      </if>
+      <if test="stopHour != null" >
+        stop_hour = #{stopHour,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

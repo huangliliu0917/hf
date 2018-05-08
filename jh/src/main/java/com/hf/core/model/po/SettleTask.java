@@ -9,7 +9,6 @@ public class SettleTask {
     private Long id;
     @Field(required = true)
     private Long groupId;
-
     private Long accountId;
     @Field(required = true)
     private Long settleBankCard;
@@ -23,6 +22,12 @@ public class SettleTask {
     private String bankNo;
     @Field(required = true)
     private String owner;
+    @Field(required = true)
+    private String bankCode;
+    @Field(required = true)
+    private String idNo;
+    @Field(required = true)
+    private String tel;
 
     private BigDecimal feeRate;
 
@@ -35,6 +40,10 @@ public class SettleTask {
     private BigDecimal fee;
 
     private BigDecimal payAmount;
+
+    private BigDecimal paidAmount;
+
+    private BigDecimal lockAmount;
 
     private Integer status;
 
@@ -194,5 +203,45 @@ public class SettleTask {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public BigDecimal getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(BigDecimal paidAmount) {
+        this.paidAmount = paidAmount;
+    }
+
+    public BigDecimal getLockAmount() {
+        return lockAmount;
+    }
+
+    public void setLockAmount(BigDecimal lockAmount) {
+        this.lockAmount = lockAmount;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 }

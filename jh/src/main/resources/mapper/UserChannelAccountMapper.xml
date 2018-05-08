@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hf.core.dao.local.UserChannelAccountDao" >
+  <resultMap id="BaseResultMap" type="com.hf.core.model.po.UserChannelAccount" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="account_id" property="accountId" jdbcType="BIGINT" />
+    <result column="channel_provider" property="channelProvider" jdbcType="VARCHAR" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="lock_amount" property="lockAmount" jdbcType="DECIMAL" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="paid_amount" property="paidAmount" jdbcType="DECIMAL" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, account_id, channel_provider, channel_code, amount, lock_amount, version, 
+    create_time, update_time, paid_amount, total_amount
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_channel_account
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_channel_account
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hf.core.model.po.UserChannelAccount" >
+    insert into user_channel_account (id, group_id, account_id, 
+      channel_provider, channel_code, amount, 
+      lock_amount, version, create_time, 
+      update_time, paid_amount, total_amount
+      )
+    values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, 
+      #{channelProvider,jdbcType=VARCHAR}, #{channelCode,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
+      #{lockAmount,jdbcType=DECIMAL}, #{version,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{paidAmount,jdbcType=DECIMAL}, #{totalAmount,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hf.core.model.po.UserChannelAccount" >
+    insert into user_channel_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="channelProvider != null" >
+        channel_provider,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="lockAmount != null" >
+        lock_amount,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="paidAmount != null" >
+        paid_amount,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="channelProvider != null" >
+        #{channelProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="lockAmount != null" >
+        #{lockAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paidAmount != null" >
+        #{paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hf.core.model.po.UserChannelAccount" >
+    update user_channel_account
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="channelProvider != null" >
+        channel_provider = #{channelProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="lockAmount != null" >
+        lock_amount = #{lockAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paidAmount != null" >
+        paid_amount = #{paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hf.core.model.po.UserChannelAccount" >
+    update user_channel_account
+    set group_id = #{groupId,jdbcType=BIGINT},
+      account_id = #{accountId,jdbcType=BIGINT},
+      channel_provider = #{channelProvider,jdbcType=VARCHAR},
+      channel_code = #{channelCode,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      lock_amount = #{lockAmount,jdbcType=DECIMAL},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      paid_amount = #{paidAmount,jdbcType=DECIMAL},
+      total_amount = #{totalAmount,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByUnq" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel_account
+    where group_id = #{groupId,jdbcType=BIGINT}
+    and channel_provider = #{channelProvider,jdbcType=VARCHAR}
+  </select>
+
+  <update id="addAmount">
+    update user_channel_account
+    set
+    amount = amount + #{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1,
+    total_amount = total_amount + #{amount,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+  </update>
+
+  <update id="lockAmount">
+    update user_channel_account
+    set
+    lock_amount = lock_amount+#{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER} and amount >= lock_amount+#{amount,jdbcType=DECIMAL}
+  </update>
+
+  <update id="unlock">
+    update user_channel_account
+    set
+    lock_amount = lock_amount-#{amount,jdbcType=DECIMAL},
+    version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER} and amount >= lock_amount-#{amount,jdbcType=DECIMAL}
+    and lock_amount-#{amount,jdbcType=DECIMAL}>=0
+  </update>
+
+  <select id="getBidding" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel_account
+    where group_id = #{groupId,jdbcType=BIGINT}
+    and amount-lock_amount>0
+    order by abs(amount-lock_amount-#{bidAmount,jdbcType=DECIMAL}) , id desc
+  </select>
+
+  <update id="finish">
+    update user_channel_account
+    set
+      amount = amount-#{amount,jdbcType=DECIMAL},
+      lock_amount = lock_amount-#{amount,jdbcType=DECIMAL},
+      paid_amount = paid_amount+#{amount,jdbcType=DECIMAL},
+      version = #{version,jdbcType=INTEGER}+1
+    where id = #{id,jdbcType=BIGINT} and version = #{version,jdbcType=INTEGER}
+          and amount-#{amount,jdbcType=DECIMAL}>=0
+          and lock_amount-#{amount,jdbcType=DECIMAL}>=0
+  </update>
+
+  <select id="selectByGroupId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_channel_account
+    where group_id = #{groupId,jdbcType=BIGINT}
+  </select>
+</mapper>

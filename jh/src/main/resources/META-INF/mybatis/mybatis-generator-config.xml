@@ -37,7 +37,7 @@
 		</javaClientGenerator>
 
 		<!-- 正式生成之前需要删除 此事例 -->
-		<table tableName="pay_request_back" domainObjectName="PayRequestBack"
+		<table tableName="agent_pay_log" domainObjectName="AgentPayLog"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false">

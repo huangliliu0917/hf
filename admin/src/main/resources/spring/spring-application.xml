@@ -85,6 +85,8 @@
 				<entry key="admin_sales_index" value-ref="adminSalesIndexDispatcher"/>
 				<entry key="admin_add_sale" value-ref="adminAddSaleDispatcher"/>
 				<entry key="edit_sub_group" value-ref="editSubGroupDispatcher"/>
+				<entry key="new_agent_pay" value-ref="newAgentPayDispatcher"/>
+				<entry key="admin_withdrawal" value-ref="adminWithdrawalDispatcher"/>
 			</map>
 		</constructor-arg>
 	</bean>

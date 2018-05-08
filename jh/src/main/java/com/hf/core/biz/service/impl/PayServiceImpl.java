@@ -19,7 +19,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -134,6 +133,8 @@ public class PayServiceImpl implements PayService {
             accountOprLog.setOutTradeNo(payRequest.getOutTradeNo());
             Account account = groupAccountMap.get(group.getId());
             accountOprLog.setAccountId(account.getId());
+            accountOprLog.setService(payRequest.getService());
+            accountOprLog.setProviderCode(payRequest.getChannelProviderCode());
         }
 
         int count = accountOprLogDao.batchInsert(logs);

@@ -2,10 +2,7 @@ package com.hf.base.contants;
 
 import com.hf.base.utils.MapUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Constants {
     public static final String USER_LOGIN_INFO = "user_login_info";
@@ -34,6 +31,7 @@ public class Constants {
     public static final String SETTLE_FEE_RATE = "settle_fee_rate";
 
     public static final List<Map<String,String>> bankCodeList = new ArrayList<>();
+    public static final Map<String,String> bankMap = new HashMap<>();
 
     static {
         bankCodeList.add(MapUtils.buildMap("ICBC","中国工商银行"));
@@ -61,5 +59,31 @@ public class Constants {
         bankCodeList.add(MapUtils.buildMap("ZHTLCB","浙江泰隆商业银行"));
         bankCodeList.add(MapUtils.buildMap("BEA","东亚银行"));
         bankCodeList.add(MapUtils.buildMap("HZB","杭州银行"));
+
+        bankMap.put("ICBC","中国工商银行");
+        bankMap.put("ABC","中国农业银行");
+        bankMap.put("BOC","中国银行");
+        bankMap.put("CCB","中国建设银行");
+        bankMap.put("BOCOM","交通银行");
+        bankMap.put("CMB","招商银行");
+        bankMap.put("CEB","光大银行");
+        bankMap.put("CMBC","民生银行");
+        bankMap.put("PSBC","中国邮政储蓄银行");
+        bankMap.put("SPDB","浦发银行");
+        bankMap.put("CNCB","中信银行");
+        bankMap.put("PAB","平安银行");
+        bankMap.put("HXB","华夏银行");
+        bankMap.put("CIB","兴业银行");
+        bankMap.put("BOHC","渤海银行");
+        bankMap.put("BCCB","北京银行");
+        bankMap.put("GDB","广发银行");
+        bankMap.put("BOS","上海银行");
+        bankMap.put("ZSBC","浙商银行");
+        bankMap.put("NBBC","宁波银行");
+        bankMap.put("NJBC","南京银行");
+        bankMap.put("BRCB","北京农村商业银行");
+        bankMap.put("ZHTLCB","浙江泰隆商业银行");
+        bankMap.put("BEA","东亚银行");
+        bankMap.put("HZB","杭州银行");
     }
 }

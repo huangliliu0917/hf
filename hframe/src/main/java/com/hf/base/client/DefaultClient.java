@@ -38,6 +38,7 @@ public class DefaultClient extends BaseClient {
     private static final String GET_WITHDRAW_FEE_RATE = "/user/get_withdraw_fee_rate";
     private static final String NEW_SETTLE_REQUEST = "/settle/new_settle_request";
     private static final String GET_WITH_DRAW_PAGE = "/settle/get_with_draw_page";
+    private static final String GET_SETTLE_TASK = "/settle/get_settle_task";
     private static final String GET_USER_CHANNEL_LIST = "/user/get_user_channel_list";
     private static final String GET_SUM_LOCK_AMOUNT = "/user/get_sum_lock_amount";
     private static final String GET_ADMIN_ACCOUNT_BY_GROUP_ID = "/user/get_admin_account_by_group_id";
@@ -227,9 +228,11 @@ public class DefaultClient extends BaseClient {
         throw new BizFailException(response.getCode(),response.getMsg());
     }
 
-    public Boolean newSettleRequest(Long groupId,BigDecimal amount,String bank,String deposit,String owner,String bankNo) {
+    public Boolean newSettleRequest(Long groupId,BigDecimal amount,String bank,String deposit,String owner,String bankNo,String bankCode,String tel,String idNo) {
         RemoteParams remoteParams = new RemoteParams(url).withPath(NEW_SETTLE_REQUEST).withParam("groupId",groupId).withParam("settleAmount",amount).withParam("bank",bank)
-                .withParam("deposit",deposit).withParam("owner",owner).withParam("bankNo",bankNo);
+                .withParam("deposit",deposit).withParam("owner",owner).withParam("bankNo",bankNo).withParam("bankCode",bankCode)
+                .withParam("tel",tel)
+                .withParam("idNo",idNo);
         String result = super.post(remoteParams);
         ResponseResult<Boolean> response = new Gson().fromJson(result,new TypeToken<ResponseResult<Boolean>>(){}.getType());
         if(response.isSuccess()) {
@@ -360,5 +363,12 @@ public class DefaultClient extends BaseClient {
             return response.getData();
         }
         throw new BizFailException(response.getCode(),response.getMsg());
+    }
+
+    public SettleTask getSettleTask(String withDrawId) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_SETTLE_TASK).withParam("withDrawId",withDrawId);
+        String result = super.post(remoteParams);
+        ResponseResult<SettleTask> responseResult = new Gson().fromJson(result,new TypeToken<ResponseResult<SettleTask>>(){}.getType());
+        return responseResult.getData();
     }
 }

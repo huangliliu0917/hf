@@ -96,6 +96,7 @@
                     <li><a href="#springUrl('/common/admin_withdrawal_setting')" class="J_menuItem">提款设置</a></li>
                     <li><a href="#springUrl('/common/admin_withdrawal_index')" class="J_menuItem">提款管理</a></li>
                     <li><a href="#springUrl('/common/admin_withdrawal_payment')" class="J_menuItem">代付管理</a></li>
+                    <li><a href="#springUrl('/common/admin_withdrawal')" class="J_menuItem">提现申请</a></li>
                 </ul>
                 </li>
             </li>

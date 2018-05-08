@@ -13,10 +13,12 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="service" property="service" jdbcType="VARCHAR" />
+    <result column="provider_code" property="providerCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, group_id, account_id, out_trade_no, amount, `type`, `status`, remark, create_time, 
-    update_time, version
+    update_time, version,service,provider_code
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -74,6 +76,12 @@
       <if test="version != null" >
         version,
       </if>
+      <if test="service != null" >
+        service,
+      </if>
+      <if test="providerCode != null" >
+        provider_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -108,6 +116,12 @@
       </if>
       <if test="version != null" >
         #{version,jdbcType=INTEGER},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="providerCode != null" >
+        #{providerCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -169,7 +183,9 @@
     out_trade_no,
     amount,
     `type`,
-    remark)
+    remark,
+    service,
+    provider_code)
     values
     <foreach collection ="list" item="log" index= "index" separator =",">
       (
@@ -178,7 +194,9 @@
       #{log.outTradeNo},
       #{log.amount},
       #{log.type},
-      #{log.remark}
+      #{log.remark},
+      #{log.service},
+      #{log.providerCode}
       )
     </foreach >
   </insert>
@@ -317,5 +335,16 @@
       </foreach>
     </if>
     and create_time >= curdate()
+  </select>
+
+  <select id="getGroupAmount" resultType="java.util.Map">
+    select t1.group_id as "groupId",
+           t2.channel_provider_code as "channelProviderCode",
+           sum(t1.amount) as "amount"
+    from account_opr_log t1 left join pay_request t2
+          on t1.out_trade_no = t2.out_trade_no
+    where t1.type = #{type,jdbcType=INTEGER}
+          and t1.status = 10 and t1.group_id = #{groupId,jdbcType=BIGINT}
+    group by t1.group_id,t2.channel_provider_code order by t1.group_id desc
   </select>
 </mapper>

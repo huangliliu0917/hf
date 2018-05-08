@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html><head><link id="layuicss-laydate" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/laydate/default/laydate.css?v=5.0.2')" media="all"><link id="layuicss-layer" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/layer/default/layer.css?v=3.0.3')" media="all"><link id="layuicss-skincodecss" rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/modules/code.css')" media="all"></head><body class="gray-bg"><div class="bread"><span class="bread-title">您的当前位置 : </span>提款管理 &gt;&gt; 提款管理</div>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>慧富宝支付系统---管理</title>
+    <link rel="shortcut icon" href="#springUrl('/favicon.ico')">
+    <link href="#springUrl('/Public/Front/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/font-awesome.min.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/animate.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Front/css/style.css')" rel="stylesheet">
+    <link href="#springUrl('/Public/Admin/css/style.css')" rel="stylesheet">
+    <link rel="stylesheet" href="#springUrl('/Public/Front/js/plugins/layui/css/layui.css')">
+    <style>
+        .layui-form-label {width:110px;padding:4px}
+        .layui-form-item .layui-form-checkbox[lay-skin="primary"]{margin-top:0;}
+        .layui-form-switch {width:54px;margin-top:0px;}
+    </style>
+
+
+<div class="wrapper wrapper-content animated">
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="ibox float-e-margins">
+            <!--条件查询-->
+            <div class="ibox-title">
+                <h5>发起代付</h5>
+                <div class="ibox-tools">
+                    <i class="layui-icon" onclick="location.replace(location.href);" title="刷新" style="cursor:pointer;">ဂ</i>
+                </div>
+            </div>
+            <!--条件查询-->
+            <div class="ibox-content">
+                <!--交易列表-->
+                <table class="layui-table" lay-data="{width:'100%',id:'userData'}">
+                    <thead>
+                    <tr>
+                        <th lay-data="{field:'agent', width:110}">通道</th>
+                        <th lay-data="{field:'amount', width:100}">金额</th>
+                        <th lay-data="{field:'payType', width:100}">付款类型</th>
+                        <th lay-data="{field:'payStatus', width:100}">状态</th>
+                        <th lay-data="{field:'op',width:250}">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($data in ${datas})
+                        <tr>
+                            <td>${data.provider}</td>
+                            <td>${data.amount}</td>
+                            <td>${data.type}</td>
+                            <td>${data.statusDesc}</td>
+                            <td>
+                            <div class="layui-btn-group">
+                                #if(${data.status}==0) {
+                                    <button class="layui-btn layui-btn-small lineblud" onclick="submit_agent_pay(${data.id})">发起付款</button>
+                                #end
+                            </div>
+                            </td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+            <button class="layui-btn" onclick="submit_agent_pay(${taskId})">确认代付</button>
+        </div>
+    </div>
+</div>
+</div>
+<script src="#springUrl('/Public/Front/js/jquery.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/bootstrap.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/peity/jquery.peity.min.js')"></script>
+<script src="#springUrl('/Public/Front/js/content.js')"></script>
+<script src="#springUrl('/Public/Front/js/plugins/layui/layui.all.js')" charset="utf-8"></script>
+<script src="#springUrl('/Public/Front/js/x-layui.js')" charset="utf-8"></script>
+<script>
+    function submit_agent_pay(id) {
+        jQuery.ajax({
+            url:"#springUrl('/user/submit_agent_pay')",
+            type:"POST",
+            data:'taskId='+id,
+            success:function(res){
+                if(res.status){
+                    layer.alert("提交成功", {icon: 6},function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(res.msg?res.msg:"操作失败!", {icon: 5},function () {
+                        location.reload();
+                    });
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+
+</body></html>

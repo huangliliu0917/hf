@@ -41,6 +41,7 @@ public class WwClient extends BaseClient implements PayClient {
     private static final String QR_PAY_URL = "http://47.97.175.195:8682/posp/cashierDesk/qrcodePay";
     private static final String AGENT_PAY_APPLY = "http://47.97.175.195:8682/posp/agentPay/toApply";
     private static final String QUERY_AGENT_AMOUNT = "http://47.97.175.195:8682/posp/agentPay/balance";
+    private static final String AGENT_PAY_URL = "http://47.97.175.195:8682/posp/agentPay/toApply";
 
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
@@ -175,11 +176,24 @@ public class WwClient extends BaseClient implements PayClient {
     public Map<String,Object> getAgentAmount(Map<String,Object> params) {
         try {
             String msg = new Httpz("utf-8", 30000, 30000).post(QUERY_AGENT_AMOUNT, params);
-            logger.info("agent pay apply result:"+msg);
-            return new Gson().fromJson(msg,new TypeToken<Map<String,Object>>(){}.getType());
+            logger.info("agent pay apply result:" + msg);
+            return new Gson().fromJson(msg, new TypeToken<Map<String, Object>>() {
+            }.getType());
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new HashMap<>();
+        }
+    }
+
+    public Map<String,Object> agentPay(Map<String, Object> params) {
+        String sign = EpaySignUtil.sign(CipherUtils.private_key, Utils.getEncryptStr(params));
+        params.put("signStr",sign);
+        try {
+            String result = new com.hfb.merchant.quick.util.http.Httpz("utf-8", 30000, 30000).post(AGENT_PAY_URL, params);
+            return new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new BizFailException(e);
         }
     }
 }
