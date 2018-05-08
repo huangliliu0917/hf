@@ -35,6 +35,9 @@ public class TradeBizFactory {
     @Autowired
     @Qualifier("zfTradingBiz")
     private TradingBiz zfTradingBiz;
+    @Autowired
+    @Qualifier("whpTradingBiz")
+    private TradingBiz whpTradingBiz;
 
     public TradingBiz getTradingBiz(String providerCode) {
         ChannelProvider channelProvider = ChannelProvider.parse(providerCode);
@@ -83,6 +86,10 @@ public class TradeBizFactory {
 
             if(ChannelProvider.ZF == provider) {
                 return zfTradingBiz;
+            }
+
+            if(ChannelProvider.WHP == provider) {
+                return whpTradingBiz;
             }
         }
         throw new BizFailException("用户无收单权限");

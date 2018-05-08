@@ -86,6 +86,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>whpPayCallBack</servlet-name>
+    <servlet-class>com.hf.core.api.WhpCallBack</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>whpPayCallBack</servlet-name>
+    <url-pattern>/payCallBack/whp</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>verify</servlet-name>
     <servlet-class>com.hf.core.callback.quik.VerifyCodeServlet</servlet-class>
   </servlet>

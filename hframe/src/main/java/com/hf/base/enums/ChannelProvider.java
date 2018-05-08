@@ -7,7 +7,8 @@ public enum  ChannelProvider {
     FXT("fxt","富信通"),
     WW("ww","微微"),
     HFB("hfb","合付宝"),
-    ZF("zf","中付");
+    ZF("zf","中付"),
+    WHP("whp","微互宝");
 
     private String code;
     private String name;
