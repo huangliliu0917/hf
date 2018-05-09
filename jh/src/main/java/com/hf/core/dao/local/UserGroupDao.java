@@ -40,4 +40,6 @@ public interface UserGroupDao {
     UserGroup selectByNo(@Param("groupNo") String groupNo);
 
     List<UserGroup> selectByIds(@Param("ids") Set<Long> ids);
+
+    int selectCount(Map<String, Object> map);
 }

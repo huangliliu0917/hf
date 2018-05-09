@@ -350,11 +350,11 @@ public class DefaultClient extends BaseClient {
         return parseResult(result);
     }
 
-    public Pagenation<UserGroupDto> getUserGroupOfAgent(String groupId,String status,String merchant,String createTime) {
-        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_USER_GROUP_OF_AGENT).withParam("groupId",groupId).withParam("status",status).withParam("merchant",merchant).withParam("createTime",createTime);
+    public Pagenation<UserGroupDto> getUserGroupOfAgent(SubGroupRequest subGroupRequest) {
+        RemoteParams remoteParams = new RemoteParams(url).withPath(GET_USER_GROUP_OF_AGENT).withParams(MapUtils.beanToMap(subGroupRequest));
         String result = super.post(remoteParams);
-        Pagenation<UserGroupDto> pagenation = new Gson().fromJson(result,new TypeToken<Pagenation<UserGroupDto>>(){}.getType());
-        return pagenation;
+        ResponseResult<Pagenation<UserGroupDto>> responseResult = new Gson().fromJson(result,new TypeToken<ResponseResult<Pagenation<UserGroupDto>>>(){}.getType());
+        return responseResult.getData();
     }
 
     private boolean parseResult(String result) {

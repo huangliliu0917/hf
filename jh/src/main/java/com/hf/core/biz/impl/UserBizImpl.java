@@ -3,7 +3,10 @@ package com.hf.core.biz.impl;
 import com.hf.base.enums.*;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.SalesManDto;
+import com.hf.base.model.SubGroupRequest;
 import com.hf.base.model.UserChannelPage;
+import com.hf.base.utils.MapUtils;
+import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.SegmentLock;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.UserBiz;
@@ -25,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -480,5 +480,54 @@ public class UserBizImpl implements UserBiz {
         if(count<=0) {
             throw new BizFailException("更新失败");
         }
+    }
+
+    @Override
+    public Pagenation<UserGroupDto> getSubUserGroups(SubGroupRequest subGroupRequest) {
+        Map<String,Object> map = MapUtils.beanToMap(subGroupRequest);
+        List<UserGroup> subUserGroups = userService.getChildMchIds(subGroupRequest.getId());
+        List<Long> subIds = subUserGroups.parallelStream().map(UserGroup::getId).collect(Collectors.toList());
+
+        map.put("groupIds",subIds);
+        if(StringUtils.isNotEmpty(subGroupRequest.getName())) {
+            map.put("user",subGroupRequest.getName());
+        }
+        map.put("startIndex",(subGroupRequest.getPageIndex()-1)*subGroupRequest.getPageSize());
+        map.put("pageSize",subGroupRequest.getPageSize());
+
+        int totalSize = userGroupDao.selectCount(map);
+
+        List<UserGroup> userGroups = userGroupDao.select(map);
+
+        List<UserGroupDto> list = new ArrayList<>();
+
+        userGroups.stream().forEach(userGroup -> list.add(buildGroupDto(userGroup)));
+
+        Pagenation<UserGroupDto> pagenation = new Pagenation<UserGroupDto>(list,totalSize,subGroupRequest.getPageIndex(),subGroupRequest.getPageSize());
+        return pagenation;
+    }
+
+    private UserGroupDto buildGroupDto(UserGroup userGroup) {
+        UserGroupDto userGroupDto = new UserGroupDto();
+        userGroupDto.setCompanyId(userGroup.getCompanyId());
+        Account account = accountDao.selectByGroupId(userGroup.getId());
+        if(!Objects.isNull(account)) {
+            userGroupDto.setAmount(account.getAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+            userGroupDto.setLockAmount(account.getLockAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        } else {
+            userGroupDto.setAmount(new BigDecimal("0"));
+            userGroupDto.setLockAmount(new BigDecimal("0"));
+        }
+        userGroupDto.setCreateTime(userGroup.getCreateTime());
+        userGroupDto.setGroupNo(userGroup.getGroupNo());
+        userGroupDto.setId(userGroup.getId());
+        userGroupDto.setName(userGroup.getName());
+        userGroupDto.setStatus(userGroup.getStatus());
+        userGroupDto.setStatusDesc(GroupStatus.parse(userGroup.getStatus()).name());
+        userGroupDto.setSubGroupId(userGroup.getSubGroupId());
+        userGroupDto.setSubGroupName(userGroup.getSubGroupName());
+        userGroupDto.setSubGroupNo(userGroup.getSubGroupNo());
+        userGroupDto.setType(GroupType.parse(userGroup.getType()).getDesc());
+        return userGroupDto;
     }
 }

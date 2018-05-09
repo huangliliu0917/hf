@@ -35,7 +35,7 @@ public class UserAccountChangeRecordDispatcher implements Dispatcher {
         Pagenation<AccountOprInfo> pagenation = client.getAccountOprLogList(accountOprRequest);
 
         pagenation.getData().forEach(accountOprInfo -> {
-            accountOprInfo.setAmount(accountOprInfo.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            accountOprInfo.setAmount(accountOprInfo.getAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
             try {
                 accountOprInfo.setOutTradeNo(accountOprInfo.getOutTradeNo().split("_")[1]);
             } catch (Exception e) {

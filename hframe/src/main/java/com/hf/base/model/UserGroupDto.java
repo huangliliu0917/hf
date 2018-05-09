@@ -124,4 +124,20 @@ public class UserGroupDto {
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 }

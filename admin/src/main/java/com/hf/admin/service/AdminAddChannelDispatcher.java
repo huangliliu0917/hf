@@ -29,8 +29,8 @@ public class AdminAddChannelDispatcher implements Dispatcher {
         String channelId = request.getParameter("channelId");
         if(!StringUtils.isEmpty(channelId)) {
             Channel channel = defaultClient.getChannelById(channelId);
-            BigDecimal maxPrice = channel.getMaxPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
-            BigDecimal minPrice = channel.getMinPrice().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            BigDecimal maxPrice = channel.getMaxPrice().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP);
+            BigDecimal minPrice = channel.getMinPrice().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP);
             channel.setMaxPrice(maxPrice);
             channel.setMinPrice(minPrice);
             dispatchResult.addObject("channel",channel);

@@ -1,6 +1,6 @@
 package com.hf.admin.service;
 
-import com.hf.admin.rpc.AdminClient;
+import com.hf.base.client.AdminClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.Dispatcher;
 import com.hf.base.model.AdminBankCard;
@@ -21,7 +21,7 @@ public class AdminBankDispatcher implements Dispatcher {
         String channelNo = request.getParameter("channelNo");
         List<AdminBankCard> list = client.getAdminBankCardList(groupId,channelNo);
         list.stream().forEach(adminBankCard -> {
-            adminBankCard.setLimitAmount(adminBankCard.getLimitAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            adminBankCard.setLimitAmount(adminBankCard.getLimitAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         });
         DispatchResult dispatchResult = new DispatchResult();
         dispatchResult.setPage(page);

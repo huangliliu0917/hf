@@ -97,14 +97,14 @@ public class AccountBizImpl implements AccountBiz {
 
     private AccountPageInfo buildPageInfo(Account account,Map<Long,UserGroup> groupMap) {
         AccountPageInfo accountPageInfo = new AccountPageInfo();
-        accountPageInfo.setAmount( (account.getAmount().subtract(account.getLockAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        accountPageInfo.setLockAmount(account.getLockAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        accountPageInfo.setAmount( (account.getAmount().subtract(account.getLockAmount())).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        accountPageInfo.setLockAmount(account.getLockAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         List<AccountOprLog> logs = accountOprLogDao.selectByGroupId(account.getId(), OprType.getAddList(), Arrays.asList(OprStatus.PAY_SUCCESS.getValue()));
         BigDecimal processingAmount = logs.parallelStream().map(AccountOprLog::getAmount).reduce(new BigDecimal("0"),BigDecimal::add);
-        accountPageInfo.setProcessingAmount(processingAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        accountPageInfo.setTotalAmount(null==account.getTotalAmount()?new BigDecimal("0"):account.getTotalAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        accountPageInfo.setTotalSettleAmount(account.getPaidAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        accountPageInfo.setTotalFee(account.getFee().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        accountPageInfo.setProcessingAmount(processingAmount.divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        accountPageInfo.setTotalAmount(null==account.getTotalAmount()?new BigDecimal("0"):account.getTotalAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        accountPageInfo.setTotalSettleAmount(account.getPaidAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        accountPageInfo.setTotalFee(account.getFee().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         accountPageInfo.setCreateTime(account.getCreateTime());
         accountPageInfo.setGroupId(account.getGroupId());
         accountPageInfo.setGroupType(groupMap.get(account.getGroupId()).getType());
@@ -156,17 +156,17 @@ public class AccountBizImpl implements AccountBiz {
 
     private AdminAccountPageInfo buildAdminAccountInfo(AdminAccount adminAccount,Map<Long,UserGroup> groupMap,Map<Long,Account> accountMap) {
         AdminAccountPageInfo adminAccountPageInfo = new AdminAccountPageInfo();
-        adminAccountPageInfo.setAmount(adminAccount.getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        adminAccountPageInfo.setPaidAmount(adminAccount.getPaidAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        adminAccountPageInfo.setCompanyAmount(accountMap.get(adminAccount.getGroupId()).getAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        adminAccountPageInfo.setCustomerAmount((adminAccount.getAmount().subtract(accountMap.get(adminAccount.getGroupId()).getAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setAmount(adminAccount.getAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setPaidAmount(adminAccount.getPaidAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setCompanyAmount(accountMap.get(adminAccount.getGroupId()).getAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setCustomerAmount((adminAccount.getAmount().subtract(accountMap.get(adminAccount.getGroupId()).getAmount())).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
 
         List<AccountOprLog> logs = accountOprLogDao.selectByGroupId(accountMap.get(adminAccount.getGroupId()).getId(), OprType.getAddList(), Arrays.asList(OprStatus.PAY_SUCCESS.getValue()));
         BigDecimal processingAmount = logs.parallelStream().map(AccountOprLog::getAmount).reduce(new BigDecimal("0"),BigDecimal::add);
 
-        adminAccountPageInfo.setProcessingAmount(processingAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        adminAccountPageInfo.setTotalAmount(adminAccount.getTotalAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        adminAccountPageInfo.setWithdrawAmount(adminAccount.getLockAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setProcessingAmount(processingAmount.divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setTotalAmount(adminAccount.getTotalAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        adminAccountPageInfo.setWithdrawAmount(adminAccount.getLockAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         adminAccountPageInfo.setCreateTime(adminAccount.getCreateTime());
         adminAccountPageInfo.setUpdateTime(adminAccount.getUpdateTime());
         adminAccountPageInfo.setId(adminAccount.getId());

@@ -47,6 +47,10 @@
 		<constructor-arg value="${hf}"></constructor-arg>
 	</bean>
 
+	<bean class="com.hf.base.client.AdminClient">
+		<constructor-arg value="${hf}"></constructor-arg>
+	</bean>
+
 	<bean id="defaultDispatcher" class="com.hf.base.dispatcher.DefaultDispatcher"></bean>
 
 	<bean id="dispatcherFactory" class="com.hf.base.dispatcher.DefaultDispatcherFactory">
@@ -60,7 +64,7 @@
 				<entry key="agent_withdraw" value-ref="agentWithdrawDispatcher"/>
 				<entry key="agent_withdraw_record" value-ref="agentWithdrawRecordDispatcher"/>
 				<entry key="user_account_info" value-ref="userAccountDispatcher"/>
-				<entry key="agent_member" value="agentMemberDispatcher"/>
+				<entry key="agent_member" value-ref="agentMemberDispatcher"/>
 			</map>
 		</constructor-arg>
 	</bean>

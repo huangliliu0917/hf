@@ -1,6 +1,6 @@
 package com.hf.admin.service;
 
-import com.hf.admin.rpc.AdminClient;
+import com.hf.base.client.AdminClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.Dispatcher;
 import com.hf.base.enums.ChannelCode;

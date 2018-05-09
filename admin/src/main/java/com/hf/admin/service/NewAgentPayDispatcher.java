@@ -1,18 +1,15 @@
 package com.hf.admin.service;
 
-import com.hf.admin.rpc.AdminClient;
+import com.hf.base.client.AdminClient;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.Dispatcher;
-import com.hf.base.enums.ChannelProvider;
 import com.hf.base.model.AgentPayLog;
 import com.hf.base.model.SettleTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

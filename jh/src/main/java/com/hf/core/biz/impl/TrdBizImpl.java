@@ -157,20 +157,20 @@ public class TrdBizImpl implements TrdBiz {
         tradeRequestDto.setOutTradeNo(payRequest.getOutTradeNo());
         tradeRequestDto.setType(payRequest.getTradeType());
 
-        tradeRequestDto.setActualAmount(payRequest.getActualAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        tradeRequestDto.setFee(payRequest.getFee().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        tradeRequestDto.setActualAmount(payRequest.getActualAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        tradeRequestDto.setFee(payRequest.getFee().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         if(payRequest.getActualAmount().compareTo(BigDecimal.ZERO)<=0) {
             if(null!=map.get(payRequest.getMchId())) {
                 List<AccountOprLog> accountOprLogs = accountOprLogDao.selectByUnq(payRequest.getOutTradeNo(),map.get(payRequest.getMchId()).getId(), OprType.PAY.getValue());
                 if(CollectionUtils.isNotEmpty(accountOprLogs)) {
                     BigDecimal totalAmount = accountOprLogs.stream().map(AccountOprLog::getAmount).reduce(new BigDecimal("0"),BigDecimal::add);
-                    tradeRequestDto.setActualAmount(totalAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-                    tradeRequestDto.setFee((new BigDecimal(payRequest.getTotalFee()).subtract(totalAmount)).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP) );
+                    tradeRequestDto.setActualAmount(totalAmount.divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+                    tradeRequestDto.setFee((new BigDecimal(payRequest.getTotalFee()).subtract(totalAmount)).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP) );
                 }
             }
         }
 
-        tradeRequestDto.setAmoun(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        tradeRequestDto.setAmoun(new BigDecimal(payRequest.getTotalFee()).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         tradeRequestDto.setSuccessTime(payRequest.getUpdateTime());
         tradeRequestDto.setTypeDesc(TradeType.parse(payRequest.getTradeType()).getDesc());
         tradeRequestDto.setService(payRequest.getService());
@@ -219,7 +219,7 @@ public class TrdBizImpl implements TrdBiz {
         Map<Long,UserStatistic> statisticMap = new TreeMap<>();
 
         results.forEach(map -> {
-            BigDecimal amount = new BigDecimal(String.valueOf(map.get("amount"))).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            BigDecimal amount = new BigDecimal(String.valueOf(map.get("amount"))).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP);
             Long groupId = Long.parseLong(String.valueOf(map.get("groupId")));
             String groupNo = String.valueOf(map.get("groupNo"));
             String name = String.valueOf(map.get("name"));

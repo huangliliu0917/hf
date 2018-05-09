@@ -1,6 +1,6 @@
 package com.hf.admin.api;
 
-import com.hf.admin.rpc.AdminClient;
+import com.hf.base.client.AdminClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.DispatcherFactory;
 import org.springframework.beans.factory.annotation.Autowired;

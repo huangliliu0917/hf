@@ -6,10 +6,12 @@ import com.hf.base.enums.GroupType;
 import com.hf.base.enums.UserStatus;
 import com.hf.base.enums.UserType;
 import com.hf.base.exceptions.BizFailException;
+import com.hf.base.model.SubGroupRequest;
 import com.hf.base.utils.*;
 import com.hf.core.biz.ChannelBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.dao.local.*;
+import com.hf.core.model.dto.UserGroupDto;
 import com.hf.core.model.po.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Assert;
@@ -278,5 +280,15 @@ public class UserTest extends BaseTestCase {
         userBiz.register(loginId,password,null,String.valueOf(userGroup.getId()));
         newUserGroup = userGroupDao.selectByPrimaryKey(userInfo.getGroupId());
         Assert.assertEquals(newUserGroup.getSubGroupId(),userGroup.getId());
+    }
+
+    @Test
+    public void testGetSubGroups() {
+        SubGroupRequest subGroupRequest = new SubGroupRequest();
+        subGroupRequest.setId(1L);
+        subGroupRequest.setPageSize(15);
+        subGroupRequest.setPageIndex(1);
+        Pagenation<UserGroupDto> pagenation = userBiz.getSubUserGroups(subGroupRequest);
+        System.out.println(new Gson().toJson(pagenation));
     }
 }

@@ -25,15 +25,15 @@ public class UserAccountInfoDispatcher implements Dispatcher {
         if(null == finishAmount) {
             dispatchResult.addObject("todayAmount",0);
         } else {
-            dispatchResult.addObject("todayAmount",finishAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            dispatchResult.addObject("todayAmount",finishAmount.divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         }
 
-        dispatchResult.addObject("totalAmount",(account.getAmount().add(account.getPaidAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        dispatchResult.addObject("totalAmount",(account.getAmount().add(account.getPaidAmount())).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
 
-        dispatchResult.addObject("amount",(account.getAmount().subtract(account.getLockAmount())).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        dispatchResult.addObject("amount",(account.getAmount().subtract(account.getLockAmount())).divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
 
-        dispatchResult.addObject("lockAmount",account.getLockAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
-        dispatchResult.addObject("paidAmount",account.getPaidAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+        dispatchResult.addObject("lockAmount",account.getLockAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
+        dispatchResult.addObject("paidAmount",account.getPaidAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
 
         return dispatchResult;
     }

@@ -75,47 +75,43 @@
                     <table class="layui-table" lay-data="{width:'100%',height:'332',id:'userData'}">
                         <thead>
                         <tr>
-                            <th lay-data="{field:'id',fixed: true,width:60}"></th>
+                            <th lay-data="{field:'id',fixed: true,width:80}"></th>
                             <th lay-data="{field:'memberid', width:80, sort: true, fixed: true}">商户号</th>
                             <th lay-data="{field:'username', width:120}">用户名</th>
                             <th lay-data="{field:'groupid', width:110}">用户类型</th>
-                            <th lay-data="{field:'status', width:80}">状态</th>
-                            <th lay-data="{field:'authorized', width:100}">认证</th>
+                            <th lay-data="{field:'status', width:110}">状态</th>
                             <th lay-data="{field:'money', width:240,style:'background-color: #00a0e9; color: #fff;'}">账户总额</th>
-                            <th lay-data="{field:'regdatetime', width:120}">注册时间</th>
+                            <th lay-data="{field:'regdatetime', width:160}">注册时间</th>
                             <th lay-data="{field:'op',width:130}">操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>29</td>
-                            <td>10029</td>
-                            <td>admin</td>
-                            <td>普通商户</td>
-                            <td>
-                                <input type="checkbox"
-                                       data-uid="29"
-                                       checked                                name="open"
-                                       lay-skin="switch"
-                                       lay-filter="switchStatus"
-                                       lay-text="正常|禁用">
-                            </td>
-                            <td>
-                                <span class="label label-warning">等待审核</span>                            </td>
-                            <td>
-                                <div title="用户资金管理">可提现：0.00 冻结：0.00</div>
-                            </td>
-                            <td><strong>2017-11-07</strong>
-                            </td>
-                            <td>
-                                <button class="layui-btn layui-btn-small"
-                                        onclick="member_rate('编辑费率','/agent_agent_userrateedit_uid_29.html',640,480)">费率</button>
-                                <button class="layui-btn layui-btn-small"
-                                        onclick="member_show('查看下级流水','/agent_agent_childord_userid_29.html',800,600)">查看
-                                </button>
-                            </td>
-
-                        </tr>            </tbody>
+                        #foreach($group in ${pagenation.data})
+                            <tr>
+                                <td>${group.id}</td>
+                                <td>${group.groupNo}</td>
+                                <td>${group.name}</td>
+                                <td>${group.type}</td>
+                                <td><input type="checkbox"
+                                           data-uid="29"
+                                           #if(${group.status}==10) checked
+                                           #end
+                                           name="open"
+                                           lay-skin="switch"
+                                           lay-filter="switchStatus"
+                                           lay-text="正常|未启用"></td>
+                                <td><div title="用户资金管理">可提现：${group.amount} 冻结：${group.lockAmount}</div></td>
+                                <td>$!date.format('yyyy-MM-dd HH:mm:ss ',${group.createTime})</td>
+                                <td>
+                                    <button class="layui-btn layui-btn-small"
+                                            onclick="member_rate('编辑通道','#springUrl("/common/user_channel_list?id=${group.id}")',640,480)">费率</button>
+                                    <button class="layui-btn layui-btn-small"
+                                            onclick="member_show('查看下级流水','/agent_agent_childord_userid_29.html',800,600)">查看
+                                    </button>
+                                </td>
+                            </tr>
+                        #end
+                        </tbody>
                     </table>
                     <!--用户列表-->
                 </div>

@@ -1,12 +1,9 @@
 package com.hf.admin.api;
 
-import com.hf.admin.model.UserGroupRequest;
-import com.hf.admin.model.UserInfoDto;
-import com.hf.admin.model.UserInfoRequest;
-import com.hf.admin.rpc.AdminClient;
 import com.hf.admin.rpc.UserClient;
 import com.hf.admin.utils.MapUtils;
 import com.hf.base.biz.CacheService;
+import com.hf.base.client.AdminClient;
 import com.hf.base.client.DefaultClient;
 import com.hf.base.contants.Constants;
 import com.hf.base.enums.ChannelCode;
@@ -30,10 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -238,7 +231,7 @@ public class AdminUserApi {
         String channelNo = request.getParameter("channelNo");
         List<AdminBankCard> list = adminClient.getAdminBankCardList(Long.parseLong(companyId),channelNo);
         list.stream().forEach(adminBankCard -> {
-            adminBankCard.setLimitAmount(adminBankCard.getLimitAmount().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            adminBankCard.setLimitAmount(adminBankCard.getLimitAmount().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         });
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin_bank_index");
@@ -513,7 +506,7 @@ public class AdminUserApi {
                 tsrd.setChannelProviderName(" ");
             }
         }
-        pagenation.getData().forEach(tradeStatisticsRequestDto -> tradeStatisticsRequestDto.setAmoun(tradeStatisticsRequestDto.getAmoun().divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP)));
+        pagenation.getData().forEach(tradeStatisticsRequestDto -> tradeStatisticsRequestDto.setAmoun(tradeStatisticsRequestDto.getAmoun().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP)));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin_order_statistics");
         modelAndView.addObject("pageInfo",pagenation);
@@ -767,7 +760,7 @@ public class AdminUserApi {
         AdminAccount account = client.getAdminAccountByGroupId(groupId);
         BigDecimal availableAmount = account.getAmount().subtract(account.getLockAmount());
         if(availableAmount.compareTo(settleAmount)<0) {
-            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg","最大结算结算金额:"+availableAmount.divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP));
+            return com.hf.base.utils.MapUtils.buildMap("status",false,"msg","最大结算结算金额:"+availableAmount.divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
         }
 
         try {

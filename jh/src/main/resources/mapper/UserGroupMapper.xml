@@ -253,8 +253,57 @@
     <if test="notStatus != null and notStatus!=''" >
       and status != #{notStatus,jdbcType=INTEGER}
     </if>
+    <if test="groupIds != null and groupIds.size() > 0" >
+      and id in
+    <foreach item="item" index="index" collection="groupIds" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    </if>
     and type != 4 and status != 101
     order by id desc
+    <if test="startIndex != null and startIndex!='' and pageSize != null and pageSize != ''" >
+      limit #{startIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+    select count(1)
+    from user_group
+    where 1=1
+    <if test="status != null and status != ''" >
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    <if test="user != null and user != ''" >
+      and (group_no like concat(concat('%',#{user,jdbcType=VARCHAR}),'%') or name like concat(concat('%',#{user,jdbcType=VARCHAR}),'%'))
+    </if>
+    <if test="agent != null and agent != ''" >
+      and (sub_group_no like concat(concat('%',#{agent,jdbcType=VARCHAR}),'%') or sub_group_name like concat(concat('%',#{agent,jdbcType=VARCHAR}),'%'))
+    </if>
+    <if test="companyId != null and companyId != ''" >
+      and company_id = #{companyId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null and type!=''" >
+      and type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="exceptGroupId != null" >
+      and id != #{exceptGroupId,jdbcType=BIGINT}
+    </if>
+    <if test="mchId != null" >
+      and group_no like concat(concat('%',#{mchId,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="name != null" >
+      and name like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="notStatus != null and notStatus!=''" >
+      and status != #{notStatus,jdbcType=INTEGER}
+    </if>
+    <if test="groupIds != null and groupIds.size() > 0" >
+      and id in
+      <foreach item="item" index="index" collection="groupIds" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    and type != 4 and status != 101
   </select>
 
   <select id="select1" resultMap="BaseResultMap" parameterType="java.util.HashMap" >

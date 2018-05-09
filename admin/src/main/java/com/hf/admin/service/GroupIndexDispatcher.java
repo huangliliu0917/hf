@@ -1,10 +1,10 @@
 package com.hf.admin.service;
 
-import com.hf.admin.model.UserGroupRequest;
-import com.hf.admin.rpc.AdminClient;
+import com.hf.base.client.AdminClient;
 import com.hf.base.dispatcher.DispatchResult;
 import com.hf.base.dispatcher.Dispatcher;
 import com.hf.base.model.UserGroup;
+import com.hf.base.model.UserGroupRequest;
 import com.hf.base.utils.Pagenation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

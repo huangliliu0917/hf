@@ -1,7 +1,10 @@
 package com.hf.core.biz;
 
 import com.hf.base.model.SalesManDto;
+import com.hf.base.model.SubGroupRequest;
 import com.hf.base.model.UserChannelPage;
+import com.hf.base.utils.Pagenation;
+import com.hf.core.model.dto.UserGroupDto;
 import com.hf.core.model.dto.UserGroupRequest;
 import com.hf.core.model.dto.UserInfoDto;
 import com.hf.core.model.dto.UserInfoRequest;
@@ -50,4 +53,6 @@ public interface UserBiz {
     List<SalesManDto> getSaleList(Long groupId);
 
     void editSubGroup(Long groupId, Long subGroupId);
+
+    Pagenation<UserGroupDto> getSubUserGroups(SubGroupRequest subGroupRequest);
 }

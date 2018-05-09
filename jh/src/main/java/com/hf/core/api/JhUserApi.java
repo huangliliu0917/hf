@@ -17,6 +17,7 @@ import com.hf.core.biz.service.ArchService;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.service.UserService;
 import com.hf.core.dao.local.*;
+import com.hf.core.model.dto.UserGroupDto;
 import com.hf.core.model.dto.UserGroupRequest;
 import com.hf.core.model.dto.UserInfoDto;
 import com.hf.core.model.dto.UserInfoRequest;
@@ -914,6 +915,18 @@ public class JhUserApi {
         }catch (Exception e) {
             e.printStackTrace();
             return ResponseResult.failed("99999",e.getMessage(),new HashMap<>());
+        }
+    }
+
+    @RequestMapping(value = "/get_user_group_of_agent",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseResult<Pagenation<com.hf.core.model.dto.UserGroupDto>> getUserGroupOfAgent(@RequestBody Map<String,Object> params) {
+        try {
+            SubGroupRequest subGroupRequest = TypeConverter.convert(params, SubGroupRequest.class);
+            Pagenation<UserGroupDto> pagenation = userBiz.getSubUserGroups(subGroupRequest);
+            return ResponseResult.success(pagenation);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseResult.failed(CodeManager.BIZ_FAIELD,e.getMessage(),null);
         }
     }
 }

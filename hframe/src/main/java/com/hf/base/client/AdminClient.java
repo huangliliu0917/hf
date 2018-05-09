@@ -1,17 +1,12 @@
-package com.hf.admin.rpc;
+package com.hf.base.client;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.hf.admin.model.UserGroupRequest;
-import com.hf.admin.model.UserInfoDto;
-import com.hf.admin.model.UserInfoRequest;
-import com.hf.base.client.BaseClient;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.*;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Pagenation;
 import com.hf.base.utils.ResponseResult;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
