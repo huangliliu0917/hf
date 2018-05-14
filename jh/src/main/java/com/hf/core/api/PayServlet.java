@@ -64,6 +64,8 @@ public class PayServlet extends HttpServlet {
                 "sign",sign,
                 "front_url",front_url);
 
+        logger.info("pay params:"+new Gson().toJson(params));
+
         Map<String,Object> resultMap = tradingBiz.pay(params,request,response);
         response.getWriter().write(new Gson().toJson(resultMap));
     }

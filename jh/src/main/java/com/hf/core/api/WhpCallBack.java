@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class WhpCallBack extends HttpServlet {
-    protected Logger logger = LoggerFactory.getLogger(ZfPayCallBack.class);
+    protected Logger logger = LoggerFactory.getLogger(WhpCallBack.class);
     private TradingBiz whpTradingBiz = BeanContextUtils.getBean("whpTradingBiz");
     private PayRequestDao payRequestDao = BeanContextUtils.getBean("payRequestDao");
 
@@ -34,10 +34,10 @@ public class WhpCallBack extends HttpServlet {
         logger.info("whp callback param data:"+new Gson().toJson(paramMap));
 
         String result = whpTradingBiz.handleCallBack(paramMap);
-        String tradeNo = paramMap.get("inTradeOrderNo");
+        String tradeNo = paramMap.get("out_tradeid");
+        logger.info("Start notice call back:"+tradeNo);
         PayRequest payRequest = payRequestDao.selectByTradeNo(tradeNo);
         whpTradingBiz.notice(payRequest);
-
         resp.getWriter().write(result);
     }
 }

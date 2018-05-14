@@ -105,14 +105,9 @@ public class PayJob {
     @Scheduled(cron = "0/10 * * * * ?")
     public void doPromote() {
         List<PayRequest> list = payRequestDao.selectWaitingPromote();
-        list.forEach(payRequest -> {
-            try {
-                payService.payPromote(payRequest.getOutTradeNo());
-            } catch (Exception e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-            }
-        });
+        for(PayRequest payRequest:list) {
+            payService.payPromote(payRequest.getOutTradeNo());
+        }
     }
 
     @Scheduled(cron = "0 0/30 * * * ?")

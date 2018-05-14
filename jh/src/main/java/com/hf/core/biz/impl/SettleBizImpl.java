@@ -100,10 +100,20 @@ public class SettleBizImpl implements SettleBiz {
         }
     }
 
-    @Transactional
     @Override
     public void finishSettle(Long id) {
-
+        AccountOprLog accountOprLog = accountOprLogDao.selectByPrimaryKey(id);
+        if(Objects.isNull(accountOprLog)) {
+            return;
+        }
+        if(accountOprLog.getStatus()!= OprStatus.NEW.getValue()) {
+            return;
+        }
+        if(accountOprLog.getType() != OprType.WITHDRAW.getValue()) {
+            return;
+        }
+        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(Long.parseLong(accountOprLog.getOutTradeNo()));
+        settleService.paySuccess(settleTask,accountOprLog);
     }
 
     @Transactional

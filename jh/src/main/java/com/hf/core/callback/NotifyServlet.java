@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
@@ -55,6 +57,7 @@ public class NotifyServlet extends HttpServlet {
 
 		Map<String, String> map=null;
 		try {
+			logger.info("hfb msg:"+new Gson().toJson(transMap));
 			//对通知进行验签操作
 			map = ResponseUtil.parseResponse(transMap, certUtil);
 			hfbTradingBiz.handleCallBack(map);

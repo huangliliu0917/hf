@@ -1,6 +1,7 @@
 package com.hf.core.biz.trade;
 
 import com.google.gson.Gson;
+import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.ChannelCode;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.PayRequestStatus;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,14 +96,17 @@ public class WhpTradingBiz extends AbstractTradingBiz {
 
         int code = new BigDecimal(result.get("code").toString()).intValue();
         if(code == 1) {
-            payRequestBack.setErrcode(String.valueOf(code));
+            payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
             payRequestBack.setMessage(String.valueOf(result.get("message")));
             payRequestBack.setPageContent(String.valueOf(result.get("type")));
             payRequestBack.setCodeUrl(String.valueOf(result.get("pay_info")));
             payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
             payService.remoteSuccess(payRequest,payRequestBack);
             try {
-                response.sendRedirect(String.valueOf(result.get("pay_info")));
+                logger.info("user-agent:"+request.getHeader("user-agent"));
+                if(request.getHeader("user-agent").contains("Mozilla")) {
+                    response.sendRedirect(String.valueOf(result.get("pay_info")));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
