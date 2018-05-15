@@ -223,10 +223,12 @@ public class HfbTradingBiz extends AbstractTradingBiz {
 
         if("0000".equals(rtnCode)) {
             payService.paySuccess(tranFlow);
+            return "SUCCESS";
         }
 
         if("0001".equals(rtnCode)) {
             payService.payFailed(tranFlow);
+            return "FAILED";
         }
 
         throw new BizFailException("handle failed");
