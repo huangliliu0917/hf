@@ -94,6 +94,16 @@
     <servlet-name>whpPayCallBack</servlet-name>
     <url-pattern>/payCallBack/whp</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>whpQrPayCallBack</servlet-name>
+    <servlet-class>com.hf.core.callback.WhpQrCallBack</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>whpQrPayCallBack</servlet-name>
+    <url-pattern>/payCallBack/whpQr</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>verify</servlet-name>
