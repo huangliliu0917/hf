@@ -93,17 +93,20 @@
                         <li><a href="#springUrl('/common/user_channel_index')" class="J_menuItem"><strong>查看通道费率</strong></a>  </li>
                     </ul>
                     <ul class="nav nav-second-level">
-                        <li><a href="#springUrl('/common/user_pay_demo')" class="J_menuItem"><strong>支付demo</strong></a>  </li>
+                        <li><a href="#springUrl('/common/user_pay_demo')" class="J_menuItem"><strong>支付DEMO</strong></a>  </li>
                     </ul>
                     <ul class="nav nav-second-level">
-                        <li><a href="#springUrl('/common/we_sm_pay')" class="J_menuItem"><strong>微信二维码</strong></a></li>
+                        <li><a href="#springUrl('/common/md5_demo')" class="J_menuItem"><strong>加密DEMO</strong></a>  </li>
                     </ul>
-                    <ul class="nav nav-second-level">
-                        <li><a href="#springUrl('/common/wy_pay')" class="J_menuItem"><strong>网银支付</strong></a></li>
-                    </ul>
-                    <ul class="nav nav-second-level">
-                        <li><a href="#springUrl('/common/h5_pay')" class="J_menuItem"><strong>H5支付</strong></a></li>
-                    </ul>
+##                    <ul class="nav nav-second-level">
+##                        <li><a href="#springUrl('/common/we_sm_pay')" class="J_menuItem"><strong>微信二维码</strong></a></li>
+##                    </ul>
+##                    <ul class="nav nav-second-level">
+##                        <li><a href="#springUrl('/common/wy_pay')" class="J_menuItem"><strong>网银支付</strong></a></li>
+##                    </ul>
+##                    <ul class="nav nav-second-level">
+##                        <li><a href="#springUrl('/common/h5_pay')" class="J_menuItem"><strong>H5支付</strong></a></li>
+##                    </ul>
                 </li>
             </ul>
         </div>

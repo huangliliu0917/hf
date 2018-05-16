@@ -55,7 +55,10 @@
                             <td>
                             <div class="layui-btn-group">
                                 #if(${data.status}==0) {
-                                    <button class="layui-btn layui-btn-small lineblud" onclick="submit_agent_pay(${data.id})">发起付款</button>
+                                    <button class="layui-btn layui-btn-small lineblud" onclick="submit_agent_pay(${data.id})">#if(${data.type}=="线下付款") 完成付款 #else 发起代付 #end </button>
+                                    #if(${data.type}=="代付")
+                                        <button class="layui-btn layui-btn-small lineblud" onclick="task_pass(${data.id})">已完成线下付款</button>
+                                    #end
                                 #end
                             </div>
                             </td>
@@ -64,7 +67,6 @@
                     </tbody>
                 </table>
             </div>
-            <button class="layui-btn" onclick="submit_agent_pay(${taskId})">确认代付</button>
         </div>
     </div>
 </div>
@@ -93,6 +95,27 @@
                     return false;
                 }
             }
+        });
+    }
+
+    function task_pass(id) {
+        layer.confirm('确认已完成线下付款？', function (index) {
+            jQuery.ajax({
+                url: "#springUrl('/user/with_draw_finish')",
+                type: "post",
+                data: "id=" + id,
+                success: function (res) {
+                    if (res.status) {
+                        layer.alert("处理成功", {icon: 6}, function () {
+                            window.location.reload();
+                        });
+                    } else {
+                        layer.alert("操作失败", {icon: 5}, function () {
+                            window.location.reload();
+                        });
+                    }
+                }
+            });
         });
     }
 </script>

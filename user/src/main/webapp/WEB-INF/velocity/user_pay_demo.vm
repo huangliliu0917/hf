@@ -30,6 +30,7 @@
                 <div class="ibox-content">
                     <blockquote class="layui-elem-quote">
                         <p class="text-danger">统一收单接口：http://huifufu.cn/openapi/unifiedorder_2</p>
+                        <p class="text-danger">慧富支付demo：http://huifufu.cn/demo/pay</p>
                         <p class="text-danger"><a href="http://huifufu.cn/doc/php demo.zip">php demo下载</a></p>
                         <p class="text-danger"><a href="http://huifufu.cn/doc/java demo.zip">java demo下载</a></p>
                     </blockquote>
@@ -51,7 +52,7 @@
                                 <td>10</td>
                                 <td>int</td>
                                 <td>是</td>
-                                <td>01微信公众号，02微信主 扫，03微信反扫，04微信H5  付，05微信APP 付，06支 付宝服务窗体，07支付宝主 扫，08支付宝反扫,09 网银,10 H5,11 QQ扫码,12 银联扫码,13 快捷支付</td>
+                                <td>01微信公众号,02微信主扫,03微信反扫,04微信H5,05微信APP,06支付宝服务窗体,07支付宝扫码,08支付宝反扫,09网银,10 QQ H5,11 QQ扫码,12银联扫码,13快捷支付,14支付宝H5</td>
                             </tr>
                             <tr>
                                 <td>接口版本</td>
@@ -59,7 +60,7 @@
                                 <td>2.0</td>
                                 <td>String</td>
                                 <td>是</td>
-                                <td></td>
+                                <td>固定值</td>
                             </tr>
                             <tr>
                                 <td>商户编号</td>
@@ -75,11 +76,19 @@
                                 <td>100</td>
                                 <td>int</td>
                                 <td>是</td>
-                                <td>不能包含小数点，如100.0</td>
+                                <td>不能包含小数点，如100.0应写为100</td>
                             </tr>
                             <tr>
                                 <td>订单名称</td>
                                 <td>name</td>
+                                <td>测试支付</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>订单备注</td>
+                                <td>remark</td>
                                 <td>测试支付</td>
                                 <td>String</td>
                                 <td>是</td>
@@ -99,7 +108,31 @@
                                 <td>127.0.0.1</td>
                                 <td>String</td>
                                 <td>是</td>
-                                <td></td>
+                                <td>支付客户端ip</td>
+                            </tr>
+                            <tr>
+                                <td>通知地址</td>
+                                <td>out_notify_url</td>
+                                <td>http://test.huifu.cn/callback</td>
+                                <td>String</td>
+                                <td>是</td>
+                                <td>异步通知地址</td>
+                            </tr>
+                            <tr>
+                                <td>前台跳转地址</td>
+                                <td>front_url</td>
+                                <td>http://test.huifu.cn/redirect_url</td>
+                                <td>String</td>
+                                <td>否</td>
+                                <td>service=13快捷支付必填,支付成功跳转页面</td>
+                            </tr>
+                            <tr>
+                                <td>付款人id</td>
+                                <td>buyer_id</td>
+                                <td>100</td>
+                                <td>String</td>
+                                <td>否</td>
+                                <td>service=13快捷支付必填,支付人id</td>
                             </tr>
                             <tr>
                                 <td>微信openid</td>

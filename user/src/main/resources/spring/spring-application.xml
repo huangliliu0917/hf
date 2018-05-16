@@ -64,6 +64,7 @@
 				<entry key="wy_pay" value-ref="wyPayDispatcher"/>
 				<entry key="h5_pay" value-ref="h5PayDispatcher"/>
 				<entry key="user_pay_demo" value-ref="userPayDemoDispatcher"/>
+				<entry key="md5_demo" value-ref="md5DemoDispatcher"/>
 			</map>
 		</constructor-arg>
 	</bean>

@@ -65,7 +65,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service","14");
+        payParams.put("service",ChannelCode.QQ_SM.getCode());
         payParams.put("remark","测试支付宝H5支付");
         payParams.put("sign_type","MD5");
         payParams.put("total","11000");//10000.00
@@ -77,7 +77,7 @@ public class RemoteTest extends BaseCommitTestCase {
 
         try {
             String asynMsg = (new Httpz("utf-8", 30000, 30000)).post("http://127.0.0.1:8080/jh/pay", payParams);
-            System.out.println(asynMsg);
+            System.out.println("message:"+asynMsg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,25 +188,25 @@ public class RemoteTest extends BaseCommitTestCase {
         //msg
         resutMap.put("message","支付成功");
 
-        resutMap.put("no","84037");
+        resutMap.put("no","85629");
         //out_trade_no
-        resutMap.put("out_trade_no","20180427100431677");
+        resutMap.put("out_trade_no","S1805101143425185");
         //mch_id
-        resutMap.put("merchant_no","5174");
+        resutMap.put("merchant_no","5187");
         //total
-        resutMap.put("total","500");
+        resutMap.put("total","1000");
         //fee
-        resutMap.put("fee","9");
+        resutMap.put("fee","33");
         //trade_type 1:收单 2:撤销 3:退款
         resutMap.put("trade_type","1");
         //sign_type
         resutMap.put("sign_type","MD5");
 
-        String key = "Q5t8SiCF2m3FkAPGiKZyh6C3Wyh4fmYG";
+        String key = "js05fv1u";
         String sign = Utils.encrypt(resutMap,key);
         resutMap.put("sign",sign);
 
-        boolean result = callBackClient.post("http://huanqiusp.nmguoji.com/indexs.php/Home/Recharge/callback",resutMap);
+        boolean result = callBackClient.post("http://www.k3hui.com/index.hfbybtzRecord.do",resutMap);
 
         System.out.println(result);
     }
