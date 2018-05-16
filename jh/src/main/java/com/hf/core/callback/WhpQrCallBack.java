@@ -40,9 +40,8 @@ public class WhpQrCallBack extends HttpServlet {
         paramMap.put("service",payRequest.getService());
 
         String result = whpTradingBiz.handleCallBack(paramMap);
-        String tradeNo = paramMap.get("out_tradeid");
-        logger.info("Start notice call back:"+tradeNo);
-        payRequest = payRequestDao.selectByTradeNo(tradeNo);
+        logger.info("Start notice call back:"+outTradeNo);
+        payRequest = payRequestDao.selectByTradeNo(outTradeNo);
         whpTradingBiz.notice(payRequest);
         resp.getWriter().write(result);
     }

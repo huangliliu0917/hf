@@ -160,7 +160,7 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         map.put("mwebId" , "");//应用场景ID 支付类型wxH5该参数有效且必填;  IOS：IOS应用唯一标识  Android：应用在安卓分发市场中的应用名  WAP：WAP网站的首页URL
         map.put("mwebName" , "");//应用场景名称
         map.put("mwebType" , "");//应用场景类型
-        map.put("notifyUrl" , "http://huifufu.cn/openapi/whp/pay_notice");//后台异步回调地址
+        map.put("notifyUrl" , "http://huifufu.cn/openapi/whp/qr_pay_notice");//后台异步回调地址
         map.put("openId" , "");//公众号openId  支付类型wxPub该参数有效且必填
         map.put("outTradeNo" , payRequest.getOutTradeNo());//商户订单号 y
         map.put("scenesType" , "");//应用场景类型  支付类型gateway该参数有效且必填
@@ -219,7 +219,7 @@ public class WhpTradingBiz extends AbstractTradingBiz {
 
     @Override
     public String handleCallBack(Map<String, String> map) {
-        if(ChannelCode.parseFromCode(map.get("service")) == ChannelCode.QQ_SM) {
+        if(null != map.get("service") && ChannelCode.parseFromCode(map.get("service")) == ChannelCode.QQ_SM) {
             return handlerQqQrCallBack(map);
         }
 
@@ -258,9 +258,11 @@ public class WhpTradingBiz extends AbstractTradingBiz {
 
         Map<String,Object> objMap = new HashMap<>();
         objMap.putAll(map);
-        if(!Utils.checkEncrypt(objMap,"fab256a197494e64b447c8087d72e163")) {
-            throw new BizFailException("支付结果验签失败");
-        }
+        logger.info("start check encript,"+map.get("outTradeNo"));
+//        if(!Utils.checkEncrypt(objMap,"fab256a197494e64b447c8087d72e163")) {
+//            logger.error("check encript failed,"+map.get("outTradeNo"));
+//            throw new BizFailException("check encript failed");
+//        }
 
         int resultCode = new BigDecimal(map.get("resultCode")).intValue();
         String errCode = map.get("errCode");
@@ -280,6 +282,8 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         if(payRequestStatus != PayRequestStatus.PROCESSING && payRequestStatus!=PayRequestStatus.OPR_GENERATED) {
             throw new BizFailException("status invalid");
         }
+
+        logger.info("Start pay success."+outTradeNo);
 
         if(resultCode == 0) {
             payService.paySuccess(outTradeNo);
