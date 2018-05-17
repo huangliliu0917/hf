@@ -65,7 +65,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service",ChannelCode.QQ_SM.getCode());
+        payParams.put("service",ChannelCode.ALI_H5.getCode());
         payParams.put("remark","测试支付宝H5支付");
         payParams.put("sign_type","MD5");
         payParams.put("total","11000");//10000.00

@@ -3,6 +3,7 @@ package com.hf.core.biz.trade;
 import com.google.gson.Gson;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.BankCode;
+import com.hf.base.enums.ChannelCode;
 import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.exceptions.BizFailException;
@@ -33,19 +34,27 @@ public class ZfTradingBiz extends AbstractTradingBiz {
         return ChannelProvider.ZF;
     }
     @Autowired
-    @Qualifier("zfClient")
-    private PayClient payClient;
-    @Autowired
-    private UserInfoDao userInfoDao;
-    @Autowired
     private CacheService cacheService;
 
     @Override
     public void doPay(PayRequest payRequest, HttpServletRequest request, HttpServletResponse response) {
+        ChannelCode channelCode = ChannelCode.parseFromCode(payRequest.getService());
+        switch (channelCode) {
+            case ALI_H5:
+                payForAliH5(payRequest,request,response);
+                break;
+            case WY:
+                payForWy(payRequest,request,response);
+                break;
+            default:
+                throw new BizFailException("channel not supported"+channelCode.getCode());
+        }
+    }
+
+    private void payForWy(PayRequest payRequest, HttpServletRequest request, HttpServletResponse response) {
         PayRequestBack payRequestBack = new PayRequestBack();
         payRequestBack.setMchId(payRequest.getMchId());
         payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
-
         try {
             UserGroup userGroup = cacheService.getGroup(payRequest.getMchId());
 
@@ -86,8 +95,6 @@ public class ZfTradingBiz extends AbstractTradingBiz {
             map.put("reqSource",reqSource);
             map.put("attach",attach);
 
-//            Map<String, Object> resultMap = payClient.unifiedorder(map);
-
             for(int i=0;i<map.keySet().size();i++) {
                 if(i==0) {
                     url = url+"?"+map.keySet().toArray()[i]+"="+map.get(map.keySet().toArray()[i]);
@@ -106,6 +113,66 @@ public class ZfTradingBiz extends AbstractTradingBiz {
 
         payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
         payService.remoteSuccess(payRequest,payRequestBack);
+    }
+
+    private void payForAliH5(PayRequest payRequest, HttpServletRequest request, HttpServletResponse response) {
+        PayRequestBack payRequestBack = new PayRequestBack();
+        payRequestBack.setMchId(payRequest.getMchId());
+        payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+        try {
+            String merchantNo = "990290077770049";
+            String terminalNo = "77700624";
+            String key = "12345678";
+            String attach = "990290073720001";
+            String merchantURL = "http://huifufu.cn/openapi/zf/pay_notice";
+            String productDescription = "990290073720001|0";
+            String payMoney = String.valueOf(payRequest.getTotalFee());
+            String productName = URLEncoder.encode(payRequest.getBody(),"UTF-8") ;
+            String inTradeOrderNo = payRequest.getOutTradeNo();
+            String payType = "18";
+            String alipayPayType = "105";
+            String validDate = "10m";
+            String signMsg = DigestUtils.md5Hex(merchantNo+terminalNo+payMoney+inTradeOrderNo+payType+alipayPayType+key).toUpperCase();
+
+            Map<String,String> map = new HashMap<>();
+            map.put("merchantNo",merchantNo);
+            map.put("terminalNo",terminalNo);
+            map.put("payMoney",payMoney);
+            map.put("productName",productName);
+            map.put("productDescription",productDescription);
+            map.put("inTradeOrderNo",inTradeOrderNo);
+            map.put("payType",payType);
+            map.put("alipayPayType",alipayPayType);
+            map.put("validDate",validDate);
+            map.put("merchantURL",merchantURL);
+            map.put("attach",attach);
+            map.put("signMsg",signMsg);
+
+//            String url = "http://paygw.guangyinwangluo.com/swPayInterface/aliH5";
+            String url = "http://test1.guangyinwangluo.com:9999/swPayInterface/aliH5";
+
+            for(int i=0;i<map.keySet().size();i++) {
+                if(i==0) {
+                    url = url+"?"+map.keySet().toArray()[i]+"="+map.get(map.keySet().toArray()[i]);
+                } else {
+                    url = url+"&"+map.keySet().toArray()[i]+"="+map.get(map.keySet().toArray()[i]);
+                }
+            }
+            response.sendRedirect(url);
+
+            payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+            payRequestBack.setMessage("下单成功");
+
+            payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
+            payService.remoteSuccess(payRequest,payRequestBack);
+        } catch (Exception e) {
+            logger.error("remote call failed,"+e.getMessage()+","+payRequest.getOutTradeNo());
+            payRequestBack.setErrcode(CodeManager.PAY_FAILED);
+            payRequestBack.setMessage("下单失败");
+
+            payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
+            payService.payFailed(payRequest.getOutTradeNo());
+        }
     }
 
     @Override

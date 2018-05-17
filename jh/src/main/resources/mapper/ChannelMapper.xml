@@ -173,7 +173,7 @@
   <select id="selectForList" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from channel where status != 99 order by status asc, id desc
+    from channel where status != 99 order by status asc, provider_code desc
   </select>
 
   <select id="selectForAvaList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
