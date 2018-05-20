@@ -180,10 +180,10 @@ public abstract class AbstractTradingBiz implements TradingBiz {
         PayRequest payRequest = new PayRequest();
         payRequest.setAppid("");
         payRequest.setBankCode(bank_code);
-        if(StringUtils.isEmpty(name) && StringUtils.isEmpty(remark)) {
+        if(StringUtils.isEmpty(name)) {
             payRequest.setBody("转账:"+total);
         } else {
-            payRequest.setBody(Utils.merge(",",name,remark));
+            payRequest.setBody(name);
         }
         if(!StringUtils.isEmpty(buyer_id)) {
             String buyerId = merchant_no+"_"+buyer_id;
@@ -348,6 +348,11 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             resutMap.put("trade_type","1");
             //sign_type
             resutMap.put("sign_type","MD5");
+
+            if(userGroup.getId() == 5266L) {
+                resutMap.put("remark",payRequest.getRemark());
+            }
+
             String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
             resutMap.put("sign",sign);
             logger.info("Start call back:"+payRequest.getOutTradeNo()+",url:"+url);

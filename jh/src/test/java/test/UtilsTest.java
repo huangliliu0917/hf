@@ -1,11 +1,18 @@
 package test;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hf.base.utils.EpaySignUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,68 +53,41 @@ public class UtilsTest {
         System.out.println(sign);
     }
 
-    private String content = "<html>\n" +
-            "<script type='text/html' style='display:block'>\n" +
-            "    <input type=\"text\" />\n" +
-            "</scipt>\n" +
-            "\n" +
-            "<head>\n" +
-            "    <title>订单支付</title>\n" +
-            "    <script src=\"/pay/js/jquery-2.2.3.min.js\"></script>\n" +
-            "</head>\n" +
-            "<body>\u2028\n" +
-            "<form id=\"form\" action=\"https://newpay.ips.com.cn/psfp-entry/gateway/payment.do\" method=\"post\">\n" +
-            "    <input name=\"pGateWayReq\" type=\"hidden\" value=\"<Ips><GateWayReq><head><Version>v1.0.0</Version><MerCode>203951</MerCode><MerName>海南侨乐邦网络科技有限公司</MerName><Account>2039510017</Account><MsgId>msg20180209113746</MsgId><ReqDate>20180209113746</ReqDate><Signature>0b1f992ba1ac78579b586f051b4576d5</Signature></head><body><MerBillNo>20180209113746036690</MerBillNo><Lang>GB</Lang><Amount>11.00</Amount><Date>20180209</Date><CurrencyType>156</CurrencyType><GatewayType>02</GatewayType><Merchanturl>http://pay1.hlqlb.cn:8692/pay/payment/result</Merchanturl><FailUrl><![CDATA[]]></FailUrl><Attach><![CDATA[]]></Attach><OrderEncodeType>5</OrderEncodeType><RetEncodeType>17</RetEncodeType><RetType>1</RetType><ServerUrl><![CDATA[http://47.97.175.195:8682/posp/bankPay/hxPayNotify]]></ServerUrl><BillEXP>24</BillEXP><GoodsName>湖南慧付 收款</GoodsName><IsCredit></IsCredit><BankCode></BankCode><ProductType></ProductType></body></GateWayReq></Ips>\" />\n" +
-            "</form>\u2028\n" +
-            "<script type=\"text/javascript\">\n" +
-            "    $(document).ready(function(){\n" +
-            "        $(\"#form\").submit();\n" +
-            "    });\n" +
-            "</script>\n" +
-            "\u2028\n" +
-            "</body>\n" +
-            "</html>";
-
     @Test
-    public void testSubstring() {
-        String buyerId = "23456radsdfgfsdaddf1234521`23234s";
-        System.out.println(buyerId.substring(buyerId.length()-10,buyerId.length()));
-    }
+    public void readFromFile() throws Exception {
+        File file = new File("/Users/tengfei/Downloads/GALAXY_19997867_20180521_001609.txt_19997867_20180521_001609.txt");
+        FileInputStream fileInputStream = new FileInputStream(file);
+        BufferedReader tmp_reader=new BufferedReader(new InputStreamReader(fileInputStream));
+        String minLine = "";
+        int minLength = 0;
+        String maxLine = "";
+        int maxLength = 0;
+        int tempLength = 0;
+        int count = 0;
+        String line = tmp_reader.readLine();
+        minLength = line.length();
+        minLine = line;
+        while (line != null) {
+            line = line.replace("lch=push&pushid=139443&msgId=88255504581&","");
+            String url = line.substring(line.indexOf("uri")+10,line.indexOf("act%3D2")+7);
+            tempLength = url.length();
+            if(tempLength > maxLength) {
+                maxLength = tempLength;
+                maxLine = url;
+            }
+            if(tempLength <= minLength) {
+                minLength = tempLength;
+                minLine = url;
+            }
+            System.out.println(url);
+            line = tmp_reader.readLine();
+            count++;
+        }
 
-    @Test
-    public void testEncript() {
-        String url = "create_ip=127.0.0.1&merchant_no=5160&name=2018032151545398&nonce_str=17548&out_trade_no=2018032151545398&service=09&sign_type=MD5&total=12300&version=1.0&key=JCwetYdyJCcWXhyd4QjieakDsWdJjzeF";
-        Map<String,Object> map = new HashMap<>();
-        map.put("create_ip","127.0.0.1");
-        map.put("merchant_no","5160");
-        map.put("name","2018032151545398");
-        map.put("nonce_str","17548");
-        map.put("out_trade_no","2018032151545398");
-        map.put("service","09");
-//        map.put()
-//        System.out.println(Utils.checkEncrypt());
-    }
-
-    @Test
-    public void testUnicode() throws Exception {
-        String url = "http://www.sjtaoch.cn/aggregate/H5/Pay.kb?pathid=6cac0b491641402e80c1bf44233dc5cb&redirecturl=http://47.97.175.195:8692/pay/debitNote/payCallBack?orderCode=20180405134340403029";
-        Map<String,String> map = new HashMap<>();
-        map.put("url",url);
-        System.out.println(new Gson().toJson(map));
-        Map<String,String> map1 = new Gson().fromJson(new Gson().toJson(map),new TypeToken<Map<String,String>>(){}.getType());
-        System.out.println(map1.get("url"));
-        System.out.println(URLDecoder.decode(new Gson().toJson(map), "UTF-8"));
-        String result = new Gson().toJson(map);
-        System.out.println(new String(map1.get("url").getBytes(),"UTF-8"));
-    }
-
-    @Test
-    public void testMd5() {
-        System.out.println(DigestUtils.md5Hex("bank_code=ICBC&buyer_id=100&create_ip=172.22.76.86&front_url=http://huifufu.cn/admin&merchant_no=13588&name=测试支付&nonce_str=revf39uxgv&out_notify_url=http://huifufu.cn/openapi/zf/pay_notice&out_trade_no=2137937845223545856&remark=测试支付&service=13&sign_type=MD5&total=100&version=2.0&key=XyEe2dK7QmRFDFsJeRAZmwfHXBzziNmk").toUpperCase());
-    }
-
-    @Test
-    public void testTimeStamp() {
-        System.out.println(new Date().getTime());
+        System.out.println("max count:"+count);
+        System.out.println("max length:"+maxLength);
+        System.out.println("max url:"+maxLine);
+        System.out.println("min length:"+minLength);
+        System.out.println("min url:"+minLine);
     }
 }

@@ -11,6 +11,7 @@ import com.hf.base.utils.MapUtils;
 import com.hf.core.biz.service.CacheService;
 import com.hf.core.dao.local.UserInfoDao;
 import com.hf.core.dao.remote.PayClient;
+import com.hf.core.dao.remote.ZfClient;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.PayRequestBack;
 import com.hf.core.model.po.UserGroup;
@@ -35,6 +36,8 @@ public class ZfTradingBiz extends AbstractTradingBiz {
     }
     @Autowired
     private CacheService cacheService;
+    @Autowired
+    private ZfClient zfClient;
 
     @Override
     public void doPay(PayRequest payRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -120,12 +123,12 @@ public class ZfTradingBiz extends AbstractTradingBiz {
         payRequestBack.setMchId(payRequest.getMchId());
         payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
         try {
-            String merchantNo = "990290077770049";
-            String terminalNo = "77700624";
-            String key = "12345678";
-            String attach = "990290073720001";
+            String merchantNo = "990581077770019";
+            String terminalNo = "77700474";
+            String key = "SU62HD9438";
+            String attach = "991391077780003";
             String merchantURL = "http://huifufu.cn/openapi/zf/pay_notice";
-            String productDescription = "990290073720001|0";
+            String productDescription = "991391077780003|00008573";
             String payMoney = String.valueOf(payRequest.getTotalFee());
             String productName = URLEncoder.encode(payRequest.getBody(),"UTF-8") ;
             String inTradeOrderNo = payRequest.getOutTradeNo();
@@ -134,12 +137,12 @@ public class ZfTradingBiz extends AbstractTradingBiz {
             String validDate = "10m";
             String signMsg = DigestUtils.md5Hex(merchantNo+terminalNo+payMoney+inTradeOrderNo+payType+alipayPayType+key).toUpperCase();
 
-            Map<String,String> map = new HashMap<>();
+            Map<String,Object> map = new HashMap<>();
             map.put("merchantNo",merchantNo);
             map.put("terminalNo",terminalNo);
             map.put("payMoney",payMoney);
             map.put("productName",productName);
-            map.put("productDescription",productDescription);
+            map.put("productDescription",URLEncoder.encode(productDescription,"UTF-8"));
             map.put("inTradeOrderNo",inTradeOrderNo);
             map.put("payType",payType);
             map.put("alipayPayType",alipayPayType);
@@ -148,8 +151,7 @@ public class ZfTradingBiz extends AbstractTradingBiz {
             map.put("attach",attach);
             map.put("signMsg",signMsg);
 
-//            String url = "http://paygw.guangyinwangluo.com/swPayInterface/aliH5";
-            String url = "http://test1.guangyinwangluo.com:9999/swPayInterface/aliH5";
+            String url = "http://paygw.guangyinwangluo.com/swPayInterface/aliH5";
 
             for(int i=0;i<map.keySet().size();i++) {
                 if(i==0) {
@@ -158,6 +160,8 @@ public class ZfTradingBiz extends AbstractTradingBiz {
                     url = url+"&"+map.keySet().toArray()[i]+"="+map.get(map.keySet().toArray()[i]);
                 }
             }
+
+//            Map<String,Object> result = zfClient.unifiedorder(map);
             response.sendRedirect(url);
 
             payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);

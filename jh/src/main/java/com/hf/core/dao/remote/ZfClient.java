@@ -14,11 +14,9 @@ import java.util.Map;
 
 @Component
 public class ZfClient extends BaseClient implements PayClient {
-
-    private String url = "http://test1.guangyinwangluo.com:9999/swPayInterface/CHPay";
-
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
+        String url = "http://paygw.guangyinwangluo.com/swPayInterface/aliH5";
         for(int i=0;i<params.keySet().size();i++) {
             if(i==0) {
                 url = url+"?"+params.keySet().toArray()[i]+"="+params.get(params.keySet().toArray()[i]);
