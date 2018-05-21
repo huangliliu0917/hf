@@ -259,10 +259,6 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         Map<String,Object> objMap = new HashMap<>();
         objMap.putAll(map);
         logger.info("start check encript,"+map.get("outTradeNo"));
-//        if(!Utils.checkEncrypt(objMap,"fab256a197494e64b447c8087d72e163")) {
-//            logger.error("check encript failed,"+map.get("outTradeNo"));
-//            throw new BizFailException("check encript failed");
-//        }
 
         int resultCode = new BigDecimal(map.get("resultCode")).intValue();
         String errCode = map.get("errCode");
@@ -274,6 +270,10 @@ public class WhpTradingBiz extends AbstractTradingBiz {
 
         PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
         PayRequestStatus payRequestStatus = PayRequestStatus.parse(payRequest.getStatus()) ;
+
+        if(payRequestStatus == PayRequestStatus.PAY_SUCCESS) {
+            return "success";
+        }
 
         if(payRequestStatus == PayRequestStatus.OPR_SUCCESS) {
             return new Gson().toJson(com.hf.base.utils.MapUtils.buildMap("resCode","0000"));
@@ -290,7 +290,7 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         } else {
             payService.payFailed(outTradeNo);
         }
-        return "SUCCESS";
+        return "success";
     }
 
     @Override

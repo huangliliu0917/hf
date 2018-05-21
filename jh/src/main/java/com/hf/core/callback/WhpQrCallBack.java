@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class WhpQrCallBack extends HttpServlet {
@@ -28,11 +29,14 @@ public class WhpQrCallBack extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("whp qr callback received , %s");
 
-        String receivedData = Utils.getPostString(req);
-        logger.info("whp qr callback received data:"+receivedData);
-
-        Map<String,String> paramMap = new Gson().fromJson(receivedData,new TypeToken<Map<String,String>>(){}.getType());
-
+        Map<String,String[]> reqMap = req.getParameterMap();
+        Map<String,String> paramMap = new HashMap<>();
+        for(String key:reqMap.keySet()) {
+            if(reqMap.get(key) == null) {
+                continue;
+            }
+            paramMap.put(key,reqMap.get(key)[0]);
+        }
         logger.info("whp qr callback param data:"+new Gson().toJson(paramMap));
 
         String outTradeNo = paramMap.get("outTradeNo");

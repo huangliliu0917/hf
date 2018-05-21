@@ -116,6 +116,11 @@ public class PayJob {
         logger.info("current password:"+password);
     }
 
+    @Scheduled()
+    public void payRequestCallBack() {
+
+    }
+
     public String getPassword() {
         if(StringUtils.isEmpty(password)) {
             this.changePassword();
