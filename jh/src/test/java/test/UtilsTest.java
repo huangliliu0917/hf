@@ -96,6 +96,5 @@ public class UtilsTest {
         String str = "amount=10.00&body=??&channel=qqQr&mchId=512004&outChannelNo=5120045187_P1805210957066342&outTradeNo=5187_P1805210957066342&resultCode=0&returnCode=0&status=02&transTime=20180521095709&sign=E3B3AE30AF09010041A414BB37B8C77B";
         Map<String,String> map = new Gson().fromJson(str,new TypeToken<Map<String,String>>(){}.getType());
         System.out.println(map);
-
     }
 }

@@ -11,6 +11,7 @@ public interface TradingBiz {
     Map<String,Object> pay(Map<String,Object> requestMap, HttpServletRequest request, HttpServletResponse response);
     Map<String,Object> pay(Map<String,Object> requestMap);
     String handleCallBack(Map<String,String> map);
+    void handleCallBack(PayRequest payRequest);
     void notice(PayRequest payRequest);
     void handleProcessingRequest(PayRequest payRequest);
     Map<String,Object> query(PayRequest payRequest);

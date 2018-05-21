@@ -73,7 +73,7 @@ public class PayJob {
         }
     }
 
-//    @Scheduled(cron = "0 0 0,23 * * ?")
+//    @Scheduled(cron = "0 0 0/1 * * ?")
     public void handleNoCallBackData() {
         logger.info("Start handle no callback");
         Long startId = 0L;

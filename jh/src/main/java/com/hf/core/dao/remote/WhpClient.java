@@ -27,6 +27,8 @@ public class WhpClient extends BaseClient implements PayClient {
 
     private static final String PAY_URL = "http://pay.weihupay.cn/payinfo.php";
     private static final String QQ_QR_PAY_URL = "http://www.82ypay.com/qqpay/trade";
+    private static final String PAY_INFO_URL = "http://pay.weihupay.cn/getres.php";
+
     private Logger logger = LoggerFactory.getLogger(WhpClient.class);
 
     @Override
@@ -41,19 +43,6 @@ public class WhpClient extends BaseClient implements PayClient {
             return null;
         }
     }
-
-//    public Map<String,Object> qqQrPay(Map<String,Object> params) {
-//        RemoteParams remoteParams = new RemoteParams(QQ_QR_PAY_URL).withParams(params);
-//        logger.info(new Gson().toJson(params));
-//        try {
-//            String result = super.post(remoteParams, MediaType.APPLICATION_JSON_UTF8);
-//            logger.info("whp qq qr pay result:"+result);
-//            return new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
-//        } catch (Exception e) {
-//            logger.error(e.getMessage());
-//            return null;
-//        }
-//    }
 
     public Map<String,Object> qqQrPay(Map<String,Object> params) {
         StringBuffer buffer = new StringBuffer();
@@ -129,6 +118,14 @@ public class WhpClient extends BaseClient implements PayClient {
 
     @Override
     public Map<String, Object> orderinfo(Map<String, Object> params) {
+        try {
+            String url = String.format("http://pay.weihupay.cn/getres.php?mchid=%s&out_tradeid=%s",params.get("mchid"),params.get("out_tradeid"));
+            RemoteParams remoteParams = new RemoteParams(url).withParams(null);
+            String result = super.get(remoteParams);
+            return new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         return null;
     }
 

@@ -11,6 +11,7 @@ import com.hf.core.biz.ChannelBiz;
 import com.hf.core.biz.UserBiz;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradingBiz;
+import com.hf.core.biz.trade.WhpTradingBiz;
 import com.hf.core.biz.trade.WwTradingBiz;
 import com.hf.core.dao.local.*;
 import com.hf.core.dao.remote.CallBackClient;
@@ -74,6 +75,8 @@ public class TradeBizTest extends BaseTestCase {
     private PayJob payJob;
     @Mock
     private CallBackClient callBackClient;
+    @Autowired
+    private WhpTradingBiz whpTradingBiz;
 
     private List<Long> groupIds;
 
@@ -585,4 +588,6 @@ public class TradeBizTest extends BaseTestCase {
         Assert.assertEquals(payRequest.getNoticeStatus(),1);
         Assert.assertEquals(payRequest.getNoticeRetryTime(),i+1);
     }
+
+
 }

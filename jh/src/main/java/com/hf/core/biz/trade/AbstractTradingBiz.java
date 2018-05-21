@@ -375,4 +375,9 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             payRequestDao.updateNoticeStatus(payRequest.getId());
         }
     }
+
+    @Override
+    public void handleCallBack(PayRequest payRequest) {
+
+    }
 }

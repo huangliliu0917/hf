@@ -3,7 +3,9 @@ package com.hf.core.api;
 import com.google.gson.Gson;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.GroupStatus;
+import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.enums.SettleStatus;
+import com.hf.base.enums.TradeType;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.ResponseResult;
@@ -19,6 +21,9 @@ import com.hf.core.job.pay.PayJob;
 import com.hf.core.model.po.*;
 import com.hf.core.utils.CallBackCache;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +37,9 @@ import java.util.*;
 @Controller
 @RequestMapping("/jhAdmin")
 public class AdminApi {
+
+    protected Logger logger = LoggerFactory.getLogger(AdminApi.class);
+
     @Autowired
     private UserGroupDao userGroupDao;
     @Autowired
@@ -205,5 +213,21 @@ public class AdminApi {
             resultList.add(result);
         }
         return new Gson().toJson(resultList);
+    }
+
+    @RequestMapping(value = "/handleNoCallBackPayRequest",method = RequestMethod.GET)
+    public @ResponseBody String handleNoCallBackPayRequest(String outTradeNos) {
+        logger.info("Start handle no callback");
+        String[] nos = outTradeNos.split(",");
+        for(String no:nos) {
+            PayRequest payRequest = payRequestDao.selectByTradeNo(no);
+            if(Objects.isNull(payRequest) || payRequest.getStatus() != PayRequestStatus.PROCESSING.getValue()) {
+                continue;
+            }
+            TradingBiz tradeBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
+            tradeBiz.handleCallBack(payRequest);
+            tradeBiz.notice(payRequest);
+        }
+        return "SUCCESS";
     }
  }

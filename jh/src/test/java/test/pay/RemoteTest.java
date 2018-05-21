@@ -9,6 +9,7 @@ import com.hf.base.utils.MapUtils;
 import com.hf.base.utils.Utils;
 import com.hf.core.biz.trade.AbstractTradingBiz;
 import com.hf.core.biz.trade.TradingBiz;
+import com.hf.core.biz.trade.WhpTradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.dao.local.UserGroupDao;
 import com.hf.core.dao.remote.CallBackClient;
@@ -54,6 +55,8 @@ public class RemoteTest extends BaseCommitTestCase {
     @Autowired
     @Qualifier("zfTradingBiz")
     private AbstractTradingBiz zfTradingBiz;
+    @Autowired
+    private WhpTradingBiz whpTradingBiz;
 
     @Test
     public void testPay() {
@@ -269,5 +272,13 @@ public class RemoteTest extends BaseCommitTestCase {
         payRequest.setSign("");
         zfTradingBiz.doPay(payRequest,null,null);
         System.out.println(payRequest.getOutTradeNo());
+    }
+
+    @Test
+    public void testGetPayInfo() {
+        PayRequest payRequest = new PayRequest();
+        payRequest.setOutTradeNo("5177_LFXGc0e20d7eda2748488c13a499799d");
+        Map<String,Object> map = whpTradingBiz.query(payRequest);
+        System.out.println(new Gson().toJson(map));
     }
 }

@@ -8,11 +8,11 @@ import com.hf.base.enums.ChannelProvider;
 import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.Utils;
-import com.hf.core.dao.remote.Md5Utils;
 import com.hf.core.dao.remote.SendData;
 import com.hf.core.dao.remote.WhpClient;
 import com.hf.core.model.po.PayRequest;
 import com.hf.core.model.po.PayRequestBack;
+import com.hfb.merchant.code.util.http.Httpz;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -294,7 +294,34 @@ public class WhpTradingBiz extends AbstractTradingBiz {
     }
 
     @Override
+    public void handleCallBack(PayRequest payRequest) {
+        Map<String,Object> result = this.query(payRequest);
+        String pay_result = String.valueOf(result.get("pay_result"));
+        if(pay_result.equals("0")) {
+            logger.info("pay success,"+payRequest.getOutTradeNo());
+            payService.paySuccess(payRequest.getOutTradeNo());
+        } else {
+            logger.error("pay failed,"+payRequest.getOutTradeNo());
+            payService.payFailed(payRequest.getOutTradeNo());
+        }
+    }
+
+    @Override
     public Map<String, Object> query(PayRequest payRequest) {
-        return null;
+        ChannelCode channelCode = ChannelCode.parseFromCode(payRequest.getService());
+        String mchid = "26015";
+        if(channelCode == ChannelCode.QQ_SM) {
+
+        }
+        String out_tradeid = payRequest.getOutTradeNo();
+        Map<String,Object> params = new HashMap<>();
+        params.put("mchid",mchid);
+        params.put("out_tradeid",out_tradeid);
+        Map<String,Object> resultMap = whpClient.orderinfo(params);
+        if(MapUtils.isEmpty(resultMap)) {
+            logger.error("query failed,"+payRequest.getOutTradeNo());
+            throw new BizFailException("query failed,"+payRequest.getOutTradeNo());
+        }
+        return resultMap;
     }
 }
