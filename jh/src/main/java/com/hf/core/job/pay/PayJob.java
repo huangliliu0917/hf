@@ -116,7 +116,7 @@ public class PayJob {
         logger.info("current password:"+password);
     }
 
-    @Scheduled()
+//    @Scheduled()
     public void payRequestCallBack() {
 
     }
