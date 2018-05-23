@@ -277,7 +277,7 @@ public class RemoteTest extends BaseCommitTestCase {
     @Test
     public void testGetPayInfo() {
         PayRequest payRequest = new PayRequest();
-        payRequest.setOutTradeNo("5177_LFXGc0e20d7eda2748488c13a499799d");
+        payRequest.setOutTradeNo("5166_appjza1455551174527657");
         Map<String,Object> map = whpTradingBiz.query(payRequest);
         System.out.println(new Gson().toJson(map));
     }

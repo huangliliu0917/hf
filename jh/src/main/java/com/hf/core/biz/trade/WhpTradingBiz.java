@@ -237,11 +237,16 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         PayRequestStatus payRequestStatus = PayRequestStatus.parse(payRequest.getStatus()) ;
 
         if(payRequestStatus == PayRequestStatus.OPR_SUCCESS) {
-            return new Gson().toJson(com.hf.base.utils.MapUtils.buildMap("resCode","0000"));
+            return "success";
+        }
+
+        if(payRequestStatus == PayRequestStatus.PAY_SUCCESS) {
+            return "success";
         }
 
         if(payRequestStatus != PayRequestStatus.PROCESSING && payRequestStatus!=PayRequestStatus.OPR_GENERATED) {
-            throw new BizFailException("status invalid");
+            logger.error("status not match,"+payRequest.getOutTradeNo());
+            return "success";
         }
 
         if(new BigDecimal(pay_result).intValue() == 0) {
@@ -250,7 +255,7 @@ public class WhpTradingBiz extends AbstractTradingBiz {
             payService.payFailed(out_tradeid);
         }
 
-        return "SUCCESS";
+        return "success";
     }
 
     private String handlerQqQrCallBack(Map<String, String> map) {
@@ -276,11 +281,12 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         }
 
         if(payRequestStatus == PayRequestStatus.OPR_SUCCESS) {
-            return new Gson().toJson(com.hf.base.utils.MapUtils.buildMap("resCode","0000"));
+            return "success";
         }
 
         if(payRequestStatus != PayRequestStatus.PROCESSING && payRequestStatus!=PayRequestStatus.OPR_GENERATED) {
-            throw new BizFailException("status invalid");
+            logger.error("status not match,"+payRequest.getOutTradeNo());
+            return "success";
         }
 
         logger.info("Start pay success."+outTradeNo);

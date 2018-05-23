@@ -51,6 +51,8 @@ public class TradeBizFactory {
                 return hfbTradingBiz;
             case ZF:
                 return zfTradingBiz;
+            case WHP:
+                return whpTradingBiz;
         }
         throw new BizFailException(String.format("no provider found,%s",providerCode));
     }
