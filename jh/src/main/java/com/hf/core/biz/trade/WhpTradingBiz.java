@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class WhpTradingBiz extends AbstractTradingBiz {
@@ -113,8 +114,8 @@ public class WhpTradingBiz extends AbstractTradingBiz {
             payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
             payService.remoteSuccess(payRequest,payRequestBack);
             try {
-                logger.info("user-agent:"+request.getHeader("user-agent"));
-                if(request.getHeader("user-agent").contains("Mozilla")) {
+                if(!Objects.isNull(request.getHeader("user-agent")) && request.getHeader("user-agent").contains("Mozilla")) {
+                    logger.info("user-agent:"+request.getHeader("user-agent"));
                     response.sendRedirect(String.valueOf(result.get("pay_info")));
                 }
             } catch (Exception e) {
@@ -178,7 +179,7 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         map.put("sign" , sign);//签名
 
         String result = sd.onlineBankJson(url, SendData.mapToJson(map,null).toString());
-
+        logger.info("支付结果:"+result);
         Map<String,Object> res = new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
 
         PayRequestBack payRequestBack = new PayRequestBack();
@@ -194,14 +195,14 @@ public class WhpTradingBiz extends AbstractTradingBiz {
         }
 
         if(new BigDecimal(res.get("resultCode").toString()).intValue() == 0) {
-            if(Utils.checkEncrypt(res,userkey)) {
-                //验签失败
-                payRequestBack.setErrcode(CodeManager.CIPHER_CHECK_FAILED);
-                payRequestBack.setMessage("交易失败");
-                logger.error("验签失败："+new Gson().toJson(res));
-                payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
-                return;
-            }
+//            if(Utils.checkEncrypt(res,userkey)) {
+//                //验签失败
+//                payRequestBack.setErrcode(CodeManager.CIPHER_CHECK_FAILED);
+//                payRequestBack.setMessage("交易失败");
+//                logger.error("验签失败："+new Gson().toJson(res));
+//                payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
+//                return;
+//            }
 
             //success
             payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);

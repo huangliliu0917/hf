@@ -1,6 +1,7 @@
 package com.hf.core.api;
 
 import com.google.gson.Gson;
+import com.hf.base.exceptions.BizFailException;
 import com.hf.base.utils.MapUtils;
 import com.hf.core.biz.service.TradeBizFactory;
 import com.hf.core.biz.trade.TradingBiz;
@@ -21,6 +22,7 @@ public class PayServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
@@ -43,30 +45,37 @@ public class PayServlet extends HttpServlet {
         String sign = request.getParameter("sign");
         String front_url = request.getParameter("front_url");
 
-        TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(merchant_no,service);
-        logger.info("tradingBiz:"+tradingBiz.getClass().getName());
+        try {
+            TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(merchant_no,service);
+            logger.info("tradingBiz:"+tradingBiz.getClass().getName());
 
-        Map<String,Object> params = MapUtils.buildMap("version",version,
-                "service",service,
-                "merchant_no",merchant_no,
-                "total",total,
-                "name",name,
-                "remark",remark,
-                "out_trade_no",out_trade_no,
-                "out_notify_url",out_notify_url,
-                "create_ip",create_ip,
-                "sub_openid",sub_openid,
-                "buyer_id",buyer_id,
-                "authcode",authcode,
-                "bank_code",bank_code,
-                "nonce_str",nonce_str,
-                "sign_type",sign_type,
-                "sign",sign,
-                "front_url",front_url);
+            Map<String,Object> params = MapUtils.buildMap("version",version,
+                    "service",service,
+                    "merchant_no",merchant_no,
+                    "total",total,
+                    "name",name,
+                    "remark",remark,
+                    "out_trade_no",out_trade_no,
+                    "out_notify_url",out_notify_url,
+                    "create_ip",create_ip,
+                    "sub_openid",sub_openid,
+                    "buyer_id",buyer_id,
+                    "authcode",authcode,
+                    "bank_code",bank_code,
+                    "nonce_str",nonce_str,
+                    "sign_type",sign_type,
+                    "sign",sign,
+                    "front_url",front_url);
 
-        logger.info("pay params:"+new Gson().toJson(params));
+            logger.info("pay params:"+new Gson().toJson(params));
 
-        Map<String,Object> resultMap = tradingBiz.pay(params,request,response);
-        response.getWriter().write(new Gson().toJson(resultMap));
+            Map<String,Object> resultMap = tradingBiz.pay(params,request,response);
+            response.getWriter().write(new Gson().toJson(resultMap));
+        } catch (BizFailException e) {
+            response.getWriter().write("订单处理失败:"+e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("系统异常:"+e.getMessage());
+        }
     }
 }
