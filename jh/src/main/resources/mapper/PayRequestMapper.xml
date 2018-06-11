@@ -8,7 +8,7 @@
     <result column="mch_id" property="mchId" jdbcType="VARCHAR" />
     <result column="sub_openid" property="subOpenid" jdbcType="VARCHAR" />
     <result column="buyer_id" property="buyerId" jdbcType="VARCHAR" />
-    <result column="service" property="service" jdbcType="VARCHAR" />
+    <result column="service" property="service" jdbcType="VARCHAR"/>
     <result column="appid" property="appid" jdbcType="VARCHAR" />
     <result column="sign" property="sign" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
@@ -519,8 +519,48 @@
 
   </select>
 
+  <select id="selectUserPaySumCount" resultType="java.util.HashMap">
+    select
+    count(1) as tradeCount,
+    channel_provider_code as providerCode,
+    service
+    from pay_request
+    where
+      mch_id = #{groupNo,jdbcType=VARCHAR}
+    and `status` = 100
+    <if test="createTime != null">
+      and t1.create_time >= #{createTime,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime2 != null">
+      and <![CDATA[ t1.create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+    </if>
+    group by channel_provider_code,service
+  </select>
+
+  <select id="selectUserPaySum" resultType="java.util.HashMap">
+    select
+    sum(total_fee) as totalAmount
+    sum(actual_amount) as actualAmount,
+    sum(fee) as totalFee,
+    channel_provider_code as providerCode,
+    service
+    from pay_request
+    where
+    mch_id = #{groupNo,jdbcType=VARCHAR}
+    and `status` = 100
+    <if test="createTime != null">
+      and t1.create_time >= #{createTime,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime2 != null">
+      and <![CDATA[ t1.create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+    </if>
+    group by channel_provider_code,service
+  </select>
+
   <select id="selectUserStatistics" resultType="java.util.HashMap">
     select sum(t1.amount) as 'amount',
+           sum(t2.total_fee) as 'totalAmount',
+           sum(t2.fee) as 'fee',
            t1.group_id as 'groupId',
            t3.group_no as 'groupNo',
            t3.name as 'name',
@@ -548,6 +588,35 @@
       </foreach>
     </if>
     group by t1.group_id,t3.group_no,t3.name,t2.service
+  </select>
+
+  <select id="countUserStatistics" resultType="java.util.HashMap">
+    select count(t1.id) as 'payCount',
+    t1.group_id as 'groupId',
+    t2.service as 'service'
+    from account_opr_log t1
+    left join pay_request t2 on t1.out_trade_no = t2.out_trade_no
+    left join user_group t3 on t1.group_id = t3.id
+    where t1.type = 0 and t1.status = 10
+    <if test="groupNo != null">
+      and t3.group_no = #{groupNo,jdbcType=VARCHAR}
+    </if>
+    <if test="groupId != null">
+      and t3.id = #{groupId,jdbcType=BIGINT}
+    </if>
+    <if test="createTime != null">
+      and t1.create_time >= #{createTime,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime2 != null">
+      and <![CDATA[ t1.create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+    </if>
+    <if test="groupIds != null and groupIds.size()>0">
+      and t1.group_id in
+      <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    group by t1.group_id,t2.service
   </select>
 
   <select id="selectCount" resultType="java.lang.Integer">

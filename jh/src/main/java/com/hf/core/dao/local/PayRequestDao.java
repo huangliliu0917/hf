@@ -55,4 +55,10 @@ public interface PayRequestDao {
     List<Map<String,Object>> sumByProvider();
 
     BigDecimal selectSum(Map<String,Object> map);
+
+    int selectUserPaySumCount(Map<String,Object> map);
+
+    List<Map<String,Object>> selectUserPaySum(Map<String,Object> map);
+
+    List<Map<String,Object>> countUserStatistics(Map<String,Object> map);
 }

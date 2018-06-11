@@ -40,9 +40,6 @@
           <div class="layui-form-item">
               <div class="layui-inline">
                   <div class="layui-input-inline">
-                      <input type="text" name="groupNo" id="groupNo" autocomplete="off" placeholder="请输入商户号" class="layui-input" #if(${requestInfo.groupNo}) value="${requestInfo.groupNo}" #else value="" #end>
-                  </div>
-                  <div class="layui-input-inline">
                       <input type="text" name="createTime" id="createTime" autocomplete="off" placeholder="请输入开始时间" class="layui-input" #if(${requestInfo.createTime}) value="${requestInfo.createTime}" #else value="" #end>
                   </div>
                   <div class="layui-input-inline">
@@ -65,7 +62,10 @@
             <th lay-data="{field:'amount', width:140,style:'color:#060;'}">总金额</th>
             <th lay-data="{field:'service', width:80,style:'color:#060;'}">通道</th>
             <th lay-data="{field:'serviceName', width:150,style:'color:#060;'}">通道名称</th>
-            <th lay-data="{field:'channelAmount', width:140,style:'color:#060;'}">通道金额</th>
+            <th lay-data="{field:'channelAmount', width:140,style:'color:#060;'}">支付金额</th>
+              <th lay-data="{field:'totalAmount', width:140,style:'color:#060;'}">交易金额</th>
+              <th lay-data="{field:'tax', width:140,style:'color:#060;'}">扣费</th>
+              <th lay-data="{field:'totalCount', width:140,style:'color:#060;'}">成功笔数</th>
           </tr>
           </thead>
           <tbody>
@@ -80,6 +80,9 @@
                     <td aria-rowspan="1" style="text-align:center;">${detail.channelCode}</td>
                     <td aria-rowspan="1" style="text-align:center;">${detail.channelName}</td>
                     <td aria-rowspan="1" style="text-align:center; color:#090">${detail.amount}</td>
+                    <td aria-rowspan="1" style="text-align:center; color:#090">${detail.totalAmount}</td>
+                    <td aria-rowspan="1" style="text-align:center; color:#090">${detail.tax}</td>
+                    <td aria-rowspan="1" style="text-align:center; color:#090">${detail.tradeCount}</td>
                 </tr>
                   #set( $index = $index+1)
             #end

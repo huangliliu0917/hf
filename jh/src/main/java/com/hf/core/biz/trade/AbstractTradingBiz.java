@@ -353,6 +353,10 @@ public abstract class AbstractTradingBiz implements TradingBiz {
                 resutMap.put("remark",payRequest.getRemark());
             }
 
+            if("5189".equals(userGroup.getGroupNo())) {
+                resutMap.put("remark",payRequest.getRemark());
+            }
+
             String sign = Utils.encrypt(resutMap,userGroup.getCipherCode());
             resutMap.put("sign",sign);
             logger.info("Start call back:"+payRequest.getOutTradeNo()+",url:"+url);

@@ -214,6 +214,11 @@ public class TrdBizImpl implements TrdBiz {
             params.remove("groupId");
         }
 
+        List<Map<String,Object>> countResults = payRequestDao.countUserStatistics(params);
+        Map<String,Integer> countMap = new HashMap<>();
+        for(Map<String,Object> countObj : countResults) {
+            countMap.put(String.format("%s_%s",countObj.get("groupId").toString(),countObj.get("service").toString()),Integer.parseInt(countObj.get("payCount").toString()));
+        }
         List<Map<String,Object>> results = payRequestDao.selectUserStatistics(params);
 
         Map<Long,UserStatistic> statisticMap = new TreeMap<>();
@@ -225,6 +230,8 @@ public class TrdBizImpl implements TrdBiz {
             String name = String.valueOf(map.get("name"));
             String channelCode = String.valueOf(map.get("service"));
             String channelName = ChannelCode.parseFromCode(channelCode).getDesc();
+            BigDecimal totalAmount = new BigDecimal(String.valueOf(map.get("totalAmount"))).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
+            BigDecimal fee = new BigDecimal(String.valueOf(map.get("fee"))).divide(new BigDecimal("100"),2,BigDecimal.ROUND_HALF_UP);
 
             if(Objects.isNull(statisticMap.get(groupId))) {
                 UserStatistic userStatistic = new UserStatistic();
@@ -237,6 +244,9 @@ public class TrdBizImpl implements TrdBiz {
                 detail.setChannelCode(channelCode);
                 detail.setChannelName(channelName);
                 detail.setAmount(amount);
+                detail.setTradeCount(countMap.get(String.format("%s_%s",groupId,channelCode)));
+                detail.setTotalAmount(totalAmount);
+                detail.setTax(fee);
 
                 if(null == userStatistic.getList()) {
                     userStatistic.setList(new ArrayList<>());
@@ -251,6 +261,9 @@ public class TrdBizImpl implements TrdBiz {
                 detail.setChannelCode(channelCode);
                 detail.setChannelName(channelName);
                 detail.setAmount(amount);
+                detail.setTradeCount(countMap.get(String.format("%s_%s",groupId,channelCode)));
+                detail.setTotalAmount(totalAmount);
+                detail.setTax(fee);
 
                 userStatistic.getList().add(detail);
             }

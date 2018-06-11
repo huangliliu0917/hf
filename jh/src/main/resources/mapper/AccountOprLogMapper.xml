@@ -208,6 +208,23 @@
     where out_trade_no = #{outTradeNo,jdbcType=VARCHAR} order by group_id,id asc
   </select>
 
+  <select id="selectGroupTradingCount" resultMap="BaseResultMap">
+    select count(1),provider_code,service from account_opr_log where `status` = 10 and type = '0'
+    <if test="groupIds != null and groupIds.size()>0">
+      and group_id in
+      <foreach item="groupId" index="index" collection="groupIds" open="(" separator="," close=")">
+        #{groupId}
+      </foreach>
+    </if>
+    <if test="createTime != null">
+      and create_time >= #{createTime,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime2 != null">
+      and <![CDATA[ create_time < #{createTime2,jdbcType=VARCHAR} ]]>
+    </if>
+    group by provider_code,service
+  </select>
+
   <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
