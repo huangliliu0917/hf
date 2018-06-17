@@ -1,5 +1,6 @@
 package com.hf.core.job.pay;
 
+import com.google.gson.Gson;
 import com.hf.base.enums.PayRequestStatus;
 import com.hf.base.enums.TradeType;
 import com.hf.base.exceptions.BizFailException;
@@ -73,33 +74,22 @@ public class PayJob {
         }
     }
 
-//    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void handleNoCallBackData() {
-        logger.info("Start handle no callback");
-        Long startId = 0L;
-        int page = 1;
-        int pageSize = 500;
-        while(page<100) {
-            Map<String,Object> map = MapUtils.buildMap("status", PayRequestStatus.PROCESSING.getValue(),
-                    "type", TradeType.PAY.getValue(),"startId",startId,"lastTime", DateUtils.addHours(new Date(),-12),
-                    "startIndex",(page-1)*pageSize,
-                    "pageSize",pageSize,"sortType","asc");
-            List<PayRequest> list = payRequestDao.select(map);
-
-            if(CollectionUtils.isEmpty(list)) {
+        Long id = 0L;
+        while(true) {
+            logger.info("Start handle call back,minId:"+id);
+            List<PayRequest> payRequests = payRequestDao.selectWaitingCallBack(id);
+            if(CollectionUtils.isEmpty(payRequests)) {
                 break;
             }
-
-            page++;
-            startId = list.get(list.size()-1).getId();
-
-            list.forEach(payRequest -> {
-                TradingBiz tradeBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
-                payService.payFailed(payRequest.getOutTradeNo());
-                tradeBiz.notice(payRequest);
+            payRequests.forEach(payRequest -> {
+                TradingBiz tradingBiz = tradeBizFactory.getTradingBiz(payRequest.getChannelProviderCode());
+                tradingBiz.notice(payRequest);
             });
+            id = payRequests.get(payRequests.size()-1).getId();
+            logger.info("Finish handle call back,maxId:"+id);
         }
-
     }
 
     @Scheduled(cron = "0/10 * * * * ?")

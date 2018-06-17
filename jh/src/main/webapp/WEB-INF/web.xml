@@ -206,6 +206,15 @@
     <servlet-name>zfPayNotify</servlet-name>
     <url-pattern>/payCallBack/zf</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>zfbPayNotify</servlet-name>
+    <servlet-class>com.hf.core.callback.ZfbCallBack</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>zfbPayNotify</servlet-name>
+    <url-pattern>/payCallBack/zfb</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>settleDemo</servlet-name>

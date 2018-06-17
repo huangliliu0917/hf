@@ -281,4 +281,5 @@ public class RemoteTest extends BaseCommitTestCase {
         Map<String,Object> map = whpTradingBiz.query(payRequest);
         System.out.println(new Gson().toJson(map));
     }
+
 }

@@ -6,6 +6,7 @@ import com.hf.base.model.RemoteParams;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class CallBackClient extends BaseClient {
         }
         RemoteParams remoteParams = new RemoteParams(url).withParams(new HashMap<>());
         try {
-            String result = super.post(remoteParams);
+            String result = super.post(remoteParams, MediaType.APPLICATION_FORM_URLENCODED);
             logger.info(String.format("remote call back result:%s,%s",result,new Gson().toJson(params)));
             return StringUtils.equalsIgnoreCase(result,"SUCCESS");
         } catch (Exception e) {

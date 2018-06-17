@@ -60,6 +60,8 @@ public class PayRequest {
 
     private String frontUrl;
 
+    private Long receiveTime;
+
     public PayRequest() {
 
     }
@@ -292,5 +294,13 @@ public class PayRequest {
 
     public void setFrontUrl(String frontUrl) {
         this.frontUrl = frontUrl;
+    }
+
+    public Long getReceiveTime() {
+        return receiveTime;
+    }
+
+    public void setReceiveTime(Long receiveTime) {
+        this.receiveTime = receiveTime;
     }
 }

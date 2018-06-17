@@ -61,4 +61,6 @@ public interface PayRequestDao {
     List<Map<String,Object>> selectUserPaySum(Map<String,Object> map);
 
     List<Map<String,Object>> countUserStatistics(Map<String,Object> map);
+
+    List<PayRequest> selectWaitingCallBack(@Param("id")Long id);
 }

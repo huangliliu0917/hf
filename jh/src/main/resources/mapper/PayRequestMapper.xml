@@ -29,13 +29,14 @@
     <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
     <result column="iversion" property="iversion" jdbcType="VARCHAR" />
     <result column="front_url" property="frontUrl" jdbcType="VARCHAR" />
+    <result column="receive_time" property="receiveTime" jdbcType="BIGINT" />
 
   </resultMap>
   <sql id="Base_Column_List" >
     id, out_trade_no, body, mch_id, sub_openid, buyer_id, service, appid, sign, `status`, 
     create_time, update_time, version,trade_type,fee,actual_amount,total_fee,remark,
     channel_provider_code,pay_result,out_notify_url,notice_status,notice_retry_time,create_ip,bank_code,
-    iversion,front_url
+    iversion,front_url,receive_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -284,7 +285,8 @@
 
   <update id="updateStatusById">
     update pay_request
-    set status = #{toStatus,jdbcType=INTEGER}
+    set status = #{toStatus,jdbcType=INTEGER},
+      receive_time = UNIX_TIMESTAMP(now())
     where id = #{id,jdbcType=BIGINT} and status = #{fromStatus,jdbcType=INTEGER}
   </update>
 
@@ -692,5 +694,16 @@
     channel_provider_code as "providerCode",
     mch_id as "mchId"
     from pay_request where status = 100 group by channel_provider_code,mch_id
+  </select>
+
+  <select id="selectWaitingCallBack" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from pay_request
+    where status in (98,100) and notice_status = 0 and <![CDATA[  notice_retry_time < 5 ]]>
+    and receive_time != 0
+    and (notice_retry_time = 0 or UNIX_TIMESTAMP(now()) > receive_time+power(2,notice_retry_time)*60)
+    and id > #{id,jdbcType=BIGINT} and <![CDATA[create_time < date_add(now(), interval -2 minute) ]]>
+    order by id limit 200
   </select>
 </mapper>
