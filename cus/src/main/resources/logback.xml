@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ~ Copyright (c) 2009-2014. 上海诺诺镑客 All rights reserved. ~ @(#) logback.xml
+	2014-10-27 16:42 -->
+<configuration scan="false" scanPeriod="10 second" >
+
+	<property name="logPath" value="logs/" />
+	<property name="system" value="jh" />
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+
+	<!-- 标准输出，除开发环境之外不能使用 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 异常错误日志文件配置 -->
+	<appender name="errorLog"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/${system}_error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/${system}_error.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="jobLog"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/${system}_job.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/${system}_job.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 业务系统日志文件配置 -->
+	<appender name="bizLog"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/${system}_biz.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/${system}_biz.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 底层框架日志文件配置 -->
+	<appender name="frameworkLog"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/${system}_framework.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/${system}_framework.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 消息队列日志文件配置 -->
+	<appender name="mqLog"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/${system}_mq.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/${system}_mq.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<!-- 配置管理中心日志文件配置 -->
+	<appender name="nolyConfLog"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/${system}_nolyconf.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logPath}/${system}_nolyconf.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date|%thread|%5level|%logger{50}|%L|%msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 默认日志,凡是没有指定的日志全部输出到frameworkLog中，业务日志一般会直接写到bizlog中，而没有配置的基本都是框架级日志 -->
+	<root level="DEBUG">
+		<appender-ref ref="console" />
+	</root>
+
+</configuration>

@@ -28,6 +28,8 @@ public class SettleServiceImpl implements SettleService {
     private AdminAccountOprLogDao adminAccountOprLogDao;
     @Autowired
     private AdminAccountDao adminAccountDao;
+    @Autowired
+    private ChannelProviderDao channelProviderDao;
 
     @Transactional
     @Override
@@ -36,7 +38,7 @@ public class SettleServiceImpl implements SettleService {
     }
 
     @Override
-    public void agentPaySuccess() {
+    public void agentPaySuccess(SettleTask settleTask, AccountOprLog accountOprLog) {
 
     }
 
@@ -65,11 +67,11 @@ public class SettleServiceImpl implements SettleService {
     public void paySuccess(SettleTask settleTask, AccountOprLog accountOprLog) {
         settleTask = settleTaskDao.selectByPrimaryKey(settleTask.getId());
         //支付金额
-        int count = accountOprLogDao.updateStatusById(accountOprLog.getId(), OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
+        ChannelProvider channelProvider = channelProviderDao.selectByCode(accountOprLog.getProviderCode());
+        int count = accountOprLogDao.updateStatusById(accountOprLog.getId(), channelProvider.getAgentPay() == 1?OprStatus.PAY_SUCCESS.getValue():OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
         if(count<=0) {
             throw new BizFailException("update oprLog status failed");
         }
-
         UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(settleTask.getGroupId(),accountOprLog.getProviderCode());
         count = userChannelAccountDao.finish(userChannelAccount.getId(),accountOprLog.getAmount(),userChannelAccount.getVersion());
         if(count<=0) {

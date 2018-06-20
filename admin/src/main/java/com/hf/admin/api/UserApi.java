@@ -614,6 +614,17 @@ public class UserApi {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/agent_with_draw_finish",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody
+    Map<String,Object> finishAgentWithDraw(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        if(StringUtils.isBlank(id)){
+            return MapUtils.buildMap("res",false,"msg","参数错误");
+        }
+        boolean result = adminClient.finishWithDraw(Long.parseLong(id));
+        return MapUtils.buildMap("res",result);
+    }
+
     @RequestMapping(value = "/with_draw_finish",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String,Object> finishWithDraw(HttpServletRequest request) {

@@ -11,6 +11,7 @@
     <module>agent</module>
     <module>jh</module>
     <module>hframe</module>
+      <module>cus</module>
   </modules>
   <packaging>pom</packaging>
 
