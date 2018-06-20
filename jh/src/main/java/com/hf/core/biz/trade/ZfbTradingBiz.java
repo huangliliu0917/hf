@@ -3,6 +3,8 @@ package com.hf.core.biz.trade;
 import com.alibaba.fastjson.JSONObject;
 import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.ChannelProvider;
+import com.hf.base.exceptions.BizFailException;
+import com.hf.base.utils.HttpClient;
 import com.hf.base.utils.Utils;
 import com.hf.core.dao.remote.ZfbClient;
 import com.hf.core.model.po.PayRequest;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,10 +44,10 @@ public class ZfbTradingBiz extends AbstractTradingBiz {
         String pay_memberid = "10123";
         String pay_orderid = payRequest.getOutTradeNo(); //todo 20长度不够,至少32
         String pay_applydate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        String pay_bankcode = "904"; //todo 支付宝H5怎么传
+        String pay_bankcode = "903"; //todo 支付宝H5怎么传
         String pay_notifyurl = "http://huifufu.cn/openapi/zfb/pay_notice";
         //String pay_callbackurl = ""; //todo 是否必填
-        String pay_amount = String.valueOf(payRequest.getTotalFee());//todo 单位
+        String pay_amount = String.valueOf(new BigDecimal(String.valueOf(payRequest.getTotalFee())).divide(new BigDecimal("100"),2, RoundingMode.HALF_UP));//todo 单位
         String format = "json";
         String pay_ip = payRequest.getCreateIp();
         String pay_productname = payRequest.getBody();
@@ -61,28 +65,25 @@ public class ZfbTradingBiz extends AbstractTradingBiz {
         params.put("pay_md5sign",sign);
         params.put("pay_productname",pay_productname);
 
-        Map<String,Object> result = zfbClient.unifiedorder(params);
+//        Map<String,Object> result = zfbClient.unifiedorder(params);
+        try {
+            HttpClient httpClient = new HttpClient(response);
+            httpClient.setParameter(params);
+            httpClient.sendByPost("https://api.likerpay.com/Pay_Index.html");
 
-        PayRequestBack payRequestBack = new PayRequestBack();
-        payRequestBack.setMchId(payRequest.getMchId());
-        payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+            PayRequestBack payRequestBack = new PayRequestBack();
+            payRequestBack.setMchId(payRequest.getMchId());
+            payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
 
-        String status = String.valueOf(result.get("status"));
-        String msg = String.valueOf(result.get("msg"));
-        if(StringUtils.equalsIgnoreCase(status,"ok")) {
-            JSONObject dataObj = JSONObject.parseObject(String.valueOf(result.get("data")));
-            String codeUrl = dataObj.getString("qrcodeUrl");
-            payRequestBack.setCodeUrl(codeUrl);
-            payRequestBack.setMessage(msg);
+            payRequestBack.setMessage("success");
             payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
-        } else {
-            payRequestBack.setErrcode(CodeManager.BIZ_FAIELD);
-            payRequestBack.setMessage(msg);
-            payService.payFailed(payRequest.getOutTradeNo(),payRequestBack);
-        }
 
-        payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
-        payService.remoteSuccess(payRequest,payRequestBack);
+            payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
+            payService.remoteSuccess(payRequest,payRequestBack);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new BizFailException(e);
+        }
     }
 
     @Override

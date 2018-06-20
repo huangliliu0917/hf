@@ -71,7 +71,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("service",ChannelCode.ALI_H5.getCode());
         payParams.put("remark","测试支付宝H5支付");
         payParams.put("sign_type","MD5");
-        payParams.put("total","11000");//10000.00
+        payParams.put("total","100");//10000.00
         payParams.put("version","2.0");
         payParams.put("out_notify_url","http://huifufu.cn");
 
