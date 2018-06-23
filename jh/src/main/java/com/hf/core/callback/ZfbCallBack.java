@@ -1,6 +1,7 @@
 package com.hf.core.callback;
 
 import com.google.gson.Gson;
+import com.hf.base.utils.Utils;
 import com.hf.core.biz.trade.TradingBiz;
 import com.hf.core.dao.local.PayRequestDao;
 import com.hf.core.model.po.PayRequest;
@@ -13,29 +14,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ZfbCallBack  extends HttpServlet {
-    protected Logger logger = LoggerFactory.getLogger(WhpQrCallBack.class);
+    protected Logger logger = LoggerFactory.getLogger(ZfbCallBack.class);
     private TradingBiz zfbTradingBiz = BeanContextUtils.getBean("zfbTradingBiz");
     private PayRequestDao payRequestDao = BeanContextUtils.getBean("payRequestDao");
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("zfb qr callback received , %s");
-
-        Map<String,String[]> reqMap = req.getParameterMap();
+        Enumeration<String> params = req.getParameterNames();
         Map<String,String> paramMap = new HashMap<>();
-        for(String key:reqMap.keySet()) {
-            if(reqMap.get(key) == null) {
-                continue;
-            }
-            paramMap.put(key,reqMap.get(key)[0]);
+        while (params.hasMoreElements()) {
+            String key = params.nextElement();
+            paramMap.put(key,String.valueOf(req.getParameter(key)));
         }
+
         logger.info("zfb qr callback param data:"+new Gson().toJson(paramMap));
 
-        String outTradeNo = paramMap.get("outTradeNo");
+        String outTradeNo = paramMap.get("orderid");
         PayRequest payRequest = payRequestDao.selectByTradeNo(outTradeNo);
         paramMap.put("service",payRequest.getService());
 

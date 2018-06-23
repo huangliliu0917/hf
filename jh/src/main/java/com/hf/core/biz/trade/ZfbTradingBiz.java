@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class ZfbTradingBiz extends AbstractTradingBiz {
@@ -88,7 +89,26 @@ public class ZfbTradingBiz extends AbstractTradingBiz {
 
     @Override
     public String handleCallBack(Map<String, String> map) {
-        return null;
+        String memberid = map.get("memberid");
+        String orderid = map.get("orderid");
+        String amount = map.get("amount");
+        String transaction_id = map.get("transaction_id");
+        String datetime = map.get("datetime");
+        String returncode = map.get("returncode");
+        String attach = map.get("attach");
+
+        PayRequest payRequest = payRequestDao.selectByTradeNo(orderid);
+        if(Objects.isNull(payRequest)) {
+            logger.error("payRequest not found,"+orderid);
+            return "ok";
+        }
+
+        if("00".equals(returncode)) {
+            payService.paySuccess(orderid);
+        } else {
+            payService.payFailed(orderid);
+        }
+        return "ok";
     }
 
     @Override

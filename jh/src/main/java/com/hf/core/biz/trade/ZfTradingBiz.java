@@ -17,6 +17,7 @@ import com.hf.core.model.po.PayRequestBack;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.model.po.UserInfo;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +51,9 @@ public class ZfTradingBiz extends AbstractTradingBiz {
                 break;
             case WY:
                 payForWy(payRequest,request,response);
+                break;
+            case WX_SM:
+                payForWx(payRequest,request,response);
                 break;
             default:
                 throw new BizFailException("channel not supported"+channelCode.getCode());
@@ -176,6 +182,70 @@ public class ZfTradingBiz extends AbstractTradingBiz {
 
             payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
             payService.payFailed(payRequest.getOutTradeNo());
+        }
+    }
+
+    private void payForWx(PayRequest payRequest, HttpServletRequest request, HttpServletResponse response) {
+        PayRequestBack payRequestBack = new PayRequestBack();
+        payRequestBack.setMchId(payRequest.getMchId());
+        payRequestBack.setOutTradeNo(payRequest.getOutTradeNo());
+        try {
+            String merchantNo = "990581077770019";
+            String terminalNo = "77700474";
+            String attach = "bank_mch_name=深圳市九度空间科技有限公司;bank_mch_id=991584077780017;";
+            String key = "SU62HD9438";
+            String merchantURL = "http://huifufu.cn/openapi/zf/pay_notice";
+            String productDescription = "991584077780017|00008825";
+            String payMoney = String.valueOf(payRequest.getTotalFee());
+            String productName = URLEncoder.encode(payRequest.getBody(), "UTF-8");
+            String inTradeOrderNo = payRequest.getOutTradeNo();
+            String payType = "19";
+            String weChatPayType = "603";
+            String validDate = new SimpleDateFormat("yyyyMMddHHmmss").format(DateUtils.addMinutes(new Date(), 10));
+            String signMsg = DigestUtils.md5Hex(merchantNo + terminalNo + payMoney + productName + inTradeOrderNo + payType + weChatPayType + key).toUpperCase();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("merchantNo", merchantNo);
+            map.put("terminalNo", terminalNo);
+            map.put("payMoney", payMoney);
+            map.put("productName", productName);
+            map.put("productDescription", URLEncoder.encode(productDescription, "UTF-8"));
+            map.put("inTradeOrderNo", inTradeOrderNo);
+            map.put("payType", payType);
+            map.put("weChatPayType", weChatPayType);
+            map.put("validDate", validDate);
+            map.put("merchantURL", merchantURL);
+            map.put("attach", attach);
+            map.put("signMsg", signMsg);
+
+            Map<String, Object> result = zfClient.payForWx(map);
+
+            if (org.apache.commons.collections.MapUtils.isEmpty(result)) {
+                payRequestBack.setErrcode(CodeManager.PAY_FAILED);
+                payRequestBack.setMessage("支付失败");
+                payService.payFailed(payRequest.getOutTradeNo());
+                return;
+            }
+
+            String responseCode = String.valueOf(result.get("responseCode"));
+            String responseComment = String.valueOf(result.get("responseComment"));
+            String qrCode = String.valueOf(result.get("qrCode"));
+
+            if (StringUtils.equals("00", responseCode)) {
+                payRequestBack.setErrcode(CodeManager.PAY_SUCCESS);
+                payRequestBack.setMessage(responseComment);
+                payRequestBack.setCodeUrl(qrCode);
+                payRequest = payRequestDao.selectByTradeNo(payRequest.getOutTradeNo());
+                payService.remoteSuccess(payRequest, payRequestBack);
+                return;
+            }
+
+            payRequestBack.setErrcode(CodeManager.PAY_FAILED);
+            payRequestBack.setMessage(responseComment);
+            payService.payFailed(payRequest.getOutTradeNo());
+        }catch (Exception e) {
+            logger.error(e.getMessage()+",tradeNo:"+payRequest.getOutTradeNo());
+            throw new BizFailException(e.getMessage());
         }
     }
 

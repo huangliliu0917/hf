@@ -83,7 +83,7 @@
                     <table class="layui-table" lay-data="{width:'100%',height:'332',id:'userData'}">
                         <thead>
                         <tr>
-                            <th lay-data="{field:'id',fixed: true,width:60}"></th>
+                            <th lay-data="{field:'id',fixed: true,width:100}"></th>
                             <th lay-data="{field:'groupNo', width:120}">商户编号</th>
                             <th lay-data="{field:'name', width:120}">商户名</th>
                             <th lay-data="{field:'ownerName', width:120}">法人</th>
@@ -138,21 +138,21 @@
                     </table>
                     <div class="pagex">
                         <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0">
-                            #if(${pageInfo.totalPage} == 1)
-                                <span class="layui-laypage-curr current">
-                                    <em class="layui-laypage-em"></em><em>${pageInfo.totalPage}</em>
-                                </span>
-                            #else
-                                #foreach($index in [1,${pageInfo.totalPage}])
-                                    #if($index == ${pageInfo.currentPage})
-                                        <span class="layui-laypage-curr current">
-                                        <em class="layui-laypage-em"></em><em>$index</em>
-                                        </span>
-                                    #else
-                                        <a class="num" href='#springUrl("/common/admin_user_authorized?currentPage=$index")'>$index</a>
-                                    #end
+                            #if(${pageInfo.showPage.showHead})
+                                <a class="num" href='#springUrl("/common/admin_order_index?currentPage=1&${urlParams}")'>首页</a>
+                            #end
+                            #foreach($page in ${pageInfo.showPage.pages})
+                                #if($page.selected)
+                                    <span class="layui-laypage-curr current"><em class="layui-laypage-em"></em><em>$page.label</em></span>
+                                #else
+                                    <a class="num" href='#springUrl("/common/admin_order_index?currentPage=${page.pageIndex}&${urlParams}")'>$page.label</a>
                                 #end
-                                <a class="next layui-laypage-next" href='#springUrl("/common/admin_user_authorized?currentPage=${pageInfo.nextPage}")'>下一页</a>
+                            #end
+                            #if($pageInfo.hasNext)
+                                <a class="num" href='#springUrl("/common/admin_order_index?currentPage=${pageInfo.nextPage}&${urlParams}")'>下一页</a>
+                            #end
+                            #if($pageInfo.showPage.showTail)
+                                <a class="num" href='#springUrl("/common/admin_order_index?currentPage=${pageInfo.tailPage.pageIndex}&${urlParams}")'>${pageInfo.tailPage.label}</a>
                             #end
                         </div>
                     </div>

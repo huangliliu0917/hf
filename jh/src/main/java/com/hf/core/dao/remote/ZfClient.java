@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hf.base.client.BaseClient;
 import com.hf.base.model.RemoteParams;
+import com.hf.core.api.JhTest;
 import org.apache.commons.httpclient.Header;
-import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -14,6 +16,9 @@ import java.util.Map;
 
 @Component
 public class ZfClient extends BaseClient implements PayClient {
+
+    protected static final Logger logger = LoggerFactory.getLogger(ZfClient.class);
+
     @Override
     public Map<String, Object> unifiedorder(Map<String, Object> params) {
         String url = "http://paygw.guangyinwangluo.com/swPayInterface/aliH5";
@@ -27,6 +32,20 @@ public class ZfClient extends BaseClient implements PayClient {
         RemoteParams remoteParams = new RemoteParams(url).withParams(new HashMap<>());
         String result = super.get(remoteParams);
         return new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
+    }
+
+    public Map<String, Object> payForWx(Map<String, Object> params) {
+        String url = "http://paygw.guangyinwangluo.com/swPayInterface/weChatQR";
+        try {
+            RemoteParams remoteParams = new RemoteParams(url).withParams(params);
+            String result = super.post(remoteParams);
+            logger.info("zf wx pay result:"+result);
+            return new Gson().fromJson(result,new TypeToken<Map<String,Object>>(){}.getType());
+        } catch (Exception e) {
+            logger.error(new Gson().toJson(params)+","+e.getMessage());
+            return new HashMap<>();
+        }
+
     }
 
     @Override

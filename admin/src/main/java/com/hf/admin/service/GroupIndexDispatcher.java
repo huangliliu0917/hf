@@ -21,6 +21,7 @@ public class GroupIndexDispatcher implements Dispatcher {
         String companyId = request.getSession().getAttribute("groupId").toString();
         UserGroupRequest userGroupRequest = new UserGroupRequest();
         userGroupRequest.setCompanyId(companyId);
+        userGroupRequest.setPageSize(15);
         Pagenation<UserGroup> pagenation = adminClient.getUserGroupList(userGroupRequest);
         DispatchResult dispatchResult = new DispatchResult();
         dispatchResult.setPage(page);

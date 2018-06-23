@@ -375,6 +375,14 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.com.sandpay</groupId>
+            <artifactId>sandpay-cashier-sdk</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/sandpay-cashier-sdk-1.0.0.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>com.hf</groupId>
             <artifactId>bdpush</artifactId>
             <version>3.0.1</version>
