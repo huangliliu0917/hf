@@ -68,12 +68,13 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service",ChannelCode.WX_SM.getCode());
+        payParams.put("service",ChannelCode.KJ.getCode());
         payParams.put("remark","测试支付宝H5支付");
         payParams.put("sign_type","MD5");
         payParams.put("total","100");//10000.00
         payParams.put("version","2.0");
         payParams.put("out_notify_url","http://huifufu.cn");
+        payParams.put("front_url","www.baidu.com");
 
         String sign = Utils.encrypt(payParams,userGroup.getCipherCode());
         payParams.put("sign",sign);

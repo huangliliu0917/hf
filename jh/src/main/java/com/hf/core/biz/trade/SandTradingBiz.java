@@ -23,6 +23,8 @@ import java.util.Map;
 @Service
 public class SandTradingBiz extends AbstractTradingBiz {
 
+    private static final String SD_REQUEST_URL = "https://cashier.sandpay.com.cn/fastPay/quickPay/index";
+
     @Override
     public ChannelProvider getChannelProvider() {
         return ChannelProvider.SAND;
@@ -33,7 +35,7 @@ public class SandTradingBiz extends AbstractTradingBiz {
         JSONObject head = new JSONObject();
         head.put("version", "1.0");
         head.put("method", "sandPay.fastPay.quickPay.index");
-        head.put("productId", "");
+        head.put("productId", "00000016");
         head.put("accessType", "1");
         head.put("mid", "18781666");
         head.put("channelType", "07"); //08 移动端
@@ -55,31 +57,43 @@ public class SandTradingBiz extends AbstractTradingBiz {
         data.put("head", head);
         data.put("body", body);
 
-        String requestMag = getRequestMessage(head, body);
-        // 模拟请求
-        logger.info("请求报文------>request：" + requestMag);
-        String response = HttpRequestUtil.sendPost(SD_REQUEST_URL + apiName, request);
-        // 将响应报文解码
-        String result = URLDecoder.decode(response, "UTF-8");
-        // 响应结果打印
-        logger.info("响应报文------------>response:" + result);
-        // 验证签名(需要先URL解码才能转换成为MAP)
-        Map respMap = SDKUtil.convertResultStringToMap(result);
-        String respData = (String) respMap.get("data");
-        String respSign = (String) respMap.get("sign");
         try {
-            boolean valid = CryptoUtil.verifyDigitalSign(respData.getBytes("UTF-8"), Base64.decodeBase64(respSign), CertUtil.getPublicKey(), "SHA1WithRSA");
-            if (!valid) {
-                logger.error("响应验证杉德签名------------>失败！");
-                throw new RuntimeException("verify sign fail.");
-            } else {
-                logger.error("响应验证杉德签名------------>成功！");
+            String reqSign = URLEncoder.encode(new String(
+                    Base64.encodeBase64(CryptoUtil.digitalSign(JSON.toJSONString(data).getBytes("UTF-8"),
+                            CertUtil.getPrivateKey(), "SHA1WithRSA"))), "UTF-8");
+            JSONObject r = new JSONObject();
+            r.put("data", JSON.toJSONString(data));
+            r.put("sign", reqSign);// 签名串
+
+            // 模拟请求
+            logger.info("请求报文------>request：" + r.toString());
+            String responseMsg = HttpRequestUtil.sendPost(SD_REQUEST_URL, r.toString());
+            // 将响应报文解码
+            try {
+                String result = URLDecoder.decode(responseMsg, "UTF-8");
+                // 响应结果打印
+                logger.info("响应报文------------>response:" + result);
+                // 验证签名(需要先URL解码才能转换成为MAP)
+                Map respMap = SDKUtil.convertResultStringToMap(result);
+                String respData = (String) respMap.get("data");
+                String respSign = (String) respMap.get("sign");
+                try {
+                    boolean valid = CryptoUtil.verifyDigitalSign(respData.getBytes("UTF-8"), Base64.decodeBase64(respSign), CertUtil.getPublicKey(), "SHA1WithRSA");
+                    if (!valid) {
+                        logger.error("响应验证杉德签名------------>失败！");
+                        throw new RuntimeException("verify sign fail.");
+                    } else {
+                        logger.error("响应验证杉德签名------------>成功！");
+                    }
+                } catch (Exception e) {
+                    logger.error("响应验证杉德签名------------>失败！", e);
+                }
+            } catch (Exception e) {
+                logger.error("decode失败",e);
             }
         } catch (Exception e) {
-            logger.error("响应验证杉德签名------------>失败！", e);
+            logger.error(e.getMessage());
         }
-
-        String url = "https://cashier.sandpay.com.cn/fastPay/quickPay/index";
     }
 
     private String getRequestMessage(Object o1, Object o2) {

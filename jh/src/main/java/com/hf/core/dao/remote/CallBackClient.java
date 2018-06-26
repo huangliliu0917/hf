@@ -18,7 +18,7 @@ public class CallBackClient extends BaseClient {
     public boolean post(String url,Map<String,Object> params) {
         for(int i=0;i<params.keySet().size();i++) {
             if(i==0) {
-               sc c   url = url+"?"+params.keySet().toArray()[i]+"="+params.get(params.keySet().toArray()[i]);
+                url = url+"?"+params.keySet().toArray()[i]+"="+params.get(params.keySet().toArray()[i]);
             } else {
                 url = url+"&"+params.keySet().toArray()[i]+"="+params.get(params.keySet().toArray()[i]);
             }

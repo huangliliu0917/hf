@@ -41,6 +41,9 @@ public class TradeBizFactory {
     @Autowired
     @Qualifier("zfbTradingBiz")
     private TradingBiz zfbTradingBiz;
+    @Autowired
+    @Qualifier("sandTradingBiz")
+    private TradingBiz sandTradingBiz;
 
     public TradingBiz getTradingBiz(String providerCode) {
         ChannelProvider channelProvider = ChannelProvider.parse(providerCode);
@@ -56,6 +59,8 @@ public class TradeBizFactory {
                 return zfTradingBiz;
             case WHP:
                 return whpTradingBiz;
+            case SAND:
+                return sandTradingBiz;
         }
         throw new BizFailException(String.format("no provider found,%s",providerCode));
     }
@@ -99,6 +104,10 @@ public class TradeBizFactory {
 
             if(ChannelProvider.ZFB == provider) {
                 return zfbTradingBiz;
+            }
+
+            if(ChannelProvider.SAND == provider) {
+                return sandTradingBiz;
             }
         }
         throw new BizFailException("用户无收单权限");
