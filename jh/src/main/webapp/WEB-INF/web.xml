@@ -215,6 +215,15 @@
     <servlet-name>zfbPayNotify</servlet-name>
     <url-pattern>/payCallBack/zfb</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>sandPayNotify</servlet-name>
+    <servlet-class>com.hf.core.callback.SandCallBack</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sandPayNotify</servlet-name>
+    <url-pattern>/payCallBack/sand</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>settleDemo</servlet-name>

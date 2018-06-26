@@ -75,6 +75,7 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("version","2.0");
         payParams.put("out_notify_url","http://huifufu.cn");
         payParams.put("front_url","www.baidu.com");
+        payParams.put("buyer_id","1000");
 
         String sign = Utils.encrypt(payParams,userGroup.getCipherCode());
         payParams.put("sign",sign);

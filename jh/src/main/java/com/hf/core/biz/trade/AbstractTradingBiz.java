@@ -186,7 +186,7 @@ public abstract class AbstractTradingBiz implements TradingBiz {
             payRequest.setBody(name);
         }
         if(!StringUtils.isEmpty(buyer_id)) {
-            String buyerId = merchant_no+"_"+buyer_id;
+            String buyerId = merchant_no+"a"+buyer_id;
             if(buyerId.length()<=10) {
                 payRequest.setBuyerId(buyerId);
             } else {

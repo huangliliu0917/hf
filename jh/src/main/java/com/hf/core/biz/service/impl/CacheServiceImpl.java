@@ -1,5 +1,6 @@
 package com.hf.core.biz.service.impl;
 
+import cn.com.sandpay.cashier.sdk.util.CertUtil;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -199,6 +200,15 @@ public class CacheServiceImpl implements CacheService,ApplicationListener<Contex
             WebApplicationContext webApplicationContext = (WebApplicationContext)applicationContext;
             ServletContext servletContext = webApplicationContext.getServletContext();
             rootPath = servletContext.getRealPath("/WEB-INF");
+
+            String privateKetPath = rootPath+"/certs/18781666private.pfx";
+            String publicKeyPath = rootPath+"/certs/18781666public.cer";
+            try {
+                CertUtil.init(publicKeyPath,privateKetPath,"18781666");
+            } catch (Exception e) {
+                throw new BizFailException(e);
+            }
+
         }
     }
 }
