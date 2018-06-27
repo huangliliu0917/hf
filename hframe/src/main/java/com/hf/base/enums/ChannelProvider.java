@@ -10,7 +10,8 @@ public enum  ChannelProvider {
     ZF("zf","中付"),
     WHP("whp","微互宝"),
     ZFB("zfb","中付宝"),
-    SAND("sand","衫德");
+    SAND("sand","衫德"),
+    SYT("syt","时运通");
 
     private String code;
     private String name;

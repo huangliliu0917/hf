@@ -1,0 +1,1 @@
+insert into channel_provider(provider_code,provider_name) values ('syt','时运通');

@@ -44,6 +44,9 @@ public class TradeBizFactory {
     @Autowired
     @Qualifier("sandTradingBiz")
     private TradingBiz sandTradingBiz;
+    @Autowired
+    @Qualifier("sytTradingBiz")
+    private TradingBiz sytTradingBiz;
 
     public TradingBiz getTradingBiz(String providerCode) {
         ChannelProvider channelProvider = ChannelProvider.parse(providerCode);
@@ -108,6 +111,10 @@ public class TradeBizFactory {
 
             if(ChannelProvider.SAND == provider) {
                 return sandTradingBiz;
+            }
+
+            if(ChannelProvider.SYT == provider) {
+                return sytTradingBiz;
             }
         }
         throw new BizFailException("用户无收单权限");

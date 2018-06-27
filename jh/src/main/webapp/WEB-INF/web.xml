@@ -226,6 +226,15 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>sytPayNotify</servlet-name>
+    <servlet-class>com.hf.core.callback.SytCallBack</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sytPayNotify</servlet-name>
+    <url-pattern>/payCallBack/syt</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>settleDemo</servlet-name>
     <servlet-class>com.hf.core.servlet.SettleAgentServlet</servlet-class>
   </servlet>

@@ -17,6 +17,7 @@ import com.hf.core.dao.remote.FxtClient;
 import com.hf.core.dao.remote.PayClient;
 import com.hf.core.dao.remote.YsClient;
 import com.hf.core.model.po.PayRequest;
+import com.hf.core.model.po.PayRequestBack;
 import com.hf.core.model.po.UserGroup;
 import com.hf.core.utils.CipherUtils;
 import com.hf.core.utils.Https;
@@ -68,14 +69,13 @@ public class RemoteTest extends BaseCommitTestCase {
         payParams.put("nonce_str", Utils.getRandomString(8));
         payParams.put("name","测试");
         payParams.put("out_trade_no",String.valueOf(RandomUtils.nextLong()));
-        payParams.put("service",ChannelCode.KJ.getCode());
+        payParams.put("service",ChannelCode.ALI_H5.getCode());
         payParams.put("remark","测试支付宝H5支付");
         payParams.put("sign_type","MD5");
         payParams.put("total","100");//10000.00
         payParams.put("version","2.0");
         payParams.put("out_notify_url","http://huifufu.cn");
         payParams.put("front_url","www.baidu.com");
-        payParams.put("buyer_id","1000");
 
         String sign = Utils.encrypt(payParams,userGroup.getCipherCode());
         payParams.put("sign",sign);
