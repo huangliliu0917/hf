@@ -183,7 +183,7 @@
 
     function new_agent_pay(id) {
         layer.confirm('确认发起付款？', function (index) {
-            x_admin_show("发起付款",'#springUrl("/common/new_agent_pay?id=")'+id,800,600);
+            x_admin_show("发起付款",'#springUrl("/common/new_agent_pay?taskId=")'+id,800,600);
         });
     }
 

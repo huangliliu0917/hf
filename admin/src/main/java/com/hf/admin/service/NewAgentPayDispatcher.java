@@ -26,7 +26,7 @@ public class NewAgentPayDispatcher implements Dispatcher {
 
     @Override
     public DispatchResult dispatch(HttpServletRequest request, String page) {
-        String withdrawId = request.getParameter("id");
+        String withdrawId = request.getParameter("taskId");
         String groupId = request.getSession().getAttribute("groupId").toString();
         SettleTask settleTask = defaultClient.getSettleTask(withdrawId);
 
