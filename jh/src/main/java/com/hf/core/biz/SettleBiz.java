@@ -15,4 +15,5 @@ public interface SettleBiz {
     Pagenation<WithDrawInfo> getWithDrawPage(WithDrawRequest withDrawRequest);
     List<AgentPayLog> newAgentPay(String withDrawId);
     void submitAgentPay(Long id);
+    void finishAgentPay(Long id);
 }

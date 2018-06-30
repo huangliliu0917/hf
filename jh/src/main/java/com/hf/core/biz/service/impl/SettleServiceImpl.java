@@ -1,5 +1,6 @@
 package com.hf.core.biz.service.impl;
 
+import com.hf.base.contants.CodeManager;
 import com.hf.base.enums.OprStatus;
 import com.hf.base.enums.OprType;
 import com.hf.base.enums.SettleStatus;
@@ -70,6 +71,9 @@ public class SettleServiceImpl implements SettleService {
         ChannelProvider channelProvider = channelProviderDao.selectByCode(accountOprLog.getProviderCode());
         int count = accountOprLogDao.updateStatusById(accountOprLog.getId(), channelProvider.getAgentPay() == 1?OprStatus.PAY_SUCCESS.getValue():OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
         if(count<=0) {
+            if(channelProvider.getAgentPay() == 1) {
+                throw new BizFailException(CodeManager.AGENT_PAY_NOT_FINISHED,"代付未完成");
+            }
             throw new BizFailException("update oprLog status failed");
         }
         UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(settleTask.getGroupId(),accountOprLog.getProviderCode());

@@ -6,6 +6,12 @@ public class CodeManager {
     public static final String RESET_PASSWORD_FAILED = "9000002";
     public static final String GET_USER_SUCCESS = "0000000";
     public static final String BIZ_FAIELD = "9999999";
+    //user(1)
+    //channel(2)
+    //account(3)
+    //settle(4)
+    public static final String AGENT_PAY_NOT_FINISHED = "40000001";
+    //trade(9)
 
     public static final String PAY_SUCCESS = "0";
     public static final String CHECK_ENCRIPT_FAILED = "1";

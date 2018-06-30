@@ -37,21 +37,10 @@ public class SettleTest extends BaseTestCase {
     private UserChannelAccountDao userChannelAccountDao;
     @Autowired
     private SettleService settleService;
+    @Autowired
+    private ChannelProviderDao channelProviderDao;
 
-    @Before
-    public void prepareData() {
-        SettleTask settleTask = new SettleTask();
-    }
-
-    @Test
-    public void testSettle() {
-        UserGroup userGroup = userGroupDao.selectByPrimaryKey(8773L);
-        Account comAccount = accountDao.selectByGroupId(userGroup.getCompanyId());
-        List<UserChannelAccount> userChannelAccounts = userChannelAccountDao.selectByGroupId(userGroup.getId());
-        List<UserChannelAccount> adminChannelAccounts = userChannelAccountDao.selectByGroupId(userGroup.getCompanyId());
-
-        AdminAccount adminAccount = adminAccountDao.selectByGroupId(userGroup.getCompanyId());
-
+    public Long prepareData() {
         SettleTask settleTask = new SettleTask();
         settleTask.setGroupId(8773L);
         settleTask.setSettleAmount(new BigDecimal("5997"));
@@ -64,8 +53,19 @@ public class SettleTest extends BaseTestCase {
         settleTask.setIdNo("37132619881122005X");
         settleTask.setTel("13611681327");
         settleBiz.saveSettle(settleTask);
+        return settleTask.getId();
+    }
 
-        settleTask = settleTaskDao.selectByPrimaryKey(settleTask.getId());
+    @Test
+    public void testSettle() {
+        Long taskId = prepareData();
+
+        UserGroup userGroup = userGroupDao.selectByPrimaryKey(8773L);
+        Account comAccount = accountDao.selectByGroupId(userGroup.getCompanyId());
+        List<UserChannelAccount> userChannelAccounts = userChannelAccountDao.selectByGroupId(userGroup.getId());
+        List<UserChannelAccount> adminChannelAccounts = userChannelAccountDao.selectByGroupId(userGroup.getCompanyId());
+        AdminAccount adminAccount = adminAccountDao.selectByGroupId(userGroup.getCompanyId());
+        SettleTask settleTask = settleTaskDao.selectByPrimaryKey(taskId);
 
         Account account = accountDao.selectByGroupId(8773L);
         Assert.assertTrue(account.getLockAmount().compareTo(new BigDecimal("5997"))==0);
@@ -95,6 +95,10 @@ public class SettleTest extends BaseTestCase {
                 "pageSize",Integer.MAX_VALUE));
 
         for(AccountOprLog accountOprLog:accountOprLogs) {
+            com.hf.core.model.po.ChannelProvider channelProvider = channelProviderDao.selectByCode(accountOprLog.getProviderCode());
+            if(channelProvider.getAgentPay() == 1) {
+                settleBiz.finishAgentPay(accountOprLog.getId());
+            }
             settleService.paySuccess(settleTask,accountOprLog);
         }
 
@@ -224,5 +228,11 @@ public class SettleTest extends BaseTestCase {
         settleTask = settleTaskDao.selectByPrimaryKey(settleTask.getId());
         Assert.assertTrue(settleTask.getSettleAmount().compareTo(settleTask.getPaidAmount())==0);
         Assert.assertTrue(settleTask.getStatus() == SettleStatus.SUCCESS.getValue());
+    }
+
+    @Test
+    public void testSettleFailed() {
+        Long taskId = prepareData();
+        settleBiz.settleFailed(taskId);
     }
 }

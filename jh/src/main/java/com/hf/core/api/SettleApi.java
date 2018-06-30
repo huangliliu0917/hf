@@ -105,4 +105,11 @@ public class SettleApi {
         settleBiz.submitAgentPay(id);
         return ResponseResult.success(true);
     }
+
+    @RequestMapping(value = "/finish_agent_pay",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")
+    public @ResponseBody ResponseResult<Boolean> finishAgentPay(@RequestBody Map<String,Object> params) {
+        Long id = new BigDecimal(params.get("id").toString()).longValue();
+        settleBiz.finishAgentPay(id);
+        return ResponseResult.success(true);
+    }
 }

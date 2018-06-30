@@ -352,4 +352,20 @@ public class SettleBizImpl implements SettleBiz {
             }
         }
     }
+
+    @Override
+    public void finishAgentPay(Long id) {
+        AccountOprLog accountOprLog =  accountOprLogDao.selectByPrimaryKey(id);
+        if(Objects.isNull(accountOprLog)) {
+            throw new BizFailException(String.format("Agent pay:%s not exists",id));
+        }
+        if(accountOprLog.getStatus() != OprStatus.NEW.getValue()) {
+            throw new BizFailException(String.format("status invalid,%s",id));
+        }
+        ChannelProvider channelProvider = channelProviderDao.selectByCode(accountOprLog.getProviderCode());
+        if(channelProvider.getAgentPay() != 1) {
+            throw new BizFailException(String.format("opr not agent,%s",id));
+        }
+        accountOprLogDao.updateStatusById(id,OprStatus.NEW.getValue(),OprStatus.PAY_SUCCESS.getValue());
+    }
 }
