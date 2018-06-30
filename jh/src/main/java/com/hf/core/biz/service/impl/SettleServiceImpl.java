@@ -6,9 +6,12 @@ import com.hf.base.enums.OprType;
 import com.hf.base.enums.SettleStatus;
 import com.hf.base.exceptions.BizFailException;
 import com.hf.base.model.AgentPayLog;
+import com.hf.core.api.PayApi;
 import com.hf.core.biz.service.SettleService;
 import com.hf.core.dao.local.*;
 import com.hf.core.model.po.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,9 @@ import java.util.Objects;
 
 @Service
 public class SettleServiceImpl implements SettleService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettleService.class);
+
     @Autowired
     private SettleTaskDao settleTaskDao;
     @Autowired
@@ -74,23 +80,27 @@ public class SettleServiceImpl implements SettleService {
             if(channelProvider.getAgentPay() == 1) {
                 throw new BizFailException(CodeManager.AGENT_PAY_NOT_FINISHED,"代付未完成");
             }
-            throw new BizFailException("update oprLog status failed");
+            LOGGER.error("update oprLog status failed,settle opr id:"+accountOprLog.getId());
+            throw new BizFailException("update oprLog status failed,settle opr id:"+accountOprLog.getId());
         }
         UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(settleTask.getGroupId(),accountOprLog.getProviderCode());
         count = userChannelAccountDao.finish(userChannelAccount.getId(),accountOprLog.getAmount(),userChannelAccount.getVersion());
         if(count<=0) {
-            throw new BizFailException("finish user channel account failed");
+            LOGGER.error("finish user channel account failed,settle opr id:"+accountOprLog.getId());
+            throw new BizFailException("finish user channel account failed,settle opr id:"+accountOprLog.getId());
         }
 
         Account withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
         count = accountDao.finishWithDraw(withdrawAccount.getId(),accountOprLog.getAmount(),withdrawAccount.getVersion());
         if(count<=0) {
-            throw new BizFailException("finish withdraw failed");
+            LOGGER.error("finish withdraw failed,settle opr id:"+accountOprLog.getId());
+            throw new BizFailException("finish withdraw failed,settle opr id:"+accountOprLog.getId());
         }
 
         count = settleTaskDao.finish(settleTask.getId(),accountOprLog.getAmount(),settleTask.getVersion());
         if(count<=0) {
-            throw new BizFailException("finish settle task failed");
+            LOGGER.error("finish settle task failed,settle opr id:"+accountOprLog.getId());
+            throw new BizFailException("finish settle task failed,settle opr id:"+accountOprLog.getId());
         }
 
         settleTask = settleTaskDao.selectByPrimaryKey(settleTask.getId());
@@ -106,27 +116,32 @@ public class SettleServiceImpl implements SettleService {
     }
 
     private void finishFee(SettleTask settleTask) {
+        LOGGER.info("Start settle fee log: taskId:"+settleTask.getId());
         List<AccountOprLog> taxLogs = accountOprLogDao.selectByUnq(String.valueOf(settleTask.getId()),settleTask.getGroupId(),OprType.TAX.getValue());
         int count = 0;
         for(AccountOprLog taxLog:taxLogs) {
             count = accountOprLogDao.updateStatusById(taxLog.getId(),OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
             if(count<=0) {
-                throw new BizFailException("update taxLog status failed");
+                LOGGER.error("update taxLog status failed,taskId:"+settleTask.getId()+",opr log id:"+taxLog.getId());
+                throw new BizFailException("update taxLog status failed,taskId:"+settleTask.getId()+",opr log id:"+taxLog.getId());
             }
             Account withdrawAccount = accountDao.selectByPrimaryKey(settleTask.getAccountId());
             count = accountDao.finishTax(withdrawAccount.getId(),taxLog.getAmount(),withdrawAccount.getVersion());
             if(count<=0) {
-                throw new BizFailException("update fee account failed");
+                LOGGER.error("update fee account failed,taskId:"+settleTask.getId()+",opr log id:"+taxLog.getId());
+                throw new BizFailException("update fee account failed,taskId:"+settleTask.getId()+",opr log id:"+taxLog.getId());
             }
             UserChannelAccount userChannelAccount = userChannelAccountDao.selectByUnq(settleTask.getGroupId(),taxLog.getProviderCode());
             count = userChannelAccountDao.finish(userChannelAccount.getId(),taxLog.getAmount(),userChannelAccount.getVersion());
             if(count<=0) {
-                throw new BizFailException("finish user channel account failed");
+                LOGGER.error("finish user channel account failed,taskId:"+settleTask.getId()+",opr log id:"+taxLog.getId());
+                throw new BizFailException("finish user channel account failed,taskId:"+settleTask.getId()+",opr log id:"+taxLog.getId());
             }
             settleTask = settleTaskDao.selectByPrimaryKey(settleTask.getId());
             count = settleTaskDao.finish(settleTask.getId(),taxLog.getAmount(),settleTask.getVersion());
             if(count<=0) {
-                throw new BizFailException("update settle task paid amount failed");
+                LOGGER.error("update settle task paid amount failed,taskId:"+settleTask.getId());
+                throw new BizFailException("update settle task paid amount failed,taskId:"+settleTask.getId());
             }
         }
 
@@ -150,20 +165,25 @@ public class SettleServiceImpl implements SettleService {
     }
 
     private void finishAdmin(SettleTask settleTask) {
+        LOGGER.info("Start finish admin account,taskId:"+settleTask.getId());
+
         AdminAccountOprLog adminLog = adminAccountOprLogDao.selectByNo(String.valueOf(settleTask.getId()));
         if(adminLog.getType() != OprType.WITHDRAW.getValue()) {
-            throw new BizFailException("opr log type not match");
+            LOGGER.error("opr log type not match,taskId:"+settleTask.getId()+",opr log id:"+adminLog.getId());
+            throw new BizFailException("opr log type not match,taskId:"+settleTask.getId()+",opr log id:"+adminLog.getId());
         }
         //admin账户
         int count = adminAccountOprLogDao.updateStatusById(adminLog.getId(),OprStatus.NEW.getValue(),OprStatus.FINISHED.getValue());
         if(count<=0) {
-            throw new BizFailException("update admin Opr log status failed");
+            LOGGER.error("update admin Opr log status failed,taskId:"+settleTask.getId()+",oprLogId:"+adminLog.getId());
+            throw new BizFailException("update admin Opr log status failed,taskId:"+settleTask.getId()+",oprLogId:"+adminLog.getId());
         }
 
         AdminAccount adminAccount = adminAccountDao.selectByGroupId(settleTask.getPayGroupId());
         count = adminAccountDao.finishPay(adminAccount.getId(),adminLog.getAmount(),adminAccount.getVersion());
         if(count<=0) {
-            throw new BizFailException("update admin amount failed");
+            LOGGER.error("update admin amount failed,taskId:"+settleTask.getId()+",opr log id :"+adminLog.getId());
+            throw new BizFailException("update admin amount failed,taskId:"+settleTask.getId()+",opr log id :"+adminLog.getId());
         }
     }
 
