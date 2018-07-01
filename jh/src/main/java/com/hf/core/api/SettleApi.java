@@ -11,22 +11,23 @@ import com.hf.core.biz.SettleBiz;
 import com.hf.core.dao.local.SettleTaskDao;
 import com.hf.core.model.po.SettleTask;
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/settle")
 public class SettleApi {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettleApi.class);
     @Autowired
     private SettleBiz settleBiz;
     @Autowired
@@ -64,8 +65,14 @@ public class SettleApi {
             return ResponseResult.failed(CodeManager.BIZ_FAIELD,"condition empty",false);
         }
         Long id = new BigDecimal(params.get("id").toString()).longValue();
-        settleBiz.finishSettle(id);
-        return ResponseResult.success(true);
+        try {
+            settleBiz.finishSettle(id);
+            return ResponseResult.success(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+            return ResponseResult.failed(CodeManager.BIZ_FAIELD,e.getMessage(),false);
+        }
     }
 
     @RequestMapping(value = "/with_draw_failed",method = RequestMethod.POST ,produces = "application/json;charset=UTF-8")

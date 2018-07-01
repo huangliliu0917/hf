@@ -106,7 +106,7 @@ public class SettleBizImpl implements SettleBiz {
         if(Objects.isNull(accountOprLog)) {
             return;
         }
-        if(accountOprLog.getStatus()!= OprStatus.NEW.getValue()) {
+        if(accountOprLog.getStatus()!= OprStatus.NEW.getValue() && accountOprLog.getStatus() != OprStatus.PAY_SUCCESS.getValue()) {
             return;
         }
         if(accountOprLog.getType() != OprType.WITHDRAW.getValue()) {
