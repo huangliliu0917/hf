@@ -105,4 +105,9 @@ public class UtilsTest {
             System.out.println(RandomUtils.nextInt(0,3));
         }
     }
+
+    @Test
+    public void testMaxInt() {
+        System.out.println(Integer.MAX_VALUE);
+    }
 }

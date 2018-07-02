@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>hf</artifactId>
@@ -9,9 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cus</artifactId>
+    <artifactId>prod</artifactId>
+    <packaging>war</packaging>
+
+    <name>prod Maven Webapp</name>
+    <url>http://www.example.com</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.12</junit.version>
         <spring.version>4.3.2.RELEASE</spring.version>
         <servlet.version>3.0.1</servlet.version>
@@ -23,31 +30,9 @@
         <maven-jetty-plugin.version>9.3.11.v20160721</maven-jetty-plugin.version>
         <jdk.version>1.8</jdk.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <!-- 配置mybatis.properties的绝对路径，必须添加”file:///“前缀 -->
-        <mybaits.generator.properties.url>
-            file:///
-        </mybaits.generator.properties.url>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-tools</artifactId>
-            <version>1.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -68,6 +53,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hf</groupId>
+            <artifactId>hframe</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -106,12 +97,6 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.hf</groupId>
-            <artifactId>hframe</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -253,8 +238,9 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
-        <finalName>cus</finalName>
+        <finalName>prod</finalName>
         <pluginManagement>
             <plugins>
                 <!-- 复制指定的资源文件到指定目录 -->
